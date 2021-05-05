@@ -3,11 +3,11 @@ package com.anet.qtr4tdm.common.tiles;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.text.html.parser.Entity;
-
 import com.anet.qtr4tdm.common.blocks.RadarBaseBlock;
 import com.anet.qtr4tdm.common.blocks.RadarMasterBlock;
 import com.anet.qtr4tdm.common.blocks.RadarSlaveBlock;
+import com.anet.qtr4tdm.common.entities.Radar1Entity;
+import com.anet.qtr4tdm.common.entities.Radar2Entity;
 import com.anet.qtr4tdm.common.entities.Radar3Entity;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar3;
 import com.anet.qtr4tdm.init.BlocksInit;
@@ -17,6 +17,7 @@ import com.anet.qtr4tdm.uebki.Teams;
 import com.anet.qtr4tdm.uebki.teamState;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -108,6 +109,7 @@ public class RadarWorkerTile extends TileEntity{
         IBlockState center = BlocksInit.RADARS.getDefaultState();
         IBlockState[] corner = {};
         IBlockState[] edge = {};
+        Entity e = null;
         switch (level) {
             case 1:
             System.out.println("Level1");
@@ -115,6 +117,7 @@ public class RadarWorkerTile extends TileEntity{
             InitTileAndSetBlock(pos.south(), center);
             InitTileAndSetBlock(pos.west(), center);
             InitTileAndSetBlock(pos.east(), center);
+            e = new Radar1Entity(world);
             break;
             case 2:
             System.out.println("Level2");
@@ -124,6 +127,7 @@ public class RadarWorkerTile extends TileEntity{
             }
             InitTileAndSetBlock(pos.east(),center);
             InitTileAndSetBlock(pos.west(),center);
+            e = new Radar2Entity(world);
             break;
             case 3:
             for (int x = pos.getX()-2; x < pos.getX() + 3; x++) {
@@ -134,12 +138,12 @@ public class RadarWorkerTile extends TileEntity{
                 }
             }
             //Entity
-            Radar3Entity e = new Radar3Entity(world);
-            BlockPos position = new BlockPos(pos.getX() + 0.5f, pos.up().getY(), pos.getZ() + 0.5f);
-            e.setPosition(position.getX() , position.getY(), position.getZ());
-            world.spawnEntity(e);
+            e = new Radar3Entity(world);
             break;
         }
+        BlockPos position = new BlockPos(pos.getX() + 0.5f, pos.up().getY(), pos.getZ() + 0.5f);
+        e.setPosition(position.getX() , position.getY(), position.getZ());
+        world.spawnEntity(e);
         teamState tm = Teams.GetClosestPlayer(this.pos).team;
         this.team = tm.ordinal();
         markDirty();
@@ -184,16 +188,8 @@ public class RadarWorkerTile extends TileEntity{
             if (slaves.get(i) != this)
                 world.setBlockState(slaves.get(i).pos, rbaseState);
         }
-        switch (level) {
-            case 1:
-            break;
-            case 2:
-            break;
-            case 3:
-                List<Radar3Entity> e = world.getEntitiesWithinAABB(Radar3Entity.class, new AxisAlignedBB(pos.down(2).north(2).east(2), pos.up(2).south(2).west(2)));
-                if (e.size() > 0) e.get(0).setDead();
-            break;
-        }
+        List<Entity> e1 = world.getEntitiesWithinAABB((level == 1 ? Radar1Entity.class : level == 2 ? Radar2Entity.class : Radar3Entity.class) , new AxisAlignedBB(pos.down(2).north(2).east(2), pos.up(2).south(2).west(2)));
+        if (e1.size() > 0) e1.get(0).setDead();
         RadarsInfo.RemoveRadar(pos);
     }
 }

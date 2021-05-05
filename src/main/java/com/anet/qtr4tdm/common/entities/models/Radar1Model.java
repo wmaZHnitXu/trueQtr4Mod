@@ -1,4 +1,4 @@
-package com.anet.qtr4tdm.common.visual;
+package com.anet.qtr4tdm.common.entities.models;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 // Paste this class into your mod and generate all required imports
 
 @SideOnly(Side.CLIENT)
-public class radar1lvlModel extends ModelBase {
+public class Radar1Model extends ModelBase {
 	private final ModelRenderer bb_main;
 	private final ModelRenderer base_r1;
 	private final ModelRenderer base_r2;
@@ -23,7 +23,7 @@ public class radar1lvlModel extends ModelBase {
 	private final ModelRenderer cube_r5;
 	private final ModelRenderer cube_r6;
 
-	public radar1lvlModel() {
+	public Radar1Model() {
 		textureWidth = 64;
 		textureHeight = 64;
 

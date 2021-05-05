@@ -29,7 +29,7 @@ public class RenderRadar3 extends Render<Radar3Entity> {
         GlStateManager.pushMatrix();
 		GlStateManager.translate(x + 0.5d, y + 1.5d, z + 0.5d);
         GlStateManager.rotate(180, 1, 0, 0);
-        entity.rot += 0.1f * partialTicks;
+        entity.rot += entity.getRotSpeed();
         model.SetCrutilkiRotation(entity.rot);
         model.render(entity, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
         GlStateManager.popMatrix();

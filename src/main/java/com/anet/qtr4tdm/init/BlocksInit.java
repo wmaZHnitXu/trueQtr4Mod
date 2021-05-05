@@ -8,7 +8,11 @@ import com.anet.qtr4tdm.common.blocks.RadarSlaveBlock;
 import com.anet.qtr4tdm.common.blocks.RadarSlaveCornerBlock;
 import com.anet.qtr4tdm.common.blocks.RadarSlaveEdgeBlock;
 import com.anet.qtr4tdm.common.blocks.TerminalRadarBlock;
+import com.anet.qtr4tdm.common.entities.Radar1Entity;
+import com.anet.qtr4tdm.common.entities.Radar2Entity;
 import com.anet.qtr4tdm.common.entities.Radar3Entity;
+import com.anet.qtr4tdm.common.entities.render.RenderRadar1;
+import com.anet.qtr4tdm.common.entities.render.RenderRadar2;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar3;
 import com.anet.qtr4tdm.common.tiles.EnergyConsumerTile;
 import com.anet.qtr4tdm.common.tiles.RadarBaseTile;
@@ -101,6 +105,20 @@ public class BlocksInit {
                 return new RenderRadar3(manager);
             }
         });
+        RenderingRegistry.registerEntityRenderingHandler(Radar2Entity.class, new IRenderFactory() {
+            @Override
+            public Render createRenderFor(RenderManager manager) 
+            {
+                return new RenderRadar2(manager);
+            }
+        });
+        RenderingRegistry.registerEntityRenderingHandler(Radar1Entity.class, new IRenderFactory() {
+            @Override
+            public Render createRenderFor(RenderManager manager) 
+            {
+                return new RenderRadar1(manager);
+            }
+        });
     }
     public static void RegisterTileEntities () {
 
@@ -112,6 +130,8 @@ public class BlocksInit {
     }
 
     public static void RegisterEntities () {
-        EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "radar3"), Radar3Entity.class, "Radar3", 1337, TdmMod.instance, 50, 3, false);
+        EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "radar1"), Radar1Entity.class, "Radar1", 1335, TdmMod.instance, 150, 3, false);
+        EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "radar2"), Radar2Entity.class, "Radar2", 1336, TdmMod.instance, 150, 3, false);
+        EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "radar3"), Radar3Entity.class, "Radar3", 1337, TdmMod.instance, 150, 3, false);
     }
 }

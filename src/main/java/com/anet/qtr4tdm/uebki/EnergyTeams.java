@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 public class EnergyTeams {
     
     double[] EnergyStored;
-
+    double[] Generation;
     double[] EnergyMax;
 
     public static EnergyTeams instance;
@@ -20,6 +20,7 @@ public class EnergyTeams {
     public EnergyTeams () {
         this.EnergyStored = new double[teamState.values().length];
         this.EnergyMax = new double[teamState.values().length];
+        this.Generation = new double[teamState.values().length];
         for (int i = 0; i < EnergyMax.length; i++) {
             EnergyMax[i] = 50000;
         }
@@ -74,5 +75,26 @@ public class EnergyTeams {
                 EnergyStored[t] -= radar.WillConsume(EnergyStored[t]);
             }
         }
+    }
+
+    public static double GetTeamConsumption (teamState team) {
+        int ord = team.ordinal();
+        double result = 0;
+        ArrayList<RadarInfoStruct> radars = RadarsInfo.instance.GetTeamRadarList(ord);
+        for (RadarInfoStruct r : radars) {
+            result += r.consumption;
+        }
+        return result;
+    }
+
+    public static double GetTeamGeneration (teamState team) {
+        if (instance == null) return 0;
+        double result = 0;
+        result = instance.Generation[team.ordinal()];
+        return result;
+    }
+
+    public static void AddGeneration (teamState team, double amount) {
+        instance.Generation[team.ordinal()] += amount;
     }
 }

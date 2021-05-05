@@ -11,33 +11,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class Radar3Entity extends Entity {
+public class Radar3Entity extends Radar1Entity {
 
-    BlockPos position;
-    public float rot;
     public Radar3Entity (World worldIn, BlockPos position) {
-        super(worldIn);
+        this(worldIn);
         this.position = position;
         
     }
 
     public Radar3Entity(World worldIn) {
         super(worldIn);
-    }
-
-    @Override
-    protected void readEntityFromNBT(NBTTagCompound compound) {
-        // TODO Auto-generated method stub
-        
-    }
-    @Override
-    protected void writeEntityToNBT(NBTTagCompound compound) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    protected void entityInit() {
-        
+        rotationSpeed = 0.01f;
     }
 }

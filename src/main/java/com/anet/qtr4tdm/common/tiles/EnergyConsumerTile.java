@@ -50,12 +50,16 @@ public class EnergyConsumerTile extends BasicEnergyTe.Sink implements ITickable 
     public static int fromServerTeamEnergy;
     public static int fromServerMaxTeamEnergy;
     public static teamState teamS;
+    public static int fromServerConsumption;
+    public static int fromServerGeneration;
 
-    public static void InjectDataFromServer (int e, int te, int mte, int tm) {
+    public static void InjectDataFromServer (int e, int te, int mte, int tm, int c, int g) {
         fromServerEnergy = e;
         fromServerTeamEnergy = te;
         fromServerMaxTeamEnergy = mte;
         teamS = teamState.values()[tm];
+        fromServerConsumption = c;
+        fromServerGeneration = g;
     }
 
     @Override
@@ -123,6 +127,30 @@ public class EnergyConsumerTile extends BasicEnergyTe.Sink implements ITickable 
             }
             if (buffer.getEnergyStored() > 0) state = ConsumerState.full;
             if (oldState != state.ordinal()) {
+                //STATS
+                if (EnergyTeams.instance != null) {
+                    int gen = 0;
+                        switch (buffer.getSinkTier()) {
+                            case 1:
+                            gen = 32;
+                            break;
+                            case 2:
+                            gen = 128;
+                            break;
+                            case 3:
+                            gen = 512;
+                            break;
+                            case 4:
+                            gen = 2048;
+                            break;
+                        }
+                    if (oldState == 0) {
+                        EnergyTeams.AddGeneration(team,  gen);
+                    }
+                    if (state.ordinal() == 0) {
+                        EnergyTeams.AddGeneration(team, -gen);
+                    }
+                }
                 EnergyConsumerBlock.SetState(world, pos, state.ordinal());
             }
         }

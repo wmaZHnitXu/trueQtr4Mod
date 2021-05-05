@@ -52,14 +52,13 @@ public class EnergyConsumerGui extends GuiScreen {
         drawTexturedModalRect(offsetLeft, offsetTop, 0, 0, screenWidth, screenHeight);
         teamState team = EnergyConsumerTile.teamS;
         if (team == null) team = teamState.specs;
-        int consumption = 10;
         String[] column1 = {
             "§fКоманда: " + Teams.GetTeamColorSymbols(team) + team.toString(),
             "§fЭнергия: " + EnergyConsumerTile.fromServerEnergy + "/10000" + " EU",
             "§fСтатус: " + (EnergyConsumerTile.fromServerEnergy == 10000 ? "Заполнен" : EnergyConsumerTile.fromServerTeamEnergy < EnergyConsumerTile.fromServerMaxTeamEnergy ? "Подача энергии в командный буфер" : "Подзарядка"),
             "§fЭнергия команды: " + EnergyConsumerTile.fromServerTeamEnergy + "/" + EnergyConsumerTile.fromServerMaxTeamEnergy + " EU",
-            "§fПотребление: " + consumption,
-            "§fПроизводительность: 10000"
+            "§fПотребление: " + EnergyConsumerTile.fromServerConsumption,
+            "§fПроизводительность: " + EnergyConsumerTile.fromServerGeneration
         };
         for (int i = 0; i < column1.length; i++) {
             GL11.glColor4f(1.0F, 1.0f, 1.0f, 1.0F);

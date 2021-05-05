@@ -1,7 +1,10 @@
 package com.anet.qtr4tdm.common.entities;
 
+import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.uebki.Teams;
 import com.anet.qtr4tdm.uebki.teamState;
+import com.anet.qtr4tdm.uebki.messages.BasedAnswer;
+import com.anet.qtr4tdm.uebki.messages.BasedRequest;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -13,12 +16,17 @@ import net.minecraft.world.World;
 
 public class Radar1Entity extends Entity {
 
-    BlockPos position;
+    public BlockPos position;
     public float rot;
+    public boolean isActive;
+    public float rotationSpeed;
+
+    protected int counter;
+
     public Radar1Entity (World worldIn, BlockPos position) {
         super(worldIn);
         this.position = position;
-        
+        rotationSpeed = 0;
     }
 
     public Radar1Entity(World worldIn) {
@@ -39,5 +47,21 @@ public class Radar1Entity extends Entity {
     @Override
     protected void entityInit() {
         
+    }
+
+    @Override
+    public void onUpdate() {
+        if (world.isRemote) {
+            if (counter >= 20) {
+                TdmMod.wrapper.sendToServer(new BasedRequest(getPosition(), 1));
+                counter = 0;
+            }
+            else counter++;
+        }
+        super.onUpdate();
+    }
+
+    public float getRotSpeed () {
+        return isActive ? rotationSpeed : 0;
     }
 }

@@ -17,7 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 
 public class RenderRadar2 extends Render<Radar2Entity> {
-    public static final ResourceLocation textures = new ResourceLocation(TdmMod.MODID + ":textures/entity/radar3.png");
+    public static final ResourceLocation textures = new ResourceLocation(TdmMod.MODID + ":textures/entity/radar2.png");
     public final Radar2Model model = new Radar2Model();
 
     public RenderRadar2(RenderManager manager) {
@@ -31,7 +31,7 @@ public class RenderRadar2 extends Render<Radar2Entity> {
         GlStateManager.pushMatrix();
 		GlStateManager.translate(x + 0.5d, y + 1.5d, z + 0.5d);
         GlStateManager.rotate(180, 1, 0, 0);
-        entity.rot += 0.01f;
+        entity.rot += entity.getRotSpeed();
         model.SetCrutilkiRotation(entity.rot);
         model.render(entity, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
         GlStateManager.popMatrix();

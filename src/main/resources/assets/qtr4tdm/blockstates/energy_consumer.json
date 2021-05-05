@@ -1,0 +1,7 @@
+{
+    "variants": {
+      "active=0": { "model": "qtr4tdm:energy_consumer_inactive" },
+      "active=1": { "model": "qtr4tdm:energy_consumer_charging" },
+      "active=2": { "model": "qtr4tdm:energy_consumer_full" }
+    }
+  }

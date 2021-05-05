@@ -1,0 +1,11 @@
+{
+    "parent": "block/bedrock",
+    "textures": {
+      "up": "qtr4tdm:blocks/consumer_top",
+      "down": "qtr4tdm:blocks/consumer_top",
+      "south": "qtr4tdm:blocks/consumer_side_full",
+      "north": "qtr4tdm:blocks/consumer_side_full",
+      "west": "qtr4tdm:blocks/consumer_side_full",
+      "east": "qtr4tdm:blocks/consumer_side_full"
+    }
+  }

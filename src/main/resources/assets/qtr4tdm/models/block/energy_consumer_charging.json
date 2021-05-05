@@ -1,0 +1,11 @@
+{
+    "parent": "block/bedrock",
+    "textures": {
+      "up": "qtr4tdm:blocks/consumer_top",
+      "down": "qtr4tdm:blocks/consumer_top",
+      "south": "qtr4tdm:blocks/consumer_side_charging",
+      "north": "qtr4tdm:blocks/consumer_side_charging",
+      "west": "qtr4tdm:blocks/consumer_side_charging",
+      "east": "qtr4tdm:blocks/consumer_side_charging"
+    }
+  }

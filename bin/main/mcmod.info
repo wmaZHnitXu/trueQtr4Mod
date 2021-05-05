@@ -1,0 +1,16 @@
+[
+{
+  "modid": "qtr4tdm",
+  "name": "TdmExtensionForQtr4",
+  "description": "team viewer virus",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "2ch.hk/qtr4/",
+  "updateUrl": "",
+  "authorList": ["Anal Network"],
+  "credits": "YEEEEEEEEEEE",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

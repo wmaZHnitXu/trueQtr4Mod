@@ -1,0 +1,7 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+      "all": "qtr4tdm:blocks/radar_base"
+    },
+    "culling": false
+  }

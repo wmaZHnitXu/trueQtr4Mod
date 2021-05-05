@@ -1,0 +1,6 @@
+{
+    "parent": "block/bedrock",
+    "textures": {
+      "all": "qtr4tdm:blocks/radar_master"
+    }
+  }

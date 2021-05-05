@@ -45,7 +45,6 @@ public class RadarWorkerTile extends TileEntity{
 
     @Override
     public void readFromNBT(NBTTagCompound tagCompound) {
-        System.out.println("compoundreaded");
         this.isMaster = tagCompound.getBoolean("isMaster");
         if (isMaster) master = this;
         this.transformed = tagCompound.getBoolean("transformed");
@@ -58,7 +57,6 @@ public class RadarWorkerTile extends TileEntity{
     public void ReadSlaves () {
         int lvl = this.level;
         slaves = new ArrayList<RadarWorkerTile>();
-        System.out.println("read1");
         switch (lvl) {
             case 1:
                 ((RadarWorkerTile)world.getTileEntity(pos.west())).GetAndSetMasterFromAware(this);
@@ -88,7 +86,6 @@ public class RadarWorkerTile extends TileEntity{
     }
 
     public void firstCheck () {
-        System.out.println("FirstCheck");
         if (world.getBlockState(pos).getBlock().getClass() == RadarMasterBlock.class) {
             MakeMeMaster();
         }
@@ -112,7 +109,6 @@ public class RadarWorkerTile extends TileEntity{
         Entity e = null;
         switch (level) {
             case 1:
-            System.out.println("Level1");
             InitTileAndSetBlock(pos.north(), center);
             InitTileAndSetBlock(pos.south(), center);
             InitTileAndSetBlock(pos.west(), center);
@@ -120,7 +116,6 @@ public class RadarWorkerTile extends TileEntity{
             e = new Radar1Entity(world);
             break;
             case 2:
-            System.out.println("Level2");
             for (int i = pos.getX()-1; i < pos.getX() + 2; i++) {
                 InitTileAndSetBlock(new BlockPos(i, pos.getY(), pos.getZ()+1),center);
                 InitTileAndSetBlock(new BlockPos(i, pos.getY(), pos.getZ()-1),center);

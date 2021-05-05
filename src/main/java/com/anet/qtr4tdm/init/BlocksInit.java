@@ -2,6 +2,7 @@ package com.anet.qtr4tdm.init;
 
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.blocks.EnergyConsumerBlock;
+import com.anet.qtr4tdm.common.blocks.MiniSiloBlock;
 import com.anet.qtr4tdm.common.blocks.RadarBaseBlock;
 import com.anet.qtr4tdm.common.blocks.RadarMasterBlock;
 import com.anet.qtr4tdm.common.blocks.RadarSlaveBlock;
@@ -14,6 +15,7 @@ import com.anet.qtr4tdm.common.entities.Radar3Entity;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar1;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar2;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar3;
+import com.anet.qtr4tdm.common.items.rocketItem;
 import com.anet.qtr4tdm.common.tiles.EnergyConsumerTile;
 import com.anet.qtr4tdm.common.tiles.RadarBaseTile;
 import com.anet.qtr4tdm.common.tiles.RadarWorkerTile;
@@ -35,6 +37,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -48,6 +51,7 @@ public class BlocksInit {
     public static final Block RADARE = new RadarSlaveEdgeBlock();
     public static final Block RADART = new TerminalRadarBlock();
     public static final Block ENERGYCONSUMER = new EnergyConsumerBlock();
+    public static final Block MINISILO = new MiniSiloBlock();
 
     public static final Block[] BLOCKS = new Block[] {
     
@@ -57,8 +61,21 @@ public class BlocksInit {
             RADARC,
             RADARE,
             RADART,
-            ENERGYCONSUMER
+            ENERGYCONSUMER,
+            MINISILO
+
     };
+
+    public static final Item ROCKET = new rocketItem();
+
+    public static final Item[] ITEMS = new Item[] {
+        ROCKET
+    };
+
+    @SubscribeEvent
+    public static void registerItems(RegistryEvent.Register<Item> event) {
+        event.getRegistry().registerAll(ITEMS);
+    }
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
@@ -77,6 +94,7 @@ public class BlocksInit {
     public static void registerModels(ModelRegistryEvent event) {
 
         setRenderForAll(BLOCKS);
+        setRenderForItems(ITEMS);
     }
 
     private static Item[] getItemBlocks(Block... blocks) {
@@ -120,6 +138,17 @@ public class BlocksInit {
             }
         });
     }
+
+    @SideOnly(Side.CLIENT)
+    public static void setRenderForItems (Item... items) {
+        for (Item item : items) {
+            final ResourceLocation regName = item.getRegistryName();
+            final ModelResourceLocation mrl = new ModelResourceLocation(regName, "inventory");
+            ModelBakery.registerItemVariants(item, mrl);
+            ModelLoader.setCustomModelResourceLocation(item, 0, mrl);
+        }
+    }
+
     public static void RegisterTileEntities () {
 
         GameRegistry.registerTileEntity(RadarWorkerTile.class, new ResourceLocation(TdmMod.MODID + ":" + "radarworkertile"));

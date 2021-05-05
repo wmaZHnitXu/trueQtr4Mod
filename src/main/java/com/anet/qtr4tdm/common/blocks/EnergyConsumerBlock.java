@@ -34,6 +34,7 @@ public class EnergyConsumerBlock extends BlockTileEntity<EnergyConsumerTile> {
     public EnergyConsumerBlock() {
         super("energy_consumer", Material.IRON, 3, 3, SoundType.METAL);
         this.setDefaultState(this.blockState.getBaseState().withProperty(active, Integer.valueOf(0)));
+        this.setCreativeTab(TdmMod.qtr4);
     }
     
 

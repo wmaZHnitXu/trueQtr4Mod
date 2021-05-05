@@ -1,0 +1,36 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [32, 32],
+	"textures": {
+		"3": "qtr4tdm:blocks/rocket",
+		"particle": "qtr4tdm:blocks/terminal_bottom"
+	},
+	"elements": [
+		{
+			"name": "rocket1",
+			"from": [5, 1, 5],
+			"to": [11, 16, 11],
+			"faces": {
+				"north": {"uv": [7.5, 1.5, 11.5, 9], "texture": "#3"},
+				"east": {"uv": [5.5, 1.5, 9.5, 9], "texture": "#3"},
+				"south": {"uv": [5.5, 1, 9.5, 8.5], "texture": "#3"},
+				"west": {"uv": [8, 2, 12, 9.5], "texture": "#3"},
+				"up": {"uv": [4.5, 3.5, 8.5, 7.5], "texture": "#3"},
+				"down": {"uv": [12, 12, 16, 16], "texture": "#3"}
+			}
+		},
+		{
+			"name": "rocket2",
+			"from": [6, 16, 6],
+			"to": [10, 18, 10],
+			"faces": {
+				"north": {"uv": [0, 0, 3, 1], "texture": "#3"},
+				"east": {"uv": [0, 0, 3, 1], "texture": "#3"},
+				"south": {"uv": [0, 0, 3, 1], "texture": "#3"},
+				"west": {"uv": [0, 0, 3, 1], "texture": "#3"},
+				"up": {"uv": [0, 0, 3, 3], "texture": "#3"},
+				"down": {"uv": [0, 0, 3, 3], "texture": "#missing"}
+			}
+		}
+	]
+}

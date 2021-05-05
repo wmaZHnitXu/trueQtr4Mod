@@ -1,0 +1,6 @@
+{
+    "variants": {
+      "armed=false": { "model": "qtr4tdm:minisilo" },
+      "armed=true": { "model": "qtr4tdm:minisilo_armed" }
+    }
+  }

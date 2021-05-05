@@ -51,12 +51,10 @@ public class BasedAnswer implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        TdmMod.logger.info("basedanswerdelivered");
         int length = buf.getInt(0);
         answer = new int[length];
         for (int i = 1; i < length + 1; i++) {
             answer[i-1] = buf.getInt(i*4);
-            TdmMod.logger.info(answer[i-1]);
         }
 
         //Vstavlyaem
@@ -85,7 +83,6 @@ public class BasedAnswer implements IMessage {
         for (int i = 0; i < answer.length; i++) {
             buf.writeInt(answer[i]);
         }
-        TdmMod.logger.info("basedanswergenerated");
     }
     
 }

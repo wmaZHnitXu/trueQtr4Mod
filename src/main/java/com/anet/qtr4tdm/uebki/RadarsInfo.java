@@ -3,9 +3,11 @@ package com.anet.qtr4tdm.uebki;
 import java.util.ArrayList;
 
 import com.anet.qtr4tdm.TdmMod;
+import com.anet.qtr4tdm.common.tiles.MiniSiloTile;
 import com.anet.qtr4tdm.uebki.messages.RadarMessage;
 
 import ibxm.Player;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.Mod;
@@ -19,6 +21,7 @@ public class RadarsInfo {
 
     public ArrayList<RadarInfoStruct>[] teamRadars;
     public ArrayList<RadarInfoStruct>[] allInfo;
+    private ArrayList<RadarObjectStructure>[] caschedObjects;
     public static RadarsInfo instance;
 
     public ArrayList<RadarInfoStruct> GetTeamRadarList (int t) {
@@ -31,6 +34,7 @@ public class RadarsInfo {
         for (int i = 0; i < teamState.values().length; i++) {
             teamRadars[i] = new ArrayList<RadarInfoStruct>();
         }
+        caschedObjects = new ArrayList[teamState.values().length];
     }
 
     public static boolean IsRadarActive (BlockPos pos) {
@@ -93,7 +97,23 @@ public class RadarsInfo {
             if (!radar.isActive) radarName = "§fРадар обесточен.";
             result.add(new RadarObjectStructure(radar.pos, radarName, true, radar.isActive));
         }
+        instance.caschedObjects[team.ordinal()] = result;
         return result;
+    }
+
+    public static EntityLivingBase GetTargetForSilo (MiniSiloTile silo) {
+        ArrayList<RadarInfoStruct> teamradars = silo.team != teamState.specs ? instance.teamRadars[silo.team.ordinal()] : new ArrayList<RadarInfoStruct>();
+        for (player p : Teams.instance.GetPlayers()) {
+            for (int i = 0; i < teamradars.size(); i++) {
+                if ( p.team != silo.team
+                && p.playerEntity.getPosition().getDistance(silo.getPos().getX(), silo.getPos().getY(), silo.getPos().getZ()) <= 200
+                && teamradars.get(i).insideRange(p.playerEntity) 
+                && teamradars.get(i).isActive) {
+                    return (EntityLivingBase)p.playerEntity;
+                }
+            }
+        }
+        return null;
     }
 }
 

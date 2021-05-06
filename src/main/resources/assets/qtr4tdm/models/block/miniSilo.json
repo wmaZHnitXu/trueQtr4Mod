@@ -3,8 +3,8 @@
 	"texture_size": [32, 32],
 	"textures": {
 		"0": "qtr4tdm:blocks/terminal_bottom",
-		"1": "block/silo_inside",
-		"2": "block/silo_bottom",
+		"1": "qtr4tdm:blocks/silo_inside",
+		"2": "qtr4tdm:blocks/silo_bottom",
 		"particle": "qtr4tdm:blocks/terminal_bottom"
 	},
 	"elements": [

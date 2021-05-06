@@ -40,7 +40,7 @@ public class MiniSiloBlock extends BlockTileEntity<MiniSiloTile> {
     public static final PropertyBool armed = PropertyBool.create("armed");
 
     public MiniSiloBlock() {
-        super("minisilo", Material.TNT, 3, 3, SoundType.METAL);
+        super("minisilo", Material.TNT, 1, 1, SoundType.METAL);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class MiniSiloBlock extends BlockTileEntity<MiniSiloTile> {
     public static void SetState (World world, BlockPos pos, boolean state) {
         TileEntity tile = world.getTileEntity(pos);
 
-        world.setBlockState(pos, BlocksInit.ENERGYCONSUMER.getDefaultState().withProperty(MiniSiloBlock.armed, state));
+        world.setBlockState(pos, BlocksInit.MINISILO.getDefaultState().withProperty(MiniSiloBlock.armed, state));
 
         if (tile != null) {
             tile.validate();

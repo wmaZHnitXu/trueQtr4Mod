@@ -12,11 +12,13 @@ import com.anet.qtr4tdm.common.blocks.TerminalRadarBlock;
 import com.anet.qtr4tdm.common.entities.Radar1Entity;
 import com.anet.qtr4tdm.common.entities.Radar2Entity;
 import com.anet.qtr4tdm.common.entities.Radar3Entity;
+import com.anet.qtr4tdm.common.entities.RocketEntity;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar1;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar2;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar3;
 import com.anet.qtr4tdm.common.items.rocketItem;
 import com.anet.qtr4tdm.common.tiles.EnergyConsumerTile;
+import com.anet.qtr4tdm.common.tiles.MiniSiloTile;
 import com.anet.qtr4tdm.common.tiles.RadarBaseTile;
 import com.anet.qtr4tdm.common.tiles.RadarWorkerTile;
 import com.anet.qtr4tdm.common.tiles.TerminalRadarTile;
@@ -155,6 +157,7 @@ public class BlocksInit {
         GameRegistry.registerTileEntity(RadarBaseTile.class, new ResourceLocation(TdmMod.MODID + ":" + "radarbasetile"));
         GameRegistry.registerTileEntity(TerminalRadarTile.class, new ResourceLocation(TdmMod.MODID + ":" + "terminalradartile"));
         GameRegistry.registerTileEntity(EnergyConsumerTile.class, new ResourceLocation(TdmMod.MODID + ":" + "energyconsumertile"));
+        GameRegistry.registerTileEntity(MiniSiloTile.class, new ResourceLocation(TdmMod.MODID + ":" + "minisilotile"));
 
     }
 
@@ -162,5 +165,6 @@ public class BlocksInit {
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "radar1"), Radar1Entity.class, "Radar1", 1335, TdmMod.instance, 150, 3, false);
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "radar2"), Radar2Entity.class, "Radar2", 1336, TdmMod.instance, 150, 3, false);
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "radar3"), Radar3Entity.class, "Radar3", 1337, TdmMod.instance, 150, 3, false);
+        EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "rocket1"), RocketEntity.class, "rocket1", 1338, TdmMod.instance, 1000, 2, true);
     }
 }

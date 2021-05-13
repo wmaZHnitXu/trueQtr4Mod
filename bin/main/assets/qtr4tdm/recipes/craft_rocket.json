@@ -1,0 +1,30 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "S",
+      "A",
+      "F"
+    ],
+    "key": {
+      "S": {
+        "item": "minecraft:redstone",
+          "data": 0
+      },
+      "A": [
+        {
+          "item": "ic2:dust",
+          "data": 16
+        }
+      ],
+      "F": [
+        {
+          "item": "ic2:plate",
+          "data": 3
+        }
+      ]
+    },
+    "result": {
+      "item": "qtr4tdm:rocket",
+      "data": 0
+    }
+  }

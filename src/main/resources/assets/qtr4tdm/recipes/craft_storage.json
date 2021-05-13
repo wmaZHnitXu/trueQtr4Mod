@@ -1,0 +1,30 @@
+  {
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "FFF",
+      "ASA",
+      "FFF"
+    ],
+    "key": {
+      "S": {
+        "item": "ic2:re_battery",
+          "data": 1
+      },
+      "A": [
+        {
+          "item": "ic2:cable",
+          "data": 0
+        }
+      ],
+      "F": [
+        {
+          "item": "ic2:plate",
+          "data": 3
+        }
+      ]
+    },
+    "result": {
+      "item": "qtr4tdm:energy_consumer",
+      "data": 0
+    }
+  }

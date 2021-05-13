@@ -20,7 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TerminalRadarBlock extends BlockTileEntity<TerminalRadarTile> {
 
     public TerminalRadarBlock() {
-        super("terminal_radar", Material.IRON, 3.0f, 10.0f, SoundType.ANVIL);
+        super("terminal_radar", Material.IRON, 1.0f, 1.0f, SoundType.ANVIL);
         this.setCreativeTab(TdmMod.qtr4);
     }
 

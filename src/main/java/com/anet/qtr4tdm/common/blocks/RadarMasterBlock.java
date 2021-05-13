@@ -16,7 +16,6 @@ public class RadarMasterBlock extends BlockTileEntity<RadarWorkerTile> {
     public RadarMasterBlock() {
   
         super("radar_master", Material.IRON, 3.0f, 10.0f, SoundType.METAL);
-        this.setCreativeTab(TdmMod.qtr4); //К примеру BuildingBlocks
     }
     @Override
     public void onBlockAdded(World world, BlockPos pos, IBlockState p_180633_3_) {

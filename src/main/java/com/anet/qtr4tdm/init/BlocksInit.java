@@ -49,8 +49,6 @@ public class BlocksInit {
     public static final Block RADAR = new RadarBaseBlock();
     public static final Block RADARM = new RadarMasterBlock();
     public static final Block RADARS = new RadarSlaveBlock();
-    public static final Block RADARC = new RadarSlaveCornerBlock();
-    public static final Block RADARE = new RadarSlaveEdgeBlock();
     public static final Block RADART = new TerminalRadarBlock();
     public static final Block ENERGYCONSUMER = new EnergyConsumerBlock();
     public static final Block MINISILO = new MiniSiloBlock();
@@ -60,8 +58,6 @@ public class BlocksInit {
             RADAR,
             RADARM,
             RADARS,
-            RADARC,
-            RADARE,
             RADART,
             ENERGYCONSUMER,
             MINISILO

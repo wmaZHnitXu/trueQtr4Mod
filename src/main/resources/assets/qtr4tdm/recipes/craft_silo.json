@@ -1,0 +1,30 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "AAA",
+      "SFS",
+      "AAA"
+    ],
+    "key": {
+      "S": {
+        "item": "ic2:crafting",
+          "data": 1
+      },
+      "A": [
+        {
+          "item": "ic2:plate",
+          "data": 3
+        }
+      ],
+      "F": [
+        {
+          "item": "ic2:resource",
+          "data": 12
+        }
+      ]
+    },
+    "result": {
+      "item": "qtr4tdm:minisilo",
+      "data": 0
+    }
+  }

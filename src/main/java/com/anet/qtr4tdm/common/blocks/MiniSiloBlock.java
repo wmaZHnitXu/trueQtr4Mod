@@ -41,6 +41,7 @@ public class MiniSiloBlock extends BlockTileEntity<MiniSiloTile> {
 
     public MiniSiloBlock() {
         super("minisilo", Material.TNT, 1, 1, SoundType.METAL);
+        this.setCreativeTab(TdmMod.qtr4);
     }
 
     @Override

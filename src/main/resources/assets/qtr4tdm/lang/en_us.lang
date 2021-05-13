@@ -1,2 +1,6 @@
 itemGroup.qtr4=QTR4
 tile.radar_base_name=Radar
+item.terminal_radar.name=Radar terminal
+item.minisilo.name=silo
+item.rocket.name=Silo rocket
+item.energy_consumer.name=Energy buffer

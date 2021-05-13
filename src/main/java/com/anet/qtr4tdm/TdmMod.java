@@ -90,7 +90,7 @@ public class TdmMod
     public static final CreativeTabs qtr4 = new CreativeTabs("qtr4") {
         @Override
         public ItemStack getTabIconItem() {
-            return new ItemStack(Item.getByNameOrId("radar_base"));
+            return new ItemStack(Item.getByNameOrId("qtr4tdm:terminal_radar"));
         }
     };
 }

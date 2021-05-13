@@ -13,7 +13,6 @@ public class RadarSlaveEdgeBlock extends BlockTileEntity<RadarWorkerTile> {
     public RadarSlaveEdgeBlock() {
   
         super("radar_slaveedge", Material.IRON, 3.0f, 10.0f, SoundType.METAL);
-        this.setCreativeTab(TdmMod.qtr4); //К примеру BuildingBlocks
     }    
     @Override
     public Class<RadarWorkerTile> getTileEntityClass() {

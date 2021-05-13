@@ -1,0 +1,30 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "AFA",
+      "ASA",
+      "AAA"
+    ],
+    "key": {
+      "S": {
+        "item": "ic2:crafting",
+          "data": 1
+      },
+      "A": [
+        {
+          "item": "ic2:plate",
+          "data": 8
+        }
+      ],
+      "F": [
+        {
+          "item": "minecraft:stained_glass_pane",
+          "data": 13
+        }
+      ]
+    },
+    "result": {
+      "item": "qtr4tdm:terminal_radar",
+      "data": 0
+    }
+  }

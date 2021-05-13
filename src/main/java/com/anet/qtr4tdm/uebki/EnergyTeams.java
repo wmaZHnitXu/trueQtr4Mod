@@ -62,10 +62,13 @@ public class EnergyTeams {
         return instance.EnergyMax[ord];
     }
 
+    private boolean tickCounter = false;
+
     @SubscribeEvent
     public static void OnWorldTick (WorldTickEvent event) {
-        if (instance == null) return;
+        if (instance == null || instance.tickCounter) {instance.tickCounter = false; return;}
         instance.ConsumeAll();
+        instance.tickCounter = true;
     }
 
     public void ConsumeAll () {

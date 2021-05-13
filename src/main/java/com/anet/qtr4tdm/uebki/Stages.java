@@ -87,7 +87,7 @@ public class Stages {
         events = new GameEvent[10];
         float timescale = 1;
 
-        events[0] = new GameEvent((int)(3600 * timescale), "Открытие границ", "Границы открыты.");
+        events[0] = new GameEvent((int)(3600 * timescale), "Открытие границ", "Границы открыты.", () -> {stage = GameStage.borderRemove;});
         events[1] = new GameEvent((int)(4200 * timescale), "Первое открытие центра (на 2 минуты)", "Центр открыт.", "На 2 минуты.", () -> OpenCenter(true));
         events[2] = new GameEvent((int)(4320 * timescale), "Закрытие центра", "Центр закрыт.", () -> OpenCenter(false));
         events[3] = new GameEvent((int)(7200 * timescale), "Открытие центра (на 4 минуты)", "Центр открыт.", "На 4 минуты.", () -> OpenCenter(true));
@@ -141,9 +141,7 @@ public class Stages {
         if (event.world.provider.getDimension() != 0 || event.side == Side.CLIENT || getStage().ordinal() < 2) return;
         if (instance.counter < 40) instance.counter++;
         else {
-            if (instance.stage == GameStage.prepare)
-                instance.CheckPlayersBounds();
-            
+            instance.CheckPlayersBounds();
             instance.CheckDangerZone();
             //Logging events
             int i = 0;
@@ -187,6 +185,8 @@ public class Stages {
             TdmMod.logger.info("mhmkak klassno");
         }
     }
+
+    
 
     private void TeamBedBroken (BlockEvent.BreakEvent event) {
         boolean remote = event.getWorld().isRemote;
@@ -291,13 +291,26 @@ public class Stages {
                         zone = boundsPerTeam[i].insideMe(Player.playerEntity.getPosition()) ? teams[i].toString() : zone;
                 }
                 BlockPos destination = boundsPerTeam[Player.team.ordinal()].GetClosestInBounds(Player.playerEntity.getPosition());
-                if (Player.playerEntity.isRiding()) {
-                    Player.playerEntity.getRidingEntity().setPositionAndUpdate(destination.getX(), destination.getY(), destination.getZ());
+                if (stage == GameStage.prepare || zone.equals("далеко далеко")) {
+                    if (Player.playerEntity.isRiding()) {
+                        Player.playerEntity.getRidingEntity().setPositionAndUpdate(destination.getX(), destination.getY(), destination.getZ());
+                    }
+                    else
+                        Player.playerEntity.setPositionAndUpdate(destination.getX(), destination.getY(), destination.getZ());
+                    Player.playerEntity.sendMessage(new TextComponentString("Зона " + zone + " в данный момент закрыта."));
                 }
-                else
-                    Player.playerEntity.setPositionAndUpdate(destination.getX(), destination.getY(), destination.getZ());
-                Player.playerEntity.sendMessage(new TextComponentString("Зона " + zone + " в данный момент закрыта."));
-                
+                else {
+                    if (Player.playerEntity.capabilities.allowEdit == true) {
+                        Player.playerEntity.capabilities.allowEdit = false;
+                        Player.playerEntity.sendMessage(new TextComponentString("Вы находитесь в зоне " + zone + ", копание забрано."));
+                    }
+                }
+            }
+            else {
+                if (Player.playerEntity.capabilities.allowEdit == false && !dangerZone.insideMe(Player.playerEntity.getPosition())) {
+                    Player.playerEntity.capabilities.allowEdit = true;
+                    Player.playerEntity.sendMessage(new TextComponentString("Вы вернулись на свою территорию, копание возвращено."));
+                }
             }
         }
     }

@@ -1,0 +1,24 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      " A ",
+      "ASA",
+      " A "
+    ],
+    "key": {
+      "S": {
+        "item": "ic2:resource",
+          "data": 12
+      },
+      "A": [
+        {
+          "item": "ic2:plate",
+          "data": 3
+        }
+      ]
+    },
+    "result": {
+      "item": "qtr4tdm:radar_base",
+      "data": 0
+    }
+  }

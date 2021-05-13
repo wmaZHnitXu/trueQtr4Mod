@@ -34,7 +34,7 @@ public class RadarBaseBlock extends BlockTileEntity<RadarBaseTile> {
 
     public RadarBaseBlock() {
   
-      super("radar_base", Material.IRON, 3.0f, 10.0f, SoundType.METAL);
+      super("radar_base", Material.IRON, 1.0f, 1.0f, SoundType.METAL);
       this.setCreativeTab(TdmMod.qtr4); //К примеру BuildingBlocks
     }
     @Override

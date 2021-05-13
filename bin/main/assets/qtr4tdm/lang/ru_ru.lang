@@ -1,3 +1,6 @@
 itemGroup.qtr4=QTR4
-tile.radar_base=Радар
-item.radar_base=Радар
+tile.radar_base.name=Блок радара
+tile.terminal_radar.name=Радар
+tile.minisilo.name=Ракетная шахта
+item.rocket.name=Ракета для шахты
+tile.energy_consumer.name=Энергетический буфер

@@ -23,5 +23,6 @@ public class Radar2Entity extends Radar1Entity {
     public Radar2Entity(World worldIn) {
         super(worldIn);
         rotationSpeed = 0.01f;
+        setSize(3, 3);
     }
 }

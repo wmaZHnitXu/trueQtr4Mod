@@ -43,8 +43,10 @@ public class TitleHandler {
         //Пиздобратия с трайкэч анхибитед эксептион не оьращай внемания, тьебе нужна 42 строка
         try {
             for (player Player : teamPlayers) {
-                arguments[0] = Player.playerEntity.getName();
-                commandTitle.execute(TdmMod.currentServer, TdmMod.currentServer, arguments);
+                if (Player.playerEntity != null) {
+                    arguments[0] = Player.playerEntity.getName();
+                    commandTitle.execute(TdmMod.currentServer, TdmMod.currentServer, arguments);
+                }
             }
         }
         catch (CommandException e) {

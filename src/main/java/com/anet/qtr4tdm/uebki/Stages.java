@@ -62,6 +62,7 @@ public class Stages {
     private boolean dgZoneOpen;
     private ArrayList<player> playersInsideDangerZone;
     private GameEvent[] events;
+    private BlockPos[] bedPositions;
     private int time;
     private int instanceCount;
 
@@ -80,6 +81,7 @@ public class Stages {
         boundsPerTeam[3] = new Bounds(1280, 1280, 0, -70);
         
         teamsStarted = new boolean[7];
+        bedPositions = new BlockPos[7];
         dangerZone = new Bounds(new BlockPos(-380, 0, -500), new BlockPos(440, 255, 320));
 
         playersInsideDangerZone = new ArrayList<player>();
@@ -143,13 +145,14 @@ public class Stages {
         else {
             instance.CheckPlayersBounds();
             instance.CheckDangerZone();
+            instance.CheckBedTeam(event.world);
             //Logging events
             int i = 0;
             while (i < instance.events.length && instance.time > instance.events[i].time) i++;
              GameEvent nextEvent = instance.events[i];
                 int timeLeft = nextEvent.time - instance.time;
                 if (timeLeft == 300 || timeLeft <= 10 || timeLeft == 900 || timeLeft == 1800 || timeLeft == 3600 || timeLeft == 30) {
-                    TdmMod.currentServer.sendMessage(new TextComponentString("§b" + nextEvent.desc + " через §a" + instance.GetFormattedTime(nextEvent.time - instance.time)));
+                    TdmMod.currentServer.getPlayerList().sendMessage(new TextComponentString("§b" + nextEvent.desc + " через §a" + instance.GetFormattedTime(nextEvent.time - instance.time)));
                 }
                 if (timeLeft == 60) {
                     TitleHandler.SendTitleForAll(nextEvent.desc, "через §a 1 минуту", "aqua");
@@ -179,10 +182,9 @@ public class Stages {
     @SubscribeEvent
     public static void BlockDestroyed (BlockEvent.BreakEvent event) {
         if (instance.stage.ordinal() < 2) return;
-        TdmMod.logger.info("sexskrovatijy");
         if (event.getState().getBlock().getUnlocalizedName().equals("tile.bed")) {
             instance.TeamBedBroken(event);
-            TdmMod.logger.info("mhmkak klassno");
+            TdmMod.logger.info("teamBedDestroyed");
         }
     }
 
@@ -210,15 +212,33 @@ public class Stages {
             for (player Player : Teams.GetPlayersOfTeam(teamDeadBed)) {
                 Player.playerEntity.setSpawnPoint(instance.startSpawnZagon, true);
             }
+            teamsStarted[teamDeadBed.ordinal()] = false;
         }
         else
             Minecraft.getMinecraft().effectRenderer.spawnEffectParticle(2, event.getPos().getX(), event.getPos().getY(), event.getPos().getZ(), 1, 1, 1);
+    }
+
+    private void CheckBedTeam (World w) {
+        for (int i = 0; i < teamsStarted.length; i++) {
+            if (teamsStarted[i]) {
+                TileEntity bed = w.getTileEntity(bedPositions[i]);
+                if (!(bed instanceof TileEntityBed)) {
+                    teamsStarted[i] = false;
+                    teamState teamDeadBed = teamState.values()[i];
+                    String colyr = teamDeadBed.forTitleColor();
+                    TitleHandler.SendTitleForAll("Кровать команды " 
+                    + teamDeadBed.toString()
+                    + " уничтожена.", "Взрывом или зомбем", colyr);
+                }
+            }
+        }
     }
 
     private void StartTeam (BlockEvent.PlaceEvent event) {
         boolean remote = event.getWorld().isRemote;
         teamState team = Teams.GetTeamOfPlayer(event.getPlayer());
         BlockPos spawnPos = event.getPos();
+        bedPositions[team.ordinal()] = spawnPos;
         ParticleManager serega = null;
         if (remote) {
             serega = Minecraft.getMinecraft().effectRenderer;

@@ -27,6 +27,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.functions.SetMetadata;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -78,6 +79,19 @@ public class Teams {
         }
     }
 
+    @SubscribeEvent
+    public static void OnLivingDamage(LivingDamageEvent e) {
+        Entity victim = e.getEntity();
+        Entity agressor = e.getSource().getTrueSource();
+        if (victim.getEntityWorld().isRemote) return;
+        if (victim instanceof EntityPlayer && agressor instanceof EntityPlayer) {
+            if (GetTeamOfPlayer((EntityPlayer)victim) == GetTeamOfPlayer((EntityPlayer)agressor)) {
+                if (e.isCancelable())
+                    e.setCanceled(true);
+            }
+        }
+    }
+
     private static void AddTeamBlocksToPlayer (EntityPlayer player) {
         TdmMod.logger.info("Blocks added");
         player.inventory.clear();
@@ -119,8 +133,14 @@ public class Teams {
                 return true;
             }
         }
-        if (!playerEntity.getEntityWorld().isRemote)
-            TitleHandler.SendTitleToPlayer("Не удалось сменить команду", "Баланс.", "red", playerEntity.getName());
+        if (!playerEntity.getEntityWorld().isRemote) {
+            
+            TdmMod.logger.info("try to change team failed, players in array: " + instance.players.size() 
+            + " players in game:" + TdmMod.currentServer.getCurrentPlayerCount());
+
+            TitleHandler.SendTitleToPlayer("Не удалось сменить команду", "Ошибка, попробуйте ещё раз.", "red", playerEntity.getName());
+            instance.players.add(new player(playerEntity));
+        }
         return false;
     }    
 

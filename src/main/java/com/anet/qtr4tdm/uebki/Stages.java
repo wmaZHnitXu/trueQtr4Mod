@@ -138,6 +138,16 @@ public class Stages {
         //Конец кровати
     }
 
+    public static int getTime () {
+        if (instance == null) return -1;
+        return instance.time;
+    }
+
+    public static boolean getTeamStarted (teamState team) {
+        if (instance == null) return false;
+        return instance.teamsStarted[team.ordinal()];
+    }
+
     @SubscribeEvent 
     public static void onWorldTick (WorldTickEvent event) {
         if (event.world.provider.getDimension() != 0 || event.side == Side.CLIENT || getStage().ordinal() < 2) return;

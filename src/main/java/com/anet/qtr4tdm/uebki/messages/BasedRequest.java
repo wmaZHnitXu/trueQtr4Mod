@@ -28,7 +28,6 @@ public class BasedRequest implements IMessage {
         z = buf.getInt(8);
         pos = new BlockPos(x,y,z);
         reqId = buf.getInt(12);
-        TdmMod.logger.info(reqId);
     }
 
     @Override

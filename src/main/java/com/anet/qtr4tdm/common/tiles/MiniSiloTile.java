@@ -24,7 +24,8 @@ public class MiniSiloTile extends TileEntity implements net.minecraft.util.ITick
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         compound.setBoolean("armed", armed);
-        compound.setInteger("team", team.ordinal());
+        if (team != null)
+            compound.setInteger("team", team.ordinal());
         return compound;
     }
 

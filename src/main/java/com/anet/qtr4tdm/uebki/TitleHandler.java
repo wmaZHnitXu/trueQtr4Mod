@@ -26,17 +26,16 @@ public class TitleHandler {
         if (!subTitle.equals("")) {
             arguments[1] = "subtitle";
             arguments[2] = "{\"text\":\"" + subTitle + "\",\"color\":\"white\",\"italic\":false}";
-            try {
                 for (player Player : teamPlayers) {
-                    arguments[0] = Player.playerEntity.getName();
-                    commandTitle.execute(TdmMod.currentServer, TdmMod.currentServer, arguments);
+                    try {
+                        arguments[0] = Player.playerEntity.getName();
+                        commandTitle.execute(TdmMod.currentServer, TdmMod.currentServer, arguments);
+                    }
+                    catch (CommandException e) {
+                        TdmMod.logger.info(e.getMessage());
+                    }
                 }
             }
-            catch (CommandException e) {
-                TdmMod.logger.info(e.getMessage());
-                TdmMod.logger.info("pizda");
-            }
-        }
         arguments[1] = "title";
         arguments[2] = "{\"text\":\"" + title + "\",\"color\":\"" + color + "\",\"bold\":true}";
 

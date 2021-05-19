@@ -37,6 +37,25 @@ public class Commands extends CommandBase {
                     Stages.instance.Start();
                     message = "startoval";
                 }
+                else if (params[0].equals("debug")) {
+                    String debugText = "#######################################\n";
+                    for (int i = 0; i < Teams.instance.GetPlayers().size(); i++) {
+                        player p = Teams.instance.GetPlayers().get(i);
+                        debugText += "playername : " + p.lastName + "\n";
+                        debugText += "hasentity : " + (p.playerEntity != null) + "\n";
+                        debugText += "dead : " + (p.dead) + "\n";
+                        debugText += "deadinside (entity) : " + (p.playerEntity != null ? p.playerEntity.isDead : "netyego") + "\n";
+                        debugText += "####################################### " + i + " \n";
+                    }
+                    debugText += "somebodyInDz : " + Stages.instance.isSomebodyInsideDangerZone + "\n";
+                    debugText += "time : " + Stages.getTime() + "\n";
+                    debugText += "stage : " + Stages.getStage().toString() + "\n";
+                    debugText += "teamstarted : b:" + Stages.getTeamStarted(teamState.blue) 
+                    + " r:" + Stages.getTeamStarted(teamState.red)
+                    + " g:" + Stages.getTeamStarted(teamState.green)
+                    + " y:" + Stages.getTeamStarted(teamState.yellow);
+                    message = debugText;
+                }
                 else {
                     boolean success = Teams.TryChangeTeam((EntityPlayer)sender.getCommandSenderEntity(), team);
                     message = success ? "Вы теперь в команде " + team.toString() : "Не удалось сменить команду.";

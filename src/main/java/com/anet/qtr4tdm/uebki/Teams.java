@@ -119,6 +119,15 @@ public class Teams {
         }
     }
 
+    public void ClearEmptyPlayers () {
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i).team == teamState.specs && players.get(i).playerEntity == null) {
+                players.remove(i);
+                i--;
+            }
+        }
+    }
+
     public static boolean TryChangeTeam (EntityPlayer playerEntity, teamState teamToChange) {
         if (instance == null) return false;
         for (player p : instance.players) {
@@ -206,7 +215,7 @@ public class Teams {
         for (player p : instance.players) {
             BlockPos playerPos = p.playerEntity.getPosition();
             double newDist = pos.getDistance(playerPos.getX(), playerPos.getY(), playerPos.getZ());
-            if (newDist < distance) {
+            if (newDist < distance && p.team != teamState.specs) {
                 distance = newDist;
                 TdmMod.logger.info(distance + " " + newDist + " " + String.valueOf(newDist < distance));
                 result = p;

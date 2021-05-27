@@ -84,7 +84,8 @@ public class EnergyConsumerTile extends BasicEnergyTe.Sink implements ITickable 
     public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
         if (!world.isRemote) {
             tagCompound = super.writeToNBT(tagCompound);
-            tagCompound.setInteger("team", team.ordinal());
+            if (team != null)
+                tagCompound.setInteger("team", team.ordinal());
         }
         return tagCompound;
     }

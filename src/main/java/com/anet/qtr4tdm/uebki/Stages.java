@@ -365,8 +365,11 @@ public class Stages {
         String result;
         int minutes = time / 60;
         int seconds =  time % 60;
-        result = minutes + " минут" + correctEnd(minutes) + " " 
-        + seconds + " секунд" + correctEnd(seconds);
+        result = "";
+        if (minutes > 0)
+            result = minutes + " минут" + correctEnd(minutes) + " ";
+        if (seconds > 0)
+            result += seconds + " секунд" + correctEnd(seconds);
         return result;
 
     }

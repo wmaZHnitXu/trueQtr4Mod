@@ -33,6 +33,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import scala.reflect.internal.Trees.This;
 
@@ -119,6 +120,16 @@ public class Teams {
         }
     }
 
+    @SubscribeEvent
+    public static void PlayerRespawnCheck (PlayerRespawnEvent event) {
+        if (instance == null) return;
+        for (player p : instance.players) {
+            if (p.lastName.equals(event.player.getName())) {
+                p.playerEntity = event.player;
+            }
+        }
+    }
+
     public void ClearEmptyPlayers () {
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i).team == teamState.specs && players.get(i).playerEntity == null) {
@@ -127,6 +138,8 @@ public class Teams {
             }
         }
     }
+
+
 
     public static boolean TryChangeTeam (EntityPlayer playerEntity, teamState teamToChange) {
         if (instance == null) return false;
@@ -137,7 +150,6 @@ public class Teams {
                     TitleHandler.SendTitleToPlayer("Вы теперь в команде " 
                     + GetTeamColorSymbols(teamToChange) 
                     + teamToChange.toString(), " ", "", p.playerEntity.getName());
-                    TdmMod.wrapper.sendToAll(new PlayersAnswerMessage());
                 }
                 return true;
             }
@@ -230,6 +242,35 @@ public class Teams {
         for (int i = 0; i < playerss.size(); i++) {
             playerss.get(i).refreshDisplayName();
         }
+    }
+
+    public static teamState GetTeamFromAlias (String alias) {
+        switch (alias) {
+            case "red": return teamState.red;
+            case "r": return teamState.red;
+            case "b": return teamState.blue;
+            case "blue": return teamState.blue;
+            case "green": return teamState.green;
+            case "g": return teamState.green;
+            case "yellow": return teamState.yellow;
+            case "y": return teamState.yellow;
+            case "w": return teamState.white;
+            case "white": return teamState.white;
+            case "black": return teamState.black;
+            case "specs": return teamState.specs;
+            case "s": return teamState.specs;
+            case "spectators": return teamState.specs;
+        }
+        return null;
+    }
+
+    public static player GetPlayerByName (String name) {
+        if (instance == null || instance.players == null) return null;
+        player p = null;
+        for (player Player : instance.players) {
+            if (Player.lastName.equals(name)) p = Player;
+        }
+        return p;
     }
 }
 

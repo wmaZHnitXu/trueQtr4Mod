@@ -1,6 +1,7 @@
 package com.anet.qtr4tdm.uebki;
 
 import com.anet.qtr4tdm.TdmMod;
+import com.anet.qtr4tdm.uebki.messages.PlayersAnswerMessage;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetworkPlayerInfo;
@@ -17,15 +18,20 @@ public class player {
     public player (String name, teamState team) {
         this.lastName = name;
         this.team = team;
-        if (name.equals(Minecraft.getMinecraft().player.getName())) {
-            Minecraft.getMinecraft().player.refreshDisplayName();
-        }
-        else {
-            TdmMod.logger.info(Minecraft.getMinecraft().player.getName() + " " + name);
-            NetworkPlayerInfo info;
-            if ((info = Minecraft.getMinecraft().getConnection().getPlayerInfo(name)) != null) {
-                info.setDisplayName(new TextComponentString(Teams.GetTeamColorSymbols(team) + name));
+        try {
+            if (name.equals(Minecraft.getMinecraft().player.getName())) {
+                Minecraft.getMinecraft().player.refreshDisplayName();
             }
+            else {
+                TdmMod.logger.info(Minecraft.getMinecraft().player.getName() + " " + name);
+                NetworkPlayerInfo info;
+                if ((info = Minecraft.getMinecraft().getConnection().getPlayerInfo(name)) != null) {
+                    info.setDisplayName(new TextComponentString(Teams.GetTeamColorSymbols(team) + name));
+                }
+            }
+        }
+        catch (Exception e){
+            TdmMod.logger.info(e.getMessage());
         }
         this.dead = false;
     }
@@ -41,18 +47,12 @@ public class player {
         this.lastName = playerEntity.getName();
     }
     public void AddFormatName (String Suffix) {
-        this.playerEntity.refreshDisplayName();
         System.out.println("formatted");
     }
 
     public void ChangeTeam (teamState newTeam) {
         this.team = newTeam;
-        String newPrefix = "▰";
-        switch (newTeam) {
-            case specs: newPrefix = "\u00A77[Наблюдатель] "; break;
-            default: newPrefix = Teams.GetTeamColorSymbols(newTeam) + "▰ "; break;
-
-        }
-        AddFormatName(newPrefix);
+        this.playerEntity.refreshDisplayName();
+        TdmMod.wrapper.sendToAll(new PlayersAnswerMessage());
     }
 }

@@ -73,7 +73,13 @@ public class RadarsInfo {
         if (instance.counter == 20) {
             for (player p : Teams.instance.GetPlayers()) {
                 if (p.playerEntity instanceof EntityPlayerMP) {
-                TdmMod.wrapper.sendTo(new RadarMessage(p.team), (EntityPlayerMP)p.playerEntity);
+                    try {
+                        TdmMod.wrapper.sendTo(new RadarMessage(p.team), (EntityPlayerMP)p.playerEntity);
+                    }
+                    catch (Exception e){
+                        TdmMod.logger.info("Network error");
+                        TdmMod.logger.info(e.toString());
+                    }
                 }
             }
             instance.counter = 0;

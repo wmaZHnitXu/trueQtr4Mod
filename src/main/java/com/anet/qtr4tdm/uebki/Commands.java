@@ -36,7 +36,7 @@ public class Commands extends CommandBase {
                 if (params[0].equals("start")) {
                     Stages.instance.Start();
                     message = "startoval";
-                }
+                } 
                 else if (params[0].equals("debug")) {
                     String debugText = "#######################################\n";
                     for (int i = 0; i < Teams.instance.GetPlayers().size(); i++) {
@@ -67,6 +67,13 @@ public class Commands extends CommandBase {
             else if (params.length == 2) {
                 if (params[0].equals("skip")) {
                     Stages.instance.Skip(Integer.parseInt(params[1]));
+                }
+                else {
+                    teamState t = Teams.GetTeamFromAlias(params[1]);
+                    player p = Teams.GetPlayerByName(params[0]);
+                    if (t != null && p != null) {
+                        p.ChangeTeam(t);
+                    }
                 }
             }
         }

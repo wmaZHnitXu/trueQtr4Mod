@@ -3,6 +3,7 @@ package com.anet.qtr4tdm.uebki;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 public class RadarInfoStruct {
     public teamState team;
@@ -42,6 +43,17 @@ public class RadarInfoStruct {
     public boolean insideRange (EntityPlayer player) {
         float distance = (float)player.getPosition().getDistance(pos.getX(), pos.getY(), pos.getZ());
         return distance < range;
+    }
+
+    public boolean canBeTraced (EntityPlayer player) {
+        Vec3d origin = new Vec3d(pos.add(0,3,0));
+        Vec3d target = player.getPositionVector().addVector(0, 100, 0);
+        Vec3d step = target.subtract(origin).normalize();
+		while (origin.distanceTo(target) > 2) {
+			origin = origin.add(step);
+			if (player.world.getBlockState(new BlockPos((int)origin.x,(int)origin.y,(int)origin.z)).isNormalCube()) return false;
+		}
+        return true;
     }
 
     public double WillConsume (double energy) {

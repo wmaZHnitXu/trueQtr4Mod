@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "BAB",
+      "AFA",
+      "BAB"
+    ],
+    "key": {
+      "A": [
+        {
+          "item": "ic2:casing",
+          "data": 3
+        }
+      ],
+      "B": [
+        {
+          "item": "minecraft:gunpowder",
+          "data": 0
+        }
+      ],
+      "F": [
+        {
+          "item": "ic2:dynamite",
+          "data": 0
+        }
+      ]
+    },
+    "result": {
+      "item": "flansmod:at4ammo",
+      "data": 0
+    }
+}

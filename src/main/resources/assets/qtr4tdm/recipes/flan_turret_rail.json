@@ -1,0 +1,37 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "BAB",
+      "BAB",
+      "CFC"
+    ],
+    "key": {
+      "A": [
+        {
+          "item": "ic2:te",
+          "data": 37
+        }
+      ],
+      "B": [
+        {
+          "tag": "forge:gems/diamond"
+        }
+      ],
+      "C": [
+        {
+          "item": "ic2:plate",
+          "data": 3
+        }
+      ],
+      "F": [
+        {
+          "item": "ic2:resource",
+          "data": 13
+        }
+      ]
+    },
+    "result": {
+      "item": "flansmod:sentryrail",
+      "data": 0
+    }
+}

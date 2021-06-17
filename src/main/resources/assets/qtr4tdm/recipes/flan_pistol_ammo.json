@@ -2,14 +2,10 @@
     "type": "minecraft:crafting_shaped",
     "pattern": [
       "AFA",
-      "ASA",
-      "AAA"
+      "AFA",
+      "AFA"
     ],
     "key": {
-      "S": {
-        "item": "ic2:crafting",
-          "data": 1
-      },
       "A": [
         {
           "item": "ic2:plate",
@@ -18,13 +14,13 @@
       ],
       "F": [
         {
-          "item": "minecraft:stained_glass_pane",
-          "data": 13
+          "item": "ic2:dust",
+          "data": 16
         }
       ]
     },
     "result": {
-      "item": "flansmod:pistol1",
+      "item": "flansmod:deserteagleammo",
       "data": 0
     }
-  }
+}

@@ -1,0 +1,13 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+      {
+          "item": "ic2:crafting",
+          "data": 29
+      }
+    ],
+    "result": {
+      "item": "flansmod:railammo",
+      "data": 0
+    }
+}

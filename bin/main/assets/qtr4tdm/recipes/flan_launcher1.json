@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "AAA",
+      "AAA",
+      " B "
+    ],
+    "key": {
+      "A": [
+        {
+          "item": "ic2:crafting",
+          "data": 3
+        }
+      ],
+      "B": [
+        {
+          "item": "ic2:crafting",
+          "data": 10
+        }
+      ]
+    },
+    "result": {
+      "item": "flansmod:launcher1",
+      "data": 0
+    }
+}

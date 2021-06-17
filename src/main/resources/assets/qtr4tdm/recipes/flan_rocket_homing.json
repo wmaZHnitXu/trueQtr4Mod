@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+      {
+          "item": "flansmod:stingerammo"
+      },
+      {
+          "item": "ic2:crafting",
+          "data": 1
+      }
+    ],
+    "result": {
+      "item": "flansmod:lockonammo",
+      "data": 0
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "BFB",
+      " A ",
+      "CCC"
+    ],
+    "key": {
+      "A": [
+        {
+          "item": "ic2:crafting",
+          "data": 1
+        }
+      ],
+      "B": [
+        {
+          "item": "ic2:te",
+          "data": 112
+        }
+      ],
+      "C": [
+        {
+          "item": "ic2:plate",
+          "data": 3
+        }
+      ],
+      "F": [
+        {
+          "item": "ic2:glass",
+          "data": 0
+        }
+      ]
+    },
+    "result": {
+      "item": "flansmod:sentryr2",
+      "data": 0
+    }
+}

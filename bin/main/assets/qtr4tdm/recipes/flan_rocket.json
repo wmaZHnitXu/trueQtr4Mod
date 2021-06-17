@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "CCC",
+      "ABB",
+      "CCC"
+    ],
+    "key": {
+      "A": [
+        {
+          "item": "minecraft:tnt",
+          "data": 0
+        }
+      ],
+      "C": [
+        {
+          "item": "ic2:casing",
+          "data": 3
+        }
+      ],
+      "B": [
+        {
+          "item": "minecraft:gunpowder",
+          "data": 0
+        }
+      ]
+    },
+    "result": {
+      "item": "flansmod:stingerammo",
+      "data": 0
+    }
+}

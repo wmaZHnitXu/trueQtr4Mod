@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "AAA",
+      "FFF",
+      "  F"
+    ],
+    "key": {
+      "A": [
+        {
+          "item": "minecraft:iron_block",
+          "data": 0
+        }
+      ],
+      "F": [
+        {
+          "item": "ic2:resource",
+          "data": 9
+        }
+      ]
+    },
+    "result": {
+      "item": "qtr4tdm:terminal_radar",
+      "data": 0
+    }
+}

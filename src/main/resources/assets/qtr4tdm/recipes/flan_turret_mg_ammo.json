@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "AAA",
+      "AFA",
+      "AAA"
+    ],
+    "key": {
+      "A": [
+        {
+          "item": "ic2:casing",
+          "data": 3
+        }
+      ],
+      "F": [
+        {
+          "item": "minecraft:gunpowder",
+          "data": 0
+        }
+      ]
+    },
+    "result": {
+      "item": "flansmod:minigunammo",
+      "data": 0
+    }
+}

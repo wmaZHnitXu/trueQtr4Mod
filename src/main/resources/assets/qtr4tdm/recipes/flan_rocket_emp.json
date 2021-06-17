@@ -1,0 +1,38 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "ABA",
+      "CFC",
+      "ABA"
+    ],
+    "key": {
+      "A": [
+        {
+          "item": "ic2:dust",
+          "data": 5
+        }
+      ],
+      "С": [
+        {
+          "item": "ic2:crafting",
+          "data": 5
+        }
+      ],
+      "B": [
+        {
+          "item": "ic2:cable",
+          "data": 1
+        }
+      ],
+      "F": [
+        {
+          "item": "flansmod:stingerammo",
+          "data": 0
+        }
+      ]
+    },
+    "result": {
+      "item": "flansmod:emprocketammo",
+      "data": 0
+    }
+}

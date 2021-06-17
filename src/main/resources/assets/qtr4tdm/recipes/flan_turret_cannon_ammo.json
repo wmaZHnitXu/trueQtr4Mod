@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "BBB",
+      "BFB",
+      "BBB"
+    ],
+    "key": {
+      "B": [
+        {
+          "item": "ic2:plate",
+          "data": 5
+        }
+      ],
+      "F": [
+        {
+          "item": "ic2:dust",
+          "data": 16
+        }
+      ]
+    },
+    "result": {
+      "item": "flansmod:cannonshellbig",
+      "data": 0
+    }
+}

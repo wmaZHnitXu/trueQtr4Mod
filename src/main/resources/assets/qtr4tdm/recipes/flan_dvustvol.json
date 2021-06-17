@@ -1,0 +1,30 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "AAB",
+      "AAB",
+      " FF"
+    ],
+    "key": {
+      "A": [
+        {
+          "item": "ic2:crafting",
+          "data": 29
+        }
+      ],
+      "B": [
+        {
+          "item": "flansmod:pistol1"
+        }
+      ],
+      "F": [
+        {
+          "tag": "minecraft:planks"
+        }
+      ]
+    },
+    "result": {
+      "item": "flansmod:obrez",
+      "data": 0
+    }
+}

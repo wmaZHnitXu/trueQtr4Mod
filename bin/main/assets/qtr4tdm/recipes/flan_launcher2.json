@@ -1,0 +1,38 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      " A ",
+      "CFC",
+      " B "
+    ],
+    "key": {
+      "A": [
+        {
+          "item": "ic2:crafting",
+          "data": 2
+        }
+      ],
+      "С": [
+        {
+          "item": "ic2:crafting",
+          "data": 15
+        }
+      ],
+      "B": [
+        {
+          "item": "minecraft:glass_pane",
+          "data": 0
+        }
+      ],
+      "F": [
+        {
+          "item": "flansmod:launcher1",
+          "data": 0
+        }
+      ]
+    },
+    "result": {
+      "item": "flansmod:launcher2",
+      "data": 0
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "FFB",
+      "FFA",
+      "CCC"
+    ],
+    "key": {
+      "A": [
+        {
+          "item": "ic2:crafting",
+          "data": 1
+        }
+      ],
+      "B": [
+        {
+          "item": "ic2:casing",
+          "data": 3
+        }
+      ],
+      "C": [
+        {
+          "item": "ic2:plate",
+          "data": 3
+        }
+      ],
+      "F": [
+        {
+          "item": "minecraft:iron_ingot",
+          "data": 0
+        }
+      ]
+    },
+    "result": {
+      "item": "flansmod:sentrymg",
+      "data": 0
+    }
+}

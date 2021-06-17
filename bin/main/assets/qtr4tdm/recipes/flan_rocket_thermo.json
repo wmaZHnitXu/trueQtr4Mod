@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      " F ",
+      "ABA",
+      " F "
+    ],
+    "key": {
+      "A": [
+        {
+          "item": "minecraft:blaze_powder",
+          "data": 0
+        }
+      ],
+      "B": [
+        {
+          "item": "flansmod:stingerammo",
+          "data": 10
+        }
+      ],
+      "F": [
+        {
+          "item": "ic2:dynamite",
+          "data": 0
+        }
+      ]
+    },
+    "result": {
+      "item": "flansmod:highexplammo",
+      "data": 0
+    }
+}

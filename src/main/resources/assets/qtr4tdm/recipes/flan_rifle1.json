@@ -1,0 +1,37 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "CFF",
+      "AAB",
+      " CC"
+    ],
+    "key": {
+      "A": [
+        {
+          "item": "ic2:crafting",
+          "data": 29
+        }
+      ],
+      "B": [
+        {
+          "item": "flansmod:pistol1"
+        }
+      ],
+      "C": [
+        {
+          "item": "ic2:plate",
+          "data": 3
+        }
+      ],
+      "F": [
+        {
+          "item": "ic2:crafting",
+          "data": 15
+        }
+      ]
+    },
+    "result": {
+      "item": "flansmod:rifle1",
+      "data": 0
+    }
+}

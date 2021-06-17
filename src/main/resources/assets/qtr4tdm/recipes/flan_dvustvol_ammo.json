@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "AFA",
+      "ABA",
+      "ABA"
+    ],
+    "key": {
+      "A": [
+        {
+          "item": "minecraft:paper",
+          "data": 8
+        }
+      ],
+      "B": [
+        {
+          "item": "minecraft:gunpowder",
+          "data": 8
+        }
+      ],
+      "F": [
+        {
+          "item": "ic2:dust",
+          "data": 10
+        }
+      ]
+    },
+    "result": {
+      "item": "flansmod:w1200ammo",
+      "data": 0
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "AFA",
+      "ABA",
+      "AFA"
+    ],
+    "key": {
+      "A": [
+        {
+          "item": "ic2:crafting",
+          "data": 15
+        }
+      ],
+      "B": [
+        {
+          "item": "ic2:dust",
+          "data": 10
+        }
+      ],
+      "F": [
+        {
+          "item": "ic2:dust",
+          "data": 16
+        }
+      ]
+    },
+    "result": {
+      "item": "flansmod:m16a4ammo",
+      "data": 0
+    }
+}

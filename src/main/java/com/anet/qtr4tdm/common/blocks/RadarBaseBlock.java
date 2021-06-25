@@ -41,7 +41,7 @@ public class RadarBaseBlock extends BlockTileEntity<RadarBaseTile> {
     public boolean onBlockActivated(World world, BlockPos position, IBlockState blockState, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 
         if (!world.isRemote) {
-
+            if (world.provider.getDimension() != 0) return true;
             RadarBaseTile tileEntity = getTileEntity(world, position);
             tileEntity.CheckStructureComplete();
         }

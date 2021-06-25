@@ -91,12 +91,13 @@ public class RadarsInfo {
         ArrayList<RadarObjectStructure> result = new ArrayList<RadarObjectStructure>();
         ArrayList<RadarInfoStruct> teamradars = team != teamState.specs ? instance.teamRadars[team.ordinal()] : new ArrayList<RadarInfoStruct>();
         for (player p : Teams.instance.GetPlayers()) {
-            for (int i = 0; i < teamradars.size(); i++) {
-                if (teamradars.get(i).insideRange(p.playerEntity) && teamradars.get(i).isActive) {
-                    result.add(new RadarObjectStructure(p.playerEntity.getPosition(), p.playerEntity.getDisplayNameString(), false, true));
-                    i = teamradars.size();
+            if (p.playerEntity != null && p.playerEntity.world.provider.getDimension() == 0)
+                for (int i = 0; i < teamradars.size(); i++) {
+                    if (teamradars.get(i).insideRange(p.playerEntity) && teamradars.get(i).isActive) {
+                        result.add(new RadarObjectStructure(p.playerEntity.getPosition(), p.playerEntity.getDisplayNameString(), false, true));
+                        i = teamradars.size();
+                    }
                 }
-            }
         }
         for (RadarInfoStruct radar : teamradars) {
             String radarName = Teams.GetTeamColorSymbols(radar.team) + "Радар lvl:" + radar.level;

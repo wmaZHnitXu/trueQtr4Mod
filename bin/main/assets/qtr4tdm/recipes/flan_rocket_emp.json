@@ -12,16 +12,16 @@
           "data": 5
         }
       ],
-      "С": [
-        {
-          "item": "ic2:crafting",
-          "data": 5
-        }
-      ],
       "B": [
         {
           "item": "ic2:cable",
           "data": 1
+        }
+      ],
+      "C": [
+        {
+          "item": "ic2:crafting",
+          "data": 5
         }
       ],
       "F": [

@@ -14,8 +14,8 @@
       ],
       "B": [
         {
-          "item": "minecraft:gunpowder",
-          "data": 0
+          "item": "ic2:crafting",
+          "data": 1
         }
       ],
       "F": [
@@ -26,7 +26,7 @@
       ]
     },
     "result": {
-      "item": "flansmod:at4ammo",
+      "item": "flansmod:mim23ammo",
       "data": 0
     }
 }

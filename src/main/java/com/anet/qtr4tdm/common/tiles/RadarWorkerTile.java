@@ -139,7 +139,7 @@ public class RadarWorkerTile extends TileEntity{
         BlockPos position = new BlockPos(pos.getX() + 0.5f, pos.up().getY(), pos.getZ() + 0.5f);
         e.setPosition(position.getX() , position.getY(), position.getZ());
         world.spawnEntity(e);
-        teamState tm = Teams.GetClosestPlayer(this.pos).team;
+        teamState tm = Teams.GetTeamOfPlayer(world.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 10000, false));
         this.team = tm.ordinal();
         markDirty();
         transformed = true;

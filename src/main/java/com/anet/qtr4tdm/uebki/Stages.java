@@ -34,6 +34,7 @@ import net.minecraft.world.GameType;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -74,15 +75,26 @@ public class Stages {
         teamCount = 4;
         stage = GameStage.waitForCommand;
         boundsPerTeam = new Bounds[6];
-    
+        /* MAP OSTRAU
         boundsPerTeam[0] = new Bounds(-1280,-1280, 0, -70);
         boundsPerTeam[1] = new Bounds(-1280, 1280, 0, -70);
         boundsPerTeam[2] = new Bounds(1280, -1280, 0, -70);
         boundsPerTeam[3] = new Bounds(1280, 1280, 0, -70);
+        */
+        // MAP MEDIUM
+        boundsPerTeam[0] = new Bounds(-630,-630, 0, -0);
+        boundsPerTeam[1] = new Bounds(-630, 630, 0, -0);
+        boundsPerTeam[2] = new Bounds(630, -630, 0, -0);
+        boundsPerTeam[3] = new Bounds(630, 630, 0, -0);
         
         teamsStarted = new boolean[7];
         bedPositions = new BlockPos[7];
+        /* MAP OSTRAU
         dangerZone = new Bounds(new BlockPos(-380, 0, -500), new BlockPos(440, 255, 320));
+        */
+
+        // MAP MEDIUM 
+        dangerZone = new Bounds(new BlockPos(-74, 0, -74), new BlockPos(74, 255, 74));
 
         playersInsideDangerZone = new ArrayList<player>();
 
@@ -106,10 +118,19 @@ public class Stages {
     public void Start () {
         if (stage == GameStage.waitForPlayers) {
             stage = GameStage.prepare;
+            /* MAP OSTRAU
             TransportPlayersAndGiveOneBed(teamState.blue, new BlockPos(-730, 119, -862));
             TransportPlayersAndGiveOneBed(teamState.red, new BlockPos(-788, 77, 804));
             TransportPlayersAndGiveOneBed(teamState.green, new BlockPos(800, 87, -880));
             TransportPlayersAndGiveOneBed(teamState.yellow, new BlockPos(830, 64, 683));
+            */
+
+            //MAP MEDIUM
+            TransportPlayersAndGiveOneBed(teamState.blue, new BlockPos(-325, 75, -298));
+            TransportPlayersAndGiveOneBed(teamState.red, new BlockPos(-292, 67, 289));
+            TransportPlayersAndGiveOneBed(teamState.green, new BlockPos(293, 69, -319));
+            TransportPlayersAndGiveOneBed(teamState.yellow, new BlockPos(388, 70, 302));
+
             TitleHandler.SendTitleForAll("Игра началась.", "установите кровать", "white");
             TdmMod.logger.info("AAAAPAMAGI " + instanceCount);
         }
@@ -180,7 +201,8 @@ public class Stages {
 
     @SubscribeEvent
     public static void BlockPlaced (BlockEvent.PlaceEvent event) {
-        if (instance.stage.ordinal() < 2 || event.getEntity() == null) return;
+        if (instance.stage.ordinal() < 2 || event.getPlayer() == null) return;
+        if (event.getPlayer().capabilities.allowEdit == false) {event.setCanceled(true); return;}
         //event.getEntity().sendMessage(new TextComponentString(String.valueOf(event.getItemInHand().getTagCompound().getTag("CanPlaceOn").getTagTypeName(0))));
         if (event.getPlacedBlock().getBlock().getUnlocalizedName().equals("tile.bed") 
         && event.getEntity() instanceof EntityPlayer
@@ -192,18 +214,18 @@ public class Stages {
     @SubscribeEvent
     public static void BlockDestroyed (BlockEvent.BreakEvent event) {
         if (instance.stage.ordinal() < 2) return;
+        if (event.getPlayer().capabilities.allowEdit == false) {event.setCanceled(true); return;}
         if (event.getState().getBlock().getUnlocalizedName().equals("tile.bed")) {
             instance.TeamBedBroken(event);
             TdmMod.logger.info("teamBedDestroyed");
         }
     }
-
     
 
     private void TeamBedBroken (BlockEvent.BreakEvent event) {
         boolean remote = event.getWorld().isRemote;
         teamState teamDeadBed = Teams.GetTeamFromMetadata(((TileEntityBed)(event.getWorld().getTileEntity(event.getPos()))).getColor().ordinal());
-        if (teamDeadBed == teamState.specs) return;
+        if (teamDeadBed == teamState.specs || !teamsStarted[teamDeadBed.ordinal()] )return;
         if (!remote) {
             String cause = "не человек";
             String colyr = "";
@@ -220,7 +242,12 @@ public class Stages {
             + cause, colyr, teamDeadBed);
 
             for (player Player : Teams.GetPlayersOfTeam(teamDeadBed)) {
-                Player.playerEntity.setSpawnPoint(instance.startSpawnZagon, true);
+                try {
+                    Player.playerEntity.setSpawnPoint(instance.startSpawnZagon, true);
+                }
+                catch (Exception e) {
+                    TdmMod.logger.info(e);
+                }
             }
             teamsStarted[teamDeadBed.ordinal()] = false;
         }
@@ -247,6 +274,7 @@ public class Stages {
     private void StartTeam (BlockEvent.PlaceEvent event) {
         boolean remote = event.getWorld().isRemote;
         teamState team = Teams.GetTeamOfPlayer(event.getPlayer());
+        if (teamsStarted[team.ordinal()]) return;
         BlockPos spawnPos = event.getPos();
         bedPositions[team.ordinal()] = spawnPos;
         ParticleManager serega = null;
@@ -284,7 +312,7 @@ public class Stages {
         for (player Player : players) {
             boolean contains = playersInsideDangerZone.contains(Player);
             if (dangerZone.insideMe(Player.playerEntity.getPosition())) {
-                if (!contains) {
+                if (!contains && !Player.playerEntity.capabilities.isCreativeMode && !Player.playerEntity.capabilities.isFlying) {
                     playersInsideDangerZone.add(Player);
                     Player.playerEntity.capabilities.allowEdit = false;
                     Player.playerEntity.sendMessage(new TextComponentString("Вы входите центральную зону"));
@@ -363,11 +391,14 @@ public class Stages {
 
     private String GetFormattedTime (int time) {
         String result;
-        int minutes = time / 60;
+        int hours = time / 3600;
+        int minutes = time % 3600 / 60;
         int seconds =  time % 60;
         result = "";
+        if (hours > 0)
+            result = hours + hours == 1 ? "час " : hours < 5 ? "часа " : "часов";
         if (minutes > 0)
-            result = minutes + " минут" + correctEnd(minutes) + " ";
+            result += minutes + " минут" + correctEnd(minutes) + " ";
         if (seconds > 0)
             result += seconds + " секунд" + correctEnd(seconds);
         return result;

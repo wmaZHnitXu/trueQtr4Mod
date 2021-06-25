@@ -26,8 +26,7 @@ public class TerminalRadarTile extends TileEntity {
     @Override
     public void onLoad() {
         if (!world.isRemote) {
-            if (Teams.GetClosestPlayer(pos) != null)
-            myTeam = Teams.GetClosestPlayer(pos).team;
+            myTeam = Teams.GetTeamOfPlayer(world.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 10000, false));
         }
         super.onLoad();
     }

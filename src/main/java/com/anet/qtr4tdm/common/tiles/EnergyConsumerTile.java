@@ -65,10 +65,7 @@ public class EnergyConsumerTile extends BasicEnergyTe.Sink implements ITickable 
     @Override
     public void onLoad () {
         if (!world.isRemote) {
-            player p = Teams.GetClosestPlayer(pos);
-            if (p != null) {
-                team = p.team;
-            }
+            team = Teams.GetTeamOfPlayer(world.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 10000, false));
             markDirty();
         }
         MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getEnergyBuffer()));

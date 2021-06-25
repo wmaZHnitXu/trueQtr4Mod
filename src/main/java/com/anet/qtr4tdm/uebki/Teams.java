@@ -166,6 +166,7 @@ public class Teams {
     }    
 
     public static teamState GetTeamOfPlayer (EntityPlayer Player) {
+        if (Player == null) return teamState.specs;
         teamState result = teamState.specs;
         for (player p : instance.players) {
             if (Player.getName().equals(p.lastName)) result = p.team;
@@ -219,21 +220,6 @@ public class Teams {
     }
     public static String GetTeamColorSymbols (EntityPlayer player) {
         return GetTeamColorSymbols(GetTeamOfPlayer(player));
-    }
-
-    public static player GetClosestPlayer (BlockPos pos) {
-        player result = null;
-        double distance = 10000000;
-        for (player p : instance.players) {
-            BlockPos playerPos = p.playerEntity.getPosition();
-            double newDist = pos.getDistance(playerPos.getX(), playerPos.getY(), playerPos.getZ());
-            if (newDist < distance && p.team != teamState.specs) {
-                distance = newDist;
-                TdmMod.logger.info(distance + " " + newDist + " " + String.valueOf(newDist < distance));
-                result = p;
-            }
-        }
-        return result;
     }
 
     public static void InsertPlayersFromServer (ArrayList<player> players) {

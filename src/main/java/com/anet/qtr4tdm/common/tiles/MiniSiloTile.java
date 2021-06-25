@@ -39,10 +39,7 @@ public class MiniSiloTile extends TileEntity implements net.minecraft.util.ITick
     @Override
     public void onLoad () {
         if (!world.isRemote) {
-            player p = Teams.GetClosestPlayer(pos);
-            if (p != null) {
-                team = p.team;
-            }
+            team = Teams.GetTeamOfPlayer(world.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 10000, false));
             markDirty();
         }
     }

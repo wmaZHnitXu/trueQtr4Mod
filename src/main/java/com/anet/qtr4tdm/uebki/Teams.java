@@ -122,10 +122,14 @@ public class Teams {
 
     @SubscribeEvent
     public static void PlayerRespawnCheck (PlayerRespawnEvent event) {
-        if (instance == null) return;
+        if (instance == null || event.player == null || event.player.world.isRemote) return;
         for (player p : instance.players) {
             if (p.lastName.equals(event.player.getName())) {
                 p.playerEntity = event.player;
+                if (Stages.instance != null && Stages.getStage().ordinal() > 0) {
+                    Stages.instance.PlayerRespawnPosCorrect(event, p);
+                }
+                return;
             }
         }
     }
@@ -172,6 +176,13 @@ public class Teams {
             if (Player.getName().equals(p.lastName)) result = p.team;
         }
         return result;
+    }
+
+    public static player GetPlayer (EntityPlayer ep) {
+        for (player p : instance.players) {
+            if (p.playerEntity == ep) return p;
+        }
+        return null;
     }
 
     public static player[] GetPlayersOfTeam (teamState team) {

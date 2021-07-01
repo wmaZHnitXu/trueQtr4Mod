@@ -7,6 +7,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import com.anet.qtr4tdm.uebki.Teams;
@@ -73,6 +74,9 @@ public class Commands extends CommandBase {
                     player p = Teams.GetPlayerByName(params[0]);
                     if (t != null && p != null) {
                         p.ChangeTeam(t);
+                        p.playerEntity.inventory.clear();
+                        BlockPos pos = Stages.instance.getBedPos(t).add(0,1,0);
+                        p.playerEntity.setPositionAndUpdate(pos.getX(), pos.getY(), pos.getZ());
                     }
                 }
             }

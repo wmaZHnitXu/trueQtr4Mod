@@ -25,13 +25,13 @@ public class Radar1Entity extends Entity {
 
     public Radar1Entity (World worldIn, BlockPos position) {
         super(worldIn);
-        setSize(3, 3);
         this.position = position;
         rotationSpeed = 0;
     }
 
     public Radar1Entity(World worldIn) {
         super(worldIn);
+        setSize(3, 10);
     }
 
     @Override

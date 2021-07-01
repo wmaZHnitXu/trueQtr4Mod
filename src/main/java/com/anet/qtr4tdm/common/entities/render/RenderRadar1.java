@@ -19,7 +19,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 
 public class RenderRadar1 extends Render<Radar1Entity> {
-    public static final ResourceLocation textures = new ResourceLocation(TdmMod.MODID + ":textures/entity/radar1.png");
+    public static final ResourceLocation textureOn = new ResourceLocation(TdmMod.MODID + ":textures/entity/radar1on.png");
+    public static final ResourceLocation textureOff = new ResourceLocation(TdmMod.MODID + ":textures/entity/radar1off.png");
     public final Radar1Model model = new Radar1Model();
 
     public RenderRadar1(RenderManager manager) {
@@ -39,6 +40,6 @@ public class RenderRadar1 extends Render<Radar1Entity> {
 
     @Override
     protected ResourceLocation getEntityTexture(Radar1Entity entity) {
-        return textures;
+        return entity.isActive ? textureOn : textureOff;
     }
 }

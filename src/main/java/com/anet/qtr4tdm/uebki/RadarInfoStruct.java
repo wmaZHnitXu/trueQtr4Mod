@@ -33,9 +33,9 @@ public class RadarInfoStruct {
 
     public static double getConsumprion (int level) {
         switch (level) {
-            case 1: return 32;
-            case 2: return 128;
-            case 3: return 160;
+            case 1: return 4;
+            case 2: return 8;
+            case 3: return 32;
         }
         return 0;
     }

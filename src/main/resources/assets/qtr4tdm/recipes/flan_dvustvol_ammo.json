@@ -9,13 +9,13 @@
       "A": [
         {
           "item": "minecraft:paper",
-          "data": 8
+          "data": 0
         }
       ],
       "B": [
         {
           "item": "minecraft:gunpowder",
-          "data": 8
+          "data": 0
         }
       ],
       "F": [
@@ -27,6 +27,7 @@
     },
     "result": {
       "item": "flansmod:w1200ammo",
+      "count": 2,
       "data": 0
     }
 }

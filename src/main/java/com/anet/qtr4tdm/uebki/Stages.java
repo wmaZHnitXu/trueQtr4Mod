@@ -2,6 +2,7 @@ package com.anet.qtr4tdm.uebki;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.text.AbstractDocument.BranchElement;
 
@@ -71,6 +72,13 @@ public class Stages {
     private int time;
     private int instanceCount;
 
+    private final String[] bannedBlocks = new String[] {
+        "minecraft:slime",
+        "flansmod:modern_item",
+        "flansmod:modernadvanced_item",
+        "flansmod:flansworkbench_item"
+    };
+
 
     public Stages() {
         instanceCount++;
@@ -103,7 +111,7 @@ public class Stages {
 
         playersInsideDangerZone = new ArrayList<player>();
 
-        events = new GameEvent[8];
+        events = new GameEvent[9];
         float timescale = 1;
 
         events[0] = new GameEvent((int)(3600 * timescale), "Открытие границ", "Границы открыты.", () -> {stage = GameStage.borderRemove;});
@@ -114,6 +122,7 @@ public class Stages {
         events[5] = new GameEvent((int)(6000 * timescale), "Открытие центра (на 4 минуты)", "Центр открыт.", "На 4 минуты.", () -> OpenCenter(true));
         events[6] = new GameEvent((int)(6240 * timescale), "Закрытие центра", "Центр закрыт.", () -> OpenCenter(false));
         events[7] = new GameEvent((int)(7000 * timescale), "Финал", "Копать можно везде.", () -> {stage = GameStage.finale;});
+        events[6] = new GameEvent((int)(36000 * timescale), "Закрытие сервера.", "Все, наигрались уже.", () -> {TdmMod.instance = null;});
 
     }
 
@@ -147,7 +156,7 @@ public class Stages {
     }
     private void TransportPlayersAndGiveOneBed (teamState team, BlockPos position) {
         player[] teamPlayers = Teams.GetPlayersOfTeam(team);
-        if (teamPlayers.length == 0) return;
+        if (teamPlayers.length == 0) { teamsDead[team.ordinal()] = true; return; }
 
         for (player Player : teamPlayers) {
             EntityPlayer entity = Player.playerEntity;
@@ -197,7 +206,7 @@ public class Stages {
             instance.CheckBedTeam(event.world);
             //Logging events
             int i = 0;
-            while (i < instance.events.length && instance.time > instance.events[i].time) i++;
+            while (i < instance.events.length - 1 && instance.time > instance.events[i].time) i++;
              GameEvent nextEvent = instance.events[i];
                 int timeLeft = nextEvent.time - instance.time;
                 if (timeLeft == 300 || (timeLeft <= 5 && timeLeft != 0) || timeLeft == 900 || timeLeft == 1800 || timeLeft == 3600 || timeLeft == 30 || timeLeft == 10) {
@@ -213,6 +222,7 @@ public class Stages {
             //EndLogging
             instance.time++;
             instance.counter = 0;
+            if (instance.smolcountdown != 0) instance.smolcountdown--;
         }
     }
         
@@ -221,6 +231,11 @@ public class Stages {
     public static void BlockPlaced (BlockEvent.PlaceEvent event) {
         if (instance.stage.ordinal() < 2 || event.getPlayer() == null || event.getWorld().provider.isNether())return;
         if (event.getPlayer().capabilities.allowEdit == false && instance.teamsStarted[Teams.GetTeamOfPlayer(event.getPlayer()).ordinal()]) {event.setCanceled(true); return;}
+        if (Arrays.asList(instance.bannedBlocks).contains(event.getState().getBlock().getRegistryName().toString()) && !event.getPlayer().isCreative()) {
+            event.getPlayer().sendMessage(new TextComponentString( Teams.GetTeamColorSymbols(teamState.red) + "Данный блок запрещен."));
+            event.setCanceled(true);
+            return;
+        }
         //event.getEntity().sendMessage(new TextComponentString(String.valueOf(event.getItemInHand().getTagCompound().getTag("CanPlaceOn").getTagTypeName(0))));
         if (event.getPlacedBlock().getBlock().getUnlocalizedName().equals("tile.bed") 
         && event.getEntity() instanceof EntityPlayer
@@ -242,7 +257,7 @@ public class Stages {
 
     @SubscribeEvent
     public static void LivingDead (LivingDeathEvent e) {
-        if (e.getEntityLiving() instanceof EntityPlayer) {
+        if (e.getEntityLiving() instanceof EntityPlayer && instance.stage.ordinal() > 1) {
             EntityPlayer plr = (EntityPlayer)e.getEntityLiving();
             player p = Teams.GetPlayer(plr);
             if (!instance.teamsStarted[p.team.ordinal()]) {
@@ -266,7 +281,7 @@ public class Stages {
                 }
                 if (aliveCount > 1)
                     TitleHandler.SendTitleForAll("Команда " + Teams.GetTeamColorSymbols(p.team) + p.team.toString() + " уничтожена.",
-                    "Осталось " + aliveCount + "команд" + instance.correctEnd(aliveCount), "white");
+                    "Осталось " + aliveCount + " команд" + instance.correctEnd(aliveCount), "white");
                 else {
                     TitleHandler.SendTitleForAll("Команда " + Teams.GetTeamColorSymbols(teamState.values()[alive]) + teamState.values()[alive].toString() + " победила!",
                     "ПОБЕДАААА УООООООООООРЯЯЯЯЯЯ", "white");
@@ -287,15 +302,17 @@ public class Stages {
             p.playerEntity.setPositionAndUpdate(pos.getX(), pos.getY(), pos.getZ());
         }
         else {
-            p.playerEntity.setPositionAndUpdate(startSpawnZagon.getX(), startSpawnZagon.getY(), startSpawnZagon.getZ());
-            boolean b = true;
-            player[] teamPlayers = Teams.GetPlayersOfTeam(p.team);
-            for (player tp : teamPlayers) {
-                if (!tp.dead) b = false;
-            }
-            if (b) {
-                for (player tp : teamPlayers) if (tp.playerEntity != null) {
-                    tp.playerEntity.setGameType(GameType.SPECTATOR);
+            if (stage.ordinal() > 1) {
+                p.playerEntity.setPositionAndUpdate(startSpawnZagon.getX(), startSpawnZagon.getY(), startSpawnZagon.getZ());
+                boolean b = true;
+                player[] teamPlayers = Teams.GetPlayersOfTeam(p.team);
+                for (player tp : teamPlayers) {
+                    if (!tp.dead) b = false;
+                }
+                if (b) {
+                    for (player tp : teamPlayers) if (tp.playerEntity != null) {
+                        tp.playerEntity.setGameType(GameType.SPECTATOR);
+                    }
                 }
             }
         }
@@ -312,6 +329,10 @@ public class Stages {
             if (event.getPlayer() != null) {
                 cause = Teams.GetTeamColorSymbols(event.getPlayer()) + event.getPlayer().getName();
                 colyr = teamDeadBed.forTitleColor();
+                if (Teams.GetTeamOfPlayer(event.getPlayer()) == teamDeadBed) {
+                    event.setCanceled(true);
+                    return;
+                }
             }
 
             TitleHandler.SendTitleForAll("Кровать команды " 
@@ -477,15 +498,19 @@ public class Stages {
         TdmMod.logger.info(instance.time);
     }
 
+    private int smolcountdown = 0;
+
     public static void ShowEventsInfo (EntityPlayer player) {
+        if (instance.smolcountdown > 0) return;
         String info;
         int i = 0;
-        while (i < instance.events.length && instance.time > instance.events[i].time) i++;
+        while (i < instance.events.length - 1 && instance.time > instance.events[i].time) i++;
         GameEvent nextEvent = instance.events[i];
         info = "Следующее событие §b" + nextEvent.desc;
         player.sendMessage(new TextComponentString(info));
         info = "через §a" + instance.GetFormattedTime(nextEvent.time - instance.time);
         player.sendMessage(new TextComponentString(info));
+        instance.smolcountdown = 60;
     }
 
     private String GetFormattedTime (int time) {

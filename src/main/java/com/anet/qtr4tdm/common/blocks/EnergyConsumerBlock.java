@@ -1,5 +1,7 @@
 package com.anet.qtr4tdm.common.blocks;
 
+import java.util.List;
+
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.tiles.EnergyConsumerTile;
 import com.anet.qtr4tdm.init.BlocksInit;
@@ -15,8 +17,10 @@ import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -103,5 +107,15 @@ public class EnergyConsumerBlock extends BlockTileEntity<EnergyConsumerTile> {
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         ((EnergyConsumerTile)worldIn.getTileEntity(pos)).FireIC2DisconnectEvent();
         super.breakBlock(worldIn, pos, state);
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
+        tooltip.add("energia dlya radarow");
+        tooltip.add("§l§2potreblenie:");
+        tooltip.add("1lvl - 4 EU/t:");
+        tooltip.add("2lvl - 8 EU/t:");
+        tooltip.add("3lvl - 32 EU/t:");
+        super.addInformation(stack, player, tooltip, advanced);
     }
 }

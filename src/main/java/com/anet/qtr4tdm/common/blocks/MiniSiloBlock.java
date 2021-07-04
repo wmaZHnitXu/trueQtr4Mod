@@ -18,6 +18,7 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -96,8 +97,11 @@ public class MiniSiloBlock extends BlockTileEntity<MiniSiloTile> {
             IBlockState state = event.getWorld().getBlockState(event.getPos());
             if (state.getBlock() instanceof MiniSiloBlock) {
                 MiniSiloTile tile = (MiniSiloTile)event.getWorld().getTileEntity(event.getPos());
-                event.getEntityPlayer().sendMessage(new TextComponentString( "Владелец: " + Teams.GetTeamColorSymbols(tile.team) + tile.team.toString()));
-                if (event.getItemStack().getItem() instanceof rocketItem && !tile.armed) {
+
+                if (Teams.GetTeamOfPlayer(event.getEntityPlayer()) != tile.team)
+                    event.getEntityPlayer().sendMessage(new TextComponentString( "Владелец: " + Teams.GetTeamColorSymbols(tile.team) + tile.team.toString()));
+
+                if (event.getItemStack().getItem() instanceof rocketItem && !tile.armed && !event.getWorld().provider.isNether()) {
                     event.getItemStack().setCount(event.getItemStack().getCount() - 1);
                     tile.Arm();
                 }
@@ -111,5 +115,11 @@ public class MiniSiloBlock extends BlockTileEntity<MiniSiloTile> {
         items.add(new ItemStack(Item.getItemFromBlock(state.getBlock())));
         if (state.getValue(armed)) items.add(new ItemStack(BlocksInit.ROCKET));
         return items;
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
+        tooltip.add("Samo rabotaet strelyaet po navodke s radarov, tok zaryajat' ne zabyvai");
+        super.addInformation(stack, player, tooltip, advanced);
     }
 }

@@ -11,6 +11,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetworkPlayerInfo;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -24,6 +25,7 @@ import net.minecraft.world.World;
 import java.io.Console;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.swing.text.html.parser.Entity;
 
@@ -61,5 +63,13 @@ public class RadarBaseBlock extends BlockTileEntity<RadarBaseTile> {
     public RadarBaseTile createTileEntity(World world, IBlockState blockState) {
 
         return new RadarBaseTile();
+    }
+    @Override
+    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
+        tooltip.add("§l§2multiblock stroish', potom pkm, 4tobi sobrat'");
+        tooltip.add("level 1: krestikom 5 blokov");
+        tooltip.add("level 2: kvadratom 3 * 3");
+        tooltip.add("level 3: vokrug lvl 2 s kajdoi storoni po 3 bloka, itogo 9 + 12 = 21");
+        super.addInformation(stack, player, tooltip, advanced);
     }
 }

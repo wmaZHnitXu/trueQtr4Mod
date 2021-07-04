@@ -76,7 +76,6 @@ public class TerminalRadarGui extends GuiScreen {
                 if (!(Math.abs(parWidth - xCoord) < size * 0.75f && Math.abs(parHeight - yCoord) < size * 0.75f)) {
                     //Draw radar range
                     if (obj.isRadar) {
-                        TdmMod.logger.info(obj.DisplayName);
                         int range = RadarInfoStruct.getRange(Character.getNumericValue(obj.DisplayName.charAt(obj.DisplayName.length()-1)));
                         float relMult = (float)(screenWidth) / 1000f;
                         int sqrCount = (int)(range * relMult * Math.PI * 1f);

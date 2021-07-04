@@ -76,7 +76,7 @@ public class RadarsInfo {
                     try {
                         TdmMod.wrapper.sendTo(new RadarMessage(p.team), (EntityPlayerMP)p.playerEntity);
                     }
-                    catch (Exception e){
+                    catch (Exception e) {
                         TdmMod.logger.info("Network error");
                         TdmMod.logger.info(e.toString());
                     }

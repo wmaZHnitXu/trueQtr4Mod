@@ -75,8 +75,10 @@ public class Commands extends CommandBase {
                     if (t != null && p != null) {
                         p.ChangeTeam(t);
                         p.playerEntity.inventory.clear();
-                        BlockPos pos = Stages.instance.getBedPos(t).add(0,1,0);
-                        p.playerEntity.setPositionAndUpdate(pos.getX(), pos.getY(), pos.getZ());
+                        if (Stages.instance.getBedPos(t) != null) {
+                            BlockPos pos = Stages.instance.getBedPos(t).add(0,1,0);
+                            p.playerEntity.setPositionAndUpdate(pos.getX(), pos.getY(), pos.getZ());
+                        }
                     }
                 }
             }

@@ -64,11 +64,10 @@ public class Teams {
     public static void PlayerJoinWorld(PlayerLoggedInEvent e) {
         if (e.player != null && e.player instanceof EntityPlayer && !e.player.world.isRemote) {
             TdmMod.wrapper.sendTo(new PlayersAnswerMessage(),(EntityPlayerMP) e.player);
-            boolean exist = false;
             for (player p : instance.players) {
                 if (e.player.getName().equals(p.lastName)) {
                     p.playerEntity = e.player;
-                    exist = true;
+                    TdmMod.wrapper.sendToAll(new PlayersAnswerMessage());
                     return;
                 }
             }
@@ -234,10 +233,15 @@ public class Teams {
     }
 
     public static void InsertPlayersFromServer (ArrayList<player> players) {
-        instance.players = players;
-        List<EntityPlayer> playerss = Minecraft.getMinecraft().world.playerEntities;
-        for (int i = 0; i < playerss.size(); i++) {
-            playerss.get(i).refreshDisplayName();
+        try {
+            instance.players = players;
+            List<EntityPlayer> playerss = Minecraft.getMinecraft().world.playerEntities;
+            for (int i = 0; i < playerss.size(); i++) {
+                playerss.get(i).refreshDisplayName();
+            }
+        }
+        catch (Exception e) {
+            TdmMod.logger.info(e.toString());
         }
     }
 

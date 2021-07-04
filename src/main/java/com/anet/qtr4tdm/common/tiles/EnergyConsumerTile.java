@@ -95,7 +95,7 @@ public class EnergyConsumerTile extends BasicEnergyTe.Sink implements ITickable 
 
     @Override
     public void update() {
-        if (!world.isRemote) {
+        if (!world.isRemote && !world.provider.isNether()) {
             int oldState = state.ordinal();
             BasicSink buffer = getEnergyBuffer();
             if (EnergyTeams.NeedEnergy(team)) {

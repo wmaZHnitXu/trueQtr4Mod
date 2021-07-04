@@ -1,0 +1,14 @@
+{
+    "system_active": {
+        "category": "block",
+        "sounds": [{"name" :"qtr4tdm:system_active"}]
+    },
+    "pidoras_found": {
+        "category": "block",
+        "sounds": ["qtr4tdm:pidoras_naiden"]
+    },
+    "beep": {
+        "category": "block",
+        "sounds": ["qtr4tdm:beep"]
+    }
+}

@@ -4,7 +4,9 @@ import com.anet.qtr4tdm.init.BlocksInit;
 import com.anet.qtr4tdm.uebki.Commands;
 import com.anet.qtr4tdm.uebki.EnergyTeams;
 import com.anet.qtr4tdm.uebki.RadarsInfo;
+import com.anet.qtr4tdm.uebki.Sounds;
 import com.anet.qtr4tdm.uebki.Stages;
+import com.anet.qtr4tdm.uebki.TeamChat;
 import com.anet.qtr4tdm.uebki.Teams;
 import com.anet.qtr4tdm.uebki.TitleHandler;
 import com.anet.qtr4tdm.uebki.messages.AnswerPlayersHandler;
@@ -32,6 +34,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
 import org.apache.logging.log4j.Logger;
+
+import net.minecraft.client.audio.Sound;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -63,6 +67,7 @@ public class TdmMod
     {
         BlocksInit.RegisterTileEntities();
         BlocksInit.RegisterEntities();
+        Sounds.regSound();
         logger.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
         wrapper = NetworkRegistry.INSTANCE.newSimpleChannel("myChannel");
 
@@ -85,6 +90,7 @@ public class TdmMod
         new EnergyTeams();
         currentServer = event.getServer();
         event.registerServerCommand(new Commands());
+        event.registerServerCommand(new TeamChat());
     }
     
     public static final CreativeTabs qtr4 = new CreativeTabs("qtr4") {

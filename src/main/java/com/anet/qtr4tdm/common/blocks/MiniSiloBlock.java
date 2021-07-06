@@ -116,10 +116,4 @@ public class MiniSiloBlock extends BlockTileEntity<MiniSiloTile> {
         if (state.getValue(armed)) items.add(new ItemStack(BlocksInit.ROCKET));
         return items;
     }
-
-    @Override
-    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
-        tooltip.add("Samo rabotaet strelyaet po navodke s radarov, tok zaryajat' ne zabyvai");
-        super.addInformation(stack, player, tooltip, advanced);
-    }
 }

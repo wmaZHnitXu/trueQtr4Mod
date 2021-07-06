@@ -265,6 +265,18 @@ public class Teams {
         return null;
     }
 
+    public static teamState GetTeamFromSymbol (char ndsymb) {
+        switch (ndsymb) {
+            case 'c':  return teamState.red;
+            case '9':  return teamState.blue;
+            case 'a':  return teamState.green;
+            case 'e':  return teamState.yellow;
+            case 'f' : return teamState.white;
+            case '0' : return teamState.black;
+        }
+        return teamState.specs;
+    }
+
     public static player GetPlayerByName (String name) {
         if (instance == null || instance.players == null) return null;
         player p = null;

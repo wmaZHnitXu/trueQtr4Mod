@@ -11,6 +11,8 @@ import com.anet.qtr4tdm.uebki.Teams;
 import com.anet.qtr4tdm.uebki.TitleHandler;
 import com.anet.qtr4tdm.uebki.messages.AnswerPlayersHandler;
 import com.anet.qtr4tdm.uebki.messages.AskForPlayersHandler;
+import com.anet.qtr4tdm.uebki.messages.AskForRadarHandler;
+import com.anet.qtr4tdm.uebki.messages.AskForRadarsMessage;
 import com.anet.qtr4tdm.uebki.messages.BasedAnswer;
 import com.anet.qtr4tdm.uebki.messages.BasedAnswerHandler;
 import com.anet.qtr4tdm.uebki.messages.BasedRequest;
@@ -78,6 +80,8 @@ public class TdmMod
 
         wrapper.registerMessage(BasedRequestHandler.class, BasedRequest.class, 4, Side.SERVER);
         wrapper.registerMessage(BasedAnswerHandler.class, BasedAnswer.class, 5, Side.CLIENT);
+
+        wrapper.registerMessage(AskForRadarHandler.class, AskForRadarsMessage.class, 6, Side.SERVER);
     }
 
     @EventHandler

@@ -6,7 +6,10 @@ import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.tiles.TerminalRadarTile;
 import com.anet.qtr4tdm.uebki.RadarInfoStruct;
 import com.anet.qtr4tdm.uebki.RadarObjectStructure;
+import com.anet.qtr4tdm.uebki.Teams;
 import com.anet.qtr4tdm.uebki.messages.RadarInfoHandler;
+import com.anet.qtr4tdm.uebki.messages.AskForRadarsMessage;
+import com.anet.qtr4tdm.uebki.messages.BasedRequest;
 
 import org.lwjgl.opengl.GL11;
 
@@ -17,6 +20,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
 
 @SideOnly(Side.CLIENT)
 public class TerminalRadarGui extends GuiScreen {
@@ -31,6 +35,7 @@ public class TerminalRadarGui extends GuiScreen {
     private static ResourceLocation enemy_texture;
     private TerminalRadarTile terminalTile;
     private int ids;
+    private int counter;
 
     public TerminalRadarGui (TerminalRadarTile tile) {
         terminalTile = tile;
@@ -108,6 +113,24 @@ public class TerminalRadarGui extends GuiScreen {
                 }
                 GL11.glColor4f(1.0F, 1.0f, 1.0f, 1.0F);
             }
+    }
+
+    @Override
+    public void updateScreen() {
+        if (counter <= 0) {
+            try {
+                TdmMod.wrapper.sendToServer(new BasedRequest(terminalTile.getPos(), 2));
+            }
+            catch (Exception e) {
+                TdmMod.logger.info("network error");
+                TdmMod.logger.info(e.toString());
+            }
+            counter = 30;
+        }
+        else {
+            counter--;
+        }
+        super.updateScreen();
     }
     
     public int[] Coords (RadarObjectStructure obj) {

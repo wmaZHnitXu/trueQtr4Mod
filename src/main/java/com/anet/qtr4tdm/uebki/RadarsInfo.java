@@ -69,7 +69,7 @@ public class RadarsInfo {
     @SubscribeEvent
     public static void OnWorldTick (WorldTickEvent event) {
         if (instance == null) return;
-
+        /*
         if (instance.counter == 20) {
             for (player p : Teams.instance.GetPlayers()) {
                 if (p.playerEntity instanceof EntityPlayerMP) {
@@ -84,6 +84,7 @@ public class RadarsInfo {
             }
             instance.counter = 0;
         }
+        */
         else instance.counter++;
     }
     

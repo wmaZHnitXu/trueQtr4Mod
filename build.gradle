@@ -6,6 +6,7 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
+        classpath 'mysql:mysql-connector-java:5.1.44' 
     }
 }
         
@@ -64,6 +65,7 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2855'
     //compile files('industrialcraft-2-2.8.221-ex112-dev.jar')
     compile files('industrialcraft-2-2.8.221-ex112-api.jar')
+    compile 'mysql:mysql-connector-java:5.1.44'
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"

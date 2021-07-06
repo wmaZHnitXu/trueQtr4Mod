@@ -2,8 +2,6 @@ package com.anet.qtr4tdm.uebki.gui;
 
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.tiles.EnergyConsumerTile;
-import com.anet.qtr4tdm.uebki.Teams;
-import com.anet.qtr4tdm.uebki.teamState;
 import com.anet.qtr4tdm.uebki.messages.BasedRequest;
 
 import org.lwjgl.opengl.GL11;
@@ -50,10 +48,7 @@ public class EnergyConsumerGui extends GuiScreen {
         offsetLeft = (int)(width * 0.5 - screenWidth * 0.5f);
         offsetTop = height/5;
         drawTexturedModalRect(offsetLeft, offsetTop, 0, 0, screenWidth, screenHeight);
-        teamState team = EnergyConsumerTile.teamS;
-        if (team == null) team = teamState.specs;
         String[] column1 = {
-            "§fКоманда: " + Teams.GetTeamColorSymbols(team) + team.toString(),
             "§fЭнергия: " + EnergyConsumerTile.fromServerEnergy + "/10000" + " EU",
             "§fСтатус: " + (EnergyConsumerTile.fromServerEnergy == 10000 ? "Заполнен" : EnergyConsumerTile.fromServerTeamEnergy < EnergyConsumerTile.fromServerMaxTeamEnergy ? "Подача энергии в командный буфер" : "Подзарядка"),
             "§fЭнергия команды: " + EnergyConsumerTile.fromServerTeamEnergy + "/" + EnergyConsumerTile.fromServerMaxTeamEnergy + " EU",

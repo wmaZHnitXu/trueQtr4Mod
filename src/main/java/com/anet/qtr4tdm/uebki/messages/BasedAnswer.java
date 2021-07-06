@@ -7,7 +7,6 @@ import javax.swing.text.AbstractDocument.BranchElement;
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.entities.Radar1Entity;
 import com.anet.qtr4tdm.common.tiles.EnergyConsumerTile;
-import com.anet.qtr4tdm.uebki.EnergyTeams;
 import com.anet.qtr4tdm.uebki.RadarsInfo;
 
 import io.netty.buffer.ByteBuf;
@@ -27,12 +26,12 @@ public class BasedAnswer implements IMessage {
                     answer[1] = pos.getX();
                     answer[2] = pos.getY();
                     answer[3] = pos.getZ();
-                    answer[4] = (int)tile.getEnergyBuffer().getEnergyStored();
-                    answer[5] = (int)EnergyTeams.GetEnergyOfTeam(tile.GetTeam());
-                    answer[6] = (int)EnergyTeams.GetMaxEnergyOfTeam(tile.GetTeam());
-                    answer[7] = tile.GetTeam().ordinal();
-                    answer[8] = (int)EnergyTeams.GetTeamConsumption(tile.GetTeam());
-                    answer[9] = (int)EnergyTeams.GetTeamGeneration(tile.GetTeam());
+                    answer[4] = 0;
+                    answer[5] = 0;
+                    answer[6] = 0;
+                    answer[7] = 0;
+                    answer[8] = 0;
+                    answer[9] = 0;
                 break;
                 case 1: answer = new int[5];
                     answer[0] = reqId;

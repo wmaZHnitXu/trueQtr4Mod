@@ -13,8 +13,6 @@ import com.anet.qtr4tdm.common.entities.render.RenderRadar3;
 import com.anet.qtr4tdm.init.BlocksInit;
 import com.anet.qtr4tdm.uebki.RadarsInfo;
 import com.anet.qtr4tdm.uebki.RadarInfoStruct;
-import com.anet.qtr4tdm.uebki.Teams;
-import com.anet.qtr4tdm.uebki.teamState;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -98,7 +96,7 @@ public class RadarWorkerTile extends TileEntity{
             level = CheckLevel();
             Transformation();
         }
-        RadarsInfo.AddRadar(new RadarInfoStruct(teamState.values()[this.team], this.pos, level));
+        //RadarsInfo.AddRadar(new RadarInfoStruct(teamState.values()[this.team], this.pos, level)); BYLO
     }
 
     private void Transformation () {
@@ -139,8 +137,8 @@ public class RadarWorkerTile extends TileEntity{
         BlockPos position = new BlockPos(pos.getX() + 0.5f, pos.up().getY(), pos.getZ() + 0.5f);
         e.setPosition(position.getX() , position.getY(), position.getZ());
         world.spawnEntity(e);
-        teamState tm = Teams.GetTeamOfPlayer(world.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 10000, false));
-        this.team = tm.ordinal();
+        //teamState tm = Teams.GetTeamOfPlayer(world.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 10000, false)); BYLO
+        //this.team = tm.ordinal(); BYLO
         markDirty();
         transformed = true;
     }

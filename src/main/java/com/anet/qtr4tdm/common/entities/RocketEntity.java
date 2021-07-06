@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.tiles.MiniSiloTile;
-import com.anet.qtr4tdm.uebki.Teams;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;

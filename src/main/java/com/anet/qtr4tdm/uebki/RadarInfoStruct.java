@@ -1,20 +1,17 @@
 package com.anet.qtr4tdm.uebki;
 
-import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 public class RadarInfoStruct {
-    public teamState team;
     public BlockPos pos;
     public int level;
     public int range;
     public boolean isActive;
     public double consumption;
 
-    public RadarInfoStruct (teamState team, BlockPos pos, int level) {
-        this.team = team;
+    public RadarInfoStruct (BlockPos pos, int level) {
         this.pos = pos;
         this.level = level;
         this.range = getRange(level);

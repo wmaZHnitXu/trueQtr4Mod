@@ -1,7 +1,4 @@
 package com.anet.qtr4tdm.uebki.messages;
-
-import com.anet.qtr4tdm.TdmMod;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

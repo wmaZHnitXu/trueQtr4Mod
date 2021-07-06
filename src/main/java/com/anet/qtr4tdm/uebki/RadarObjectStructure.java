@@ -8,8 +8,8 @@ public class RadarObjectStructure {
     public String DisplayName;
     public boolean isRadar;
     public boolean isActive;
-    public teamState team;
-
+    public String owner;
+    
     public RadarObjectStructure(BlockPos pos, String displayName, boolean isradar, boolean isActive) {
         this.pos = pos;
         DisplayName = displayName;

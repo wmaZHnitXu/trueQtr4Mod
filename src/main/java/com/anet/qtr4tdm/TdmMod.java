@@ -1,24 +1,14 @@
 package com.anet.qtr4tdm;
 
 import com.anet.qtr4tdm.init.BlocksInit;
-import com.anet.qtr4tdm.uebki.Commands;
-import com.anet.qtr4tdm.uebki.EnergyTeams;
 import com.anet.qtr4tdm.uebki.RadarsInfo;
 import com.anet.qtr4tdm.uebki.Sounds;
-import com.anet.qtr4tdm.uebki.Stages;
-import com.anet.qtr4tdm.uebki.TeamChat;
-import com.anet.qtr4tdm.uebki.Teams;
-import com.anet.qtr4tdm.uebki.TitleHandler;
-import com.anet.qtr4tdm.uebki.messages.AnswerPlayersHandler;
-import com.anet.qtr4tdm.uebki.messages.AskForPlayersHandler;
 import com.anet.qtr4tdm.uebki.messages.AskForRadarHandler;
 import com.anet.qtr4tdm.uebki.messages.AskForRadarsMessage;
 import com.anet.qtr4tdm.uebki.messages.BasedAnswer;
 import com.anet.qtr4tdm.uebki.messages.BasedAnswerHandler;
 import com.anet.qtr4tdm.uebki.messages.BasedRequest;
 import com.anet.qtr4tdm.uebki.messages.BasedRequestHandler;
-import com.anet.qtr4tdm.uebki.messages.PlayersAnswerMessage;
-import com.anet.qtr4tdm.uebki.messages.PlayersAskMessage;
 import com.anet.qtr4tdm.uebki.messages.RadarInfoHandler;
 import com.anet.qtr4tdm.uebki.messages.RadarMessage;
 
@@ -28,20 +18,15 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.client.audio.Sound;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.scoreboard.Team;
 import net.minecraft.server.MinecraftServer;
 
 
@@ -73,8 +58,8 @@ public class TdmMod
         logger.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
         wrapper = NetworkRegistry.INSTANCE.newSimpleChannel("myChannel");
 
-        wrapper.registerMessage(AskForPlayersHandler.class, PlayersAskMessage.class, 1, Side.CLIENT);
-        wrapper.registerMessage(AnswerPlayersHandler.class, PlayersAnswerMessage.class, 2, Side.SERVER);
+        //wrapper.registerMessage(AskForPlayersHandler.class, PlayersAskMessage.class, 1, Side.CLIENT);
+        //wrapper.registerMessage(AnswerPlayersHandler.class, PlayersAnswerMessage.class, 2, Side.SERVER);
 
         wrapper.registerMessage(RadarInfoHandler.class, RadarMessage.class, 3, Side.SERVER);
 
@@ -88,13 +73,8 @@ public class TdmMod
     public void initServerStart(FMLServerStartingEvent event)
     {
         logger.info("initalise FMLServerStartingEvent :" + NAME);
-        new Teams();
-        new Stages();
         new RadarsInfo();
-        new EnergyTeams();
         currentServer = event.getServer();
-        event.registerServerCommand(new Commands());
-        event.registerServerCommand(new TeamChat());
     }
     
     public static final CreativeTabs qtr4 = new CreativeTabs("qtr4") {

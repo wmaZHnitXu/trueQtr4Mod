@@ -1,7 +1,7 @@
 package com.anet.qtr4tdm.uebki.messages;
-import com.anet.qtr4tdm.uebki.teamState;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class AskForRadarsMessage implements IMessage {
@@ -10,19 +10,21 @@ public class AskForRadarsMessage implements IMessage {
         
     }
 
-    public AskForRadarsMessage (teamState t) {
-        team = t.ordinal();
+    public AskForRadarsMessage (BlockPos pos) {
+
     }
 
-    public int team;
+    public BlockPos pos;
     @Override
     public void fromBytes(ByteBuf arg0) {
-        team = arg0.readInt();        
+        pos = new BlockPos(arg0.readInt(),arg0.readInt(),arg0.readInt());       
     }
 
     @Override
     public void toBytes(ByteBuf arg0) {
-        arg0.writeInt(team);
+        arg0.writeInt(pos.getX());
+        arg0.writeInt(pos.getY());
+        arg0.writeInt(pos.getZ());
     }
     
 }

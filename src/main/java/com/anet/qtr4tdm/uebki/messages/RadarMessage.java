@@ -2,31 +2,25 @@ package com.anet.qtr4tdm.uebki.messages;
 
 import java.util.ArrayList;
 
-import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.uebki.RadarObjectStructure;
 import com.anet.qtr4tdm.uebki.RadarsInfo;
-import com.anet.qtr4tdm.uebki.Teams;
-import com.anet.qtr4tdm.uebki.teamState;
-import com.google.common.base.Utf8;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import io.netty.buffer.ByteBufUtil;
 
 public class RadarMessage implements IMessage {
 
-    public RadarMessage (teamState to) {
-        this.to = to;
+    public RadarMessage (BlockPos pos) {
+        this.pos = pos;
     }
 
     public RadarMessage () {
 
     }
 
-    private teamState to;
+    private BlockPos pos;
     public ArrayList<RadarObjectStructure> objs;
 
     @Override
@@ -52,8 +46,7 @@ public class RadarMessage implements IMessage {
     @Override
     public void toBytes(ByteBuf buf) {
         ArrayList<RadarObjectStructure> objects = null;
-        if (to != null)
-            objects = RadarsInfo.GetinfoForTeam(to);
+        objects = RadarsInfo.instance.GetInfoForPos(pos);
         String prepString = "";
         for (RadarObjectStructure object : objects) {
             prepString += "«";

@@ -1,20 +1,16 @@
 package com.anet.qtr4tdm.uebki.gui;
 
-import java.util.ArrayList;
 
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.tiles.TerminalRadarTile;
 import com.anet.qtr4tdm.uebki.RadarInfoStruct;
 import com.anet.qtr4tdm.uebki.RadarObjectStructure;
-import com.anet.qtr4tdm.uebki.Teams;
 import com.anet.qtr4tdm.uebki.messages.RadarInfoHandler;
-import com.anet.qtr4tdm.uebki.messages.AskForRadarsMessage;
 import com.anet.qtr4tdm.uebki.messages.BasedRequest;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
+
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.util.ResourceLocation;
@@ -31,10 +27,8 @@ public class TerminalRadarGui extends GuiScreen {
     private static int offsetLeft;
     private static int offsetTop;
     private static ResourceLocation radar_texture;
-    private static ResourceLocation teammate_texture;
     private static ResourceLocation enemy_texture;
     private TerminalRadarTile terminalTile;
-    private int ids;
     private int counter;
 
     public TerminalRadarGui (TerminalRadarTile tile) {
@@ -64,15 +58,7 @@ public class TerminalRadarGui extends GuiScreen {
                 GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                 mc.getTextureManager().bindTexture(obj.isRadar ? radar_texture : enemy_texture);
                 int size = obj.isRadar ? 4 : 4;
-                if (obj.team != null)
-                switch (obj.team) {
-                    case red: GL11.glColor4f(1.0F, 0, 0, 1.0F); break;
-                    case green: GL11.glColor4f(0.0F, 1.0f, 0, 1.0F); break;
-                    case blue: GL11.glColor4f(0.0F, 0, 1.0f, 1.0F); break;
-                    case yellow: GL11.glColor4f(1.0F, 1.0f, 0f, 1.0F); break;
-                    case white: GL11.glColor4f(1.0F, 1.0f, 1.0f, 1.0F); break;
-                    case black: GL11.glColor4f(0F, 0f, 0f, 1.0F); break;
-                }
+                //ЗДЕСЬ РАНЬШЕ БЫЛА КОРРЕКЦИЯ ЦВЕТА В ЗАВИСИОМСТИ ОТ КОМАНДЫ ОБЪЕКТА
                 int[] c = Coords(obj);
                 float xCoord = offsetLeft + screenWidth * 0.5f + c[0];
                 float yCoord = offsetTop + screenHeight * 0.5f + c[1];
@@ -85,15 +71,7 @@ public class TerminalRadarGui extends GuiScreen {
                         float relMult = (float)(screenWidth) / 1000f;
                         int sqrCount = (int)(range * relMult * Math.PI * 1f);
                         float red = 0, green = 0, blue = 0;
-                        if (obj.team != null)
-                                switch (obj.team) {
-                                    case red: red = 1; break;
-                                    case green: green = 1; break;
-                                    case blue: blue = 1; break;
-                                    case yellow: green = 1; red = 1; break;
-                                    case white: red = 1; green = 1; blue = 1; break;
-                                    default: red = 0.5f; green = 0.5f; blue = 0.5f; break;
-                                }
+                        //ЗДЕСЬ ТОЖЕ
                         for (int i = 0; i <= sqrCount; i++) {
                             Double sin = Math.sin(i);
                             Double cos = Math.cos(i);

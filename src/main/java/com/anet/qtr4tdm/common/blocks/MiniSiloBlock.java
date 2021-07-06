@@ -8,8 +8,6 @@ import com.anet.qtr4tdm.common.items.rocketItem;
 import com.anet.qtr4tdm.common.tiles.MiniSiloTile;
 import com.anet.qtr4tdm.init.BlocksInit;
 import com.anet.qtr4tdm.uebki.BlockTileEntity;
-import com.anet.qtr4tdm.uebki.Teams;
-import com.anet.qtr4tdm.uebki.teamState;
 import com.jcraft.jorbis.Block;
 
 import net.minecraft.block.SoundType;
@@ -97,9 +95,6 @@ public class MiniSiloBlock extends BlockTileEntity<MiniSiloTile> {
             IBlockState state = event.getWorld().getBlockState(event.getPos());
             if (state.getBlock() instanceof MiniSiloBlock) {
                 MiniSiloTile tile = (MiniSiloTile)event.getWorld().getTileEntity(event.getPos());
-
-                if (Teams.GetTeamOfPlayer(event.getEntityPlayer()) != tile.team)
-                    event.getEntityPlayer().sendMessage(new TextComponentString( "Владелец: " + Teams.GetTeamColorSymbols(tile.team) + tile.team.toString()));
 
                 if (event.getItemStack().getItem() instanceof rocketItem && !tile.armed && !event.getWorld().provider.isNether()) {
                     event.getItemStack().setCount(event.getItemStack().getCount() - 1);

@@ -1,8 +1,6 @@
 package com.anet.qtr4tdm.common.entities;
 
 import com.anet.qtr4tdm.TdmMod;
-import com.anet.qtr4tdm.uebki.Teams;
-import com.anet.qtr4tdm.uebki.teamState;
 import com.anet.qtr4tdm.uebki.messages.BasedAnswer;
 import com.anet.qtr4tdm.uebki.messages.BasedRequest;
 

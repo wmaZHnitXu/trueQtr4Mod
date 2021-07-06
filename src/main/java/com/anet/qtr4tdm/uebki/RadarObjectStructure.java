@@ -9,19 +9,12 @@ public class RadarObjectStructure {
     public boolean isRadar;
     public boolean isActive;
     public String owner;
-    
+
     public RadarObjectStructure(BlockPos pos, String displayName, boolean isradar, boolean isActive) {
         this.pos = pos;
         DisplayName = displayName;
         isRadar = isradar;
-        team = teamState.specs;
-        if (displayName.charAt(0) == '§') {
-            for (teamState t : teamState.values()) {
-                if (Teams.GetTeamColorSymbols(t).equals(displayName.substring(0, 2))) {
-                    team = t;
-                }
-            }
-        }
+        
         this.isActive = isActive;
     }
 }

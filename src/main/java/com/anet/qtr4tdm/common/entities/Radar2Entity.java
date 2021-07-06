@@ -1,11 +1,5 @@
 package com.anet.qtr4tdm.common.entities;
 
-
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityTrackerEntry;
-import net.minecraft.entity.passive.EntityCow;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 

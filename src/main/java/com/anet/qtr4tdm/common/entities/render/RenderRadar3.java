@@ -4,15 +4,10 @@ import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.entities.Radar3Entity;
 import com.anet.qtr4tdm.common.entities.models.Radar3Model;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
 
 public class RenderRadar3 extends Render<Radar3Entity> {
     public static final ResourceLocation textures = new ResourceLocation(TdmMod.MODID + ":textures/entity/radar3.png");

@@ -1,8 +1,12 @@
 package com.anet.qtr4tdm;
 
+import java.nio.file.Path;
+
 import com.anet.qtr4tdm.init.BlocksInit;
+import com.anet.qtr4tdm.uebki.IDSmanager;
 import com.anet.qtr4tdm.uebki.RadarsInfo;
 import com.anet.qtr4tdm.uebki.Sounds;
+import com.anet.qtr4tdm.uebki.SqlHelper;
 import com.anet.qtr4tdm.uebki.messages.AskForRadarHandler;
 import com.anet.qtr4tdm.uebki.messages.AskForRadarsMessage;
 import com.anet.qtr4tdm.uebki.messages.BasedAnswer;
@@ -18,6 +22,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -41,12 +46,14 @@ public class TdmMod
     public static MinecraftServer currentServer;
     public static Logger logger;
     public static SimpleNetworkWrapper wrapper;
+    public static String cfgPath;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
         instance = this;
         logger = event.getModLog();
+        cfgPath = event.getModConfigurationDirectory().getAbsolutePath();
     }
 
     @EventHandler
@@ -74,7 +81,14 @@ public class TdmMod
     {
         logger.info("initalise FMLServerStartingEvent :" + NAME);
         new RadarsInfo();
+        new SqlHelper(cfgPath + "/baseinfo.cfg");
+        new IDSmanager();
         currentServer = event.getServer();
+    }
+
+    @EventHandler
+    public void Stopping (FMLServerStoppingEvent event) {
+        SqlHelper.CloseConnection();
     }
     
     public static final CreativeTabs qtr4 = new CreativeTabs("qtr4") {

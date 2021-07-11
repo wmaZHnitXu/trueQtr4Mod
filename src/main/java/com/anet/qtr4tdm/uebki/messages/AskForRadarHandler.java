@@ -10,7 +10,7 @@ public class AskForRadarHandler implements IMessageHandler<AskForRadarsMessage, 
     @Override
     public RadarMessage onMessage(AskForRadarsMessage arg0, MessageContext arg1) {
         TdmMod.logger.info("ClientAskedForRadars");
-        return new RadarMessage();
+        return new RadarMessage(arg0.pos);
     }
     
 }

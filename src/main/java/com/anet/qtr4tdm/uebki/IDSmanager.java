@@ -14,8 +14,7 @@ public class IDSmanager {
     }
 
     public int GetPlayerId (EntityPlayer entity) {
-        try { return  SqlHelper.instance.GetPlayerId(entity.getName()); } 
-        catch (SQLException e) { TdmMod.logger.info(e.toString()); return 0; }
+        return  SqlHelper.instance.GetPlayerId(entity.getName());
     }
     
 }

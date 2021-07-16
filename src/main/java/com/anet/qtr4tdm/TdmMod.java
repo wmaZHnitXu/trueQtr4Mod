@@ -2,6 +2,8 @@ package com.anet.qtr4tdm;
 
 import java.nio.file.Path;
 
+import com.anet.qtr4tdm.commands.AdminManagementCommands;
+import com.anet.qtr4tdm.common.bases.InWorldBasesManager;
 import com.anet.qtr4tdm.init.BlocksInit;
 import com.anet.qtr4tdm.uebki.IDSmanager;
 import com.anet.qtr4tdm.uebki.RadarsInfo;
@@ -80,10 +82,12 @@ public class TdmMod
     public void initServerStart(FMLServerStartingEvent event)
     {
         logger.info("initalise FMLServerStartingEvent :" + NAME);
-        new RadarsInfo();
-        new SqlHelper(cfgPath + "/baseinfo.cfg");
-        new IDSmanager();
         currentServer = event.getServer();
+        event.registerServerCommand(new AdminManagementCommands());
+        new RadarsInfo();
+        new IDSmanager();
+        new InWorldBasesManager();
+        new SqlHelper(cfgPath + "/baseinfo.cfg");
     }
 
     @EventHandler

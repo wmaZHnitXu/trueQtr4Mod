@@ -76,11 +76,17 @@ public class SqlHelper {
         } else System.out.println("There's fail to create connection!");
     }
 
-    public int GetPlayerId (String name) throws SQLException {
-        statement = (Statement) connection.createStatement();
-        resSet = statement.executeQuery("SELECT id FROM users WHERE name='" + name + "'");
-        resSet.first();
-        return resSet.getInt("id");
+    public int GetPlayerId (String name) {
+        try {
+            statement = (Statement) connection.createStatement();
+            resSet = statement.executeQuery("SELECT id FROM users WHERE name='" + name + "'");
+            resSet.first();
+            return resSet.getInt("id");
+        }
+        catch (SQLException e) {
+            System.out.println(e.toString());
+            return 0;
+        }
     }
 
     public void registerPlayer(String name) throws SQLException { //Функция регистрация игрока в базе данных на основе запроса БД

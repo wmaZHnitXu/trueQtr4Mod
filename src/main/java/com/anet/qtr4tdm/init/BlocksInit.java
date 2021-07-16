@@ -1,6 +1,7 @@
 package com.anet.qtr4tdm.init;
 
 import com.anet.qtr4tdm.TdmMod;
+import com.anet.qtr4tdm.common.blocks.BaseBlock;
 import com.anet.qtr4tdm.common.blocks.EnergyConsumerBlock;
 import com.anet.qtr4tdm.common.blocks.MiniSiloBlock;
 import com.anet.qtr4tdm.common.blocks.RadarBaseBlock;
@@ -17,6 +18,7 @@ import com.anet.qtr4tdm.common.entities.render.RenderRadar1;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar2;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar3;
 import com.anet.qtr4tdm.common.items.rocketItem;
+import com.anet.qtr4tdm.common.tiles.BaseTile;
 import com.anet.qtr4tdm.common.tiles.EnergyConsumerTile;
 import com.anet.qtr4tdm.common.tiles.MiniSiloTile;
 import com.anet.qtr4tdm.common.tiles.RadarBaseTile;
@@ -52,6 +54,7 @@ public class BlocksInit {
     public static final Block RADART = new TerminalRadarBlock();
     public static final Block ENERGYCONSUMER = new EnergyConsumerBlock();
     public static final Block MINISILO = new MiniSiloBlock();
+    public static final Block BASE = new BaseBlock();
 
     public static final Block[] BLOCKS = new Block[] {
     
@@ -60,7 +63,8 @@ public class BlocksInit {
             RADARS,
             RADART,
             ENERGYCONSUMER,
-            MINISILO
+            MINISILO,
+            BASE
 
     };
 
@@ -154,6 +158,7 @@ public class BlocksInit {
         GameRegistry.registerTileEntity(TerminalRadarTile.class, new ResourceLocation(TdmMod.MODID + ":" + "terminalradartile"));
         GameRegistry.registerTileEntity(EnergyConsumerTile.class, new ResourceLocation(TdmMod.MODID + ":" + "energyconsumertile"));
         GameRegistry.registerTileEntity(MiniSiloTile.class, new ResourceLocation(TdmMod.MODID + ":" + "minisilotile"));
+        GameRegistry.registerTileEntity(BaseTile.class, new ResourceLocation(TdmMod.MODID + ":" + "basetile"));
 
     }
 

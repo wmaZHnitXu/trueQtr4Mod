@@ -7,6 +7,8 @@ import javax.swing.text.AbstractDocument.BranchElement;
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.bases.InWorldBasesManager;
 import com.anet.qtr4tdm.common.tiles.BaseTile;
+import com.anet.qtr4tdm.uebki.messages.BasedRequest;
+import com.jcraft.jogg.Page;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -29,6 +31,27 @@ public class BaseSetupGui extends GuiScreen{
     String[] content;
     String smoll;
     private BaseTile tile;
+    static boolean AlreadyClaimed;
+    static boolean PlayerCanMakeBase;
+    static int BaseId;
+    static BaseSetupGui instance;
+    static boolean success;
+
+    public BaseSetupGui(BaseTile tile) {
+        this.tile = tile;
+    }
+
+    public static void InsertInfoFromServer (boolean a, boolean p, int id) {
+        AlreadyClaimed = a;
+        PlayerCanMakeBase = p;
+        BaseId = id;
+    }
+
+    public static void SetDone (boolean done) {
+        instance.page = 3;
+        success = done;
+        instance.UpdateContent();
+    }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -61,8 +84,10 @@ public class BaseSetupGui extends GuiScreen{
         buttonList.add(new ShindowsButton(0, centerX + 65, centerY + 85, "Отмена"));
         buttonList.add(new ShindowsButton(1, centerX + 10, centerY + 85, "Далее >>"));
         buttonList.add(new ShindowsButton(2, centerX - 45, centerY + 85, "<< Назад"));
+        TdmMod.wrapper.sendToServer(new BasedRequest(tile.getPos(), 3, mc.world.provider.getDimension(), mc.player.getEntityId()));
         content = new String[2];
         UpdateContent();
+        instance = this;
         super.initGui();
     }
 
@@ -87,23 +112,49 @@ public class BaseSetupGui extends GuiScreen{
 
             break;
             case 1:
-                title = "Начало установки";
+                title = "§lИнформация о базе";
                 content = new String[]{"Позиция: " + tile.getPos(),
-                    "Базовый чанк: " + InWorldBasesManager.ChunkPosFromBlockPos(tile.getPos()),
-                    "Владелец: " + mc.getSession().getUsername(),
-                    "Первичное количество оборонительных орудий: 8", "вВЫВЫВфывфывфывфыв", "Для продолжения нажмите кнопку \"Далее\"."};
+                    "Базовый чанк: " + RedOrGreen(!AlreadyClaimed) + InWorldBasesManager.ChunkPosFromBlockPos(tile.getPos()),
+                    "Владелец: " + RedOrGreen(PlayerCanMakeBase) + mc.getSession().getUsername(),
+                    "Первичное количество оборонительных орудий: 8",
+                    "id базы: " + BaseId};
+                smoll = (AlreadyClaimed ?  RedOrGreen(true) + "Невозможно создать базу: территория занята" : (PlayerCanMakeBase ? "Для создания базы нажмите \"Далее\"" :
+                RedOrGreen(true) + "Невозможно создать базу: вы достигли максимального количества баз"));
             break;
+            case 2:
+                title = "§lСоздание базы...";
+                content = new String[]{"Пожалуйста, подождите."};
+                smoll = "";
+            case 3:
+                title = success ? "§lБаза успешно создана!" : "§cОшибка.";
+                content = success ? new String[]{"Теперь вы можете начать выстраивать", "оборону."} : new String[]{"При создании базы произошла ошибка,", "повторите попытку позже"};
+                smoll = "";
+                if (success) tile.InsertClientData(BaseId, true);
         }
+        buttonList.get(0).enabled = true;
         if (page == 0) buttonList.get(2).enabled = false; else buttonList.get(2).enabled = true;
-        if (page == maxPage) buttonList.get(1).displayString = "Готово"; else buttonList.get(1).displayString = "Далее >>";
+        if (page == 1 && (AlreadyClaimed || !PlayerCanMakeBase)) buttonList.get(1).enabled = false; else buttonList.get(1).enabled = true;
+        if (page == 2) { buttonList.forEach(button -> button.enabled = false); TdmMod.wrapper.sendToServer(new BasedRequest(tile.getPos(), 4, mc.world.provider.getDimension(), mc.player.getEntityId())); };
+        if (page == maxPage) {buttonList.get(1).displayString = "Готово"; buttonList.get(2).enabled = false;}
     }
 
     private void Conclusion () {
         mc.displayGuiScreen(null);
     }
+
+    public String RedOrGreen (boolean b) {
+        return b ? "" : "§c";
+    }
+
     @Override
     public boolean doesGuiPauseGame() {
         return true;
+    }
+
+    @Override
+    public void onGuiClosed() {
+        instance = null;
+        super.onGuiClosed();
     }
 
     class ShindowsButton extends GuiButton {

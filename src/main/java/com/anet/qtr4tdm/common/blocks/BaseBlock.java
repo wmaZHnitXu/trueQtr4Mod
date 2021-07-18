@@ -39,20 +39,18 @@ public class BaseBlock extends BlockTileEntity<BaseTile>  {
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
     EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (worldIn.isRemote) {
-            ClientGuiOpen(worldIn, pos);
+            TileEntity tile = worldIn.getTileEntity(pos);
+            if (tile instanceof BaseTile) ((BaseTile)tile).Interaction(playerIn);
         }
         return true;
     }
 
     @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-        TileEntity tile = worldIn.getTileEntity(pos);
-        if (tile instanceof BaseTile) ((BaseTile)tile).BaseBlockDestroy();
+        if (!worldIn.isRemote) {
+            TileEntity tile = worldIn.getTileEntity(pos);
+            if (tile instanceof BaseTile) ((BaseTile)tile).BaseBlockDestroy();
+        }
         super.breakBlock(worldIn, pos, state);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void ClientGuiOpen (World worldIn, BlockPos pos) {
-        Minecraft.getMinecraft().displayGuiScreen(new BaseSetupGui());
     }
 }

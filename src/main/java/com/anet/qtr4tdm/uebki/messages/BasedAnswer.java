@@ -5,24 +5,29 @@ import java.util.List;
 import javax.swing.text.AbstractDocument.BranchElement;
 
 import com.anet.qtr4tdm.TdmMod;
+import com.anet.qtr4tdm.common.bases.InWorldBasesManager;
+import com.anet.qtr4tdm.common.bases.baseInfo;
 import com.anet.qtr4tdm.common.entities.Radar1Entity;
 import com.anet.qtr4tdm.common.tiles.EnergyConsumerTile;
 import com.anet.qtr4tdm.uebki.RadarsInfo;
+import com.anet.qtr4tdm.uebki.gui.BaseSetupGui;
+import com.anet.qtr4tdm.common.tiles.BaseTile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class BasedAnswer implements IMessage {
 
-    public BasedAnswer(BlockPos pos, int reqId) {
-        try {
+    public BasedAnswer(BlockPos pos, int reqId, int dim, int playerId) { //REQID RESERVE: 2
+        //try {
             switch (reqId) {
                 case 0: answer = new int[10]; // запрос по транслятору энергии.
+                    EnergyConsumerTile tile = (EnergyConsumerTile)TdmMod.currentServer.worlds[dim].getTileEntity(pos);
                     answer[0] = reqId;
-                    EnergyConsumerTile tile = (EnergyConsumerTile)TdmMod.currentServer.worlds[0].getTileEntity(pos);
                     answer[1] = pos.getX();
                     answer[2] = pos.getY();
                     answer[3] = pos.getZ();
@@ -40,11 +45,29 @@ public class BasedAnswer implements IMessage {
                     answer[3] = pos.getZ();
                     answer[4] = RadarsInfo.IsRadarActive(pos) ? 1 : 0;
                 break;
+                case 3: answer = new int[4];
+                    answer[0] = reqId;
+                    String name = TdmMod.currentServer.getWorld(dim).getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 100, false).getName(); //TODO PEREPISAT'
+                    answer[1] = InWorldBasesManager.PlayerBaseCount(name);
+                    answer[2] = InWorldBasesManager.IsPositionClaimed(pos) ? 1 : 0;
+                    answer[3] = InWorldBasesManager.GetNewBaseId();
+                break;
+                case 4: answer = new int[2];
+                answer[0] = reqId;
+                    baseInfo i = InWorldBasesManager.AddNormalBase(pos, TdmMod.currentServer.getWorld(dim).getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 100, false), dim); //TODO PEREPISAT'
+                    if (i != null) {
+                        ((BaseTile)TdmMod.currentServer.getWorld(dim).getTileEntity(pos)).InsertDirectInfo(i);;
+                        answer[1] = 1;
+                    }
+                    else {
+                        answer[1] = 0;
+                    }
+                break;
             }
-        }
-        catch (Exception e) {
-            TdmMod.logger.info(e.toString());
-        }
+        //}
+        //catch (Exception e) {
+        //    TdmMod.logger.info(e.toString());
+        //}
     }
 
     public BasedAnswer () {
@@ -77,6 +100,13 @@ public class BasedAnswer implements IMessage {
                     if (ent.size() > 0) {
                         ent.get(0).isActive = answer[4] > 0;
                     }
+                break;
+                case 3:
+                    TdmMod.logger.info("answer 3");
+                    BaseSetupGui.InsertInfoFromServer(answer[2] == 1, answer[1] < 1, answer[3]);
+                break;
+                case 4:
+                    BaseSetupGui.SetDone(answer[1] == 1);
                 break;
             }
         }

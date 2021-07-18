@@ -48,7 +48,7 @@ public class Radar1Entity extends Entity {
     public void onUpdate() {
         if (world.isRemote) {
             if (counter >= 20) {
-                TdmMod.wrapper.sendToServer(new BasedRequest(getPosition(), 1));
+                TdmMod.wrapper.sendToServer(new BasedRequest(getPosition(), 1, world.provider.getDimension()));
                 counter = 0;
             }
             else counter++;

@@ -28,5 +28,6 @@ public class baseInfo {
             if (pos.equals(chunk)) return true;
         }
         return false;
+        
     }
 }

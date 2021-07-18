@@ -32,7 +32,7 @@ public class EnergyConsumerGui extends GuiScreen {
         super.updateScreen();
         if (counter == 20) {
             TdmMod.logger.info("sendbasedreq");
-            TdmMod.wrapper.sendToServer(new BasedRequest(tile.getPos(), 0));
+            TdmMod.wrapper.sendToServer(new BasedRequest(tile.getPos(), 0, mc.world.provider.getDimension()));
             counter = 0;
         }
         else counter++;

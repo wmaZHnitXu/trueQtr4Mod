@@ -1,8 +1,6 @@
 package com.anet.qtr4tdm.common.savedata;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.bases.baseInfo;
@@ -42,6 +40,7 @@ public class WorldBasesSavedData extends WorldSavedData {
     public void readFromNBT(NBTTagCompound nbt) {
         int length = nbt.getInteger("length");
         bases = new ArrayList<baseInfo>();
+        freeIds = new ArrayList<Integer>();
         for (int i = 0; i < length; i++) {
             BlockPos pos;
                 int[] arr = nbt.getIntArray("pos" + i);

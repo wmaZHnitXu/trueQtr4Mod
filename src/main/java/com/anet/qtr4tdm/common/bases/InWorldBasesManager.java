@@ -47,13 +47,19 @@ public class InWorldBasesManager {
     public static baseInfo AddNormalBase (BlockPos pos, EntityPlayer owner, int dimension) {
         int level = 1;
         int OwnerId = IDSmanager.instance.GetPlayerId(owner);
-        int id; if (instance.freeIds.size() == 0) id = instance.bases.size(); else {id = instance.freeIds.get(0); instance.freeIds.remove(0); }
+        int id = GetNewBaseId();
+        if (instance.freeIds.contains(id)) instance.freeIds.remove(0);
         ChunkPos[] chunks = new ChunkPos[1];
         chunks[0] = owner.world.getChunkFromBlockCoords(pos).getPos();
         baseInfo base = new baseInfo(pos, OwnerId, id, level, chunks, dimension);
         instance.bases.add(base);
         instance.SaveData();
         return base;
+    }
+
+    public static int GetNewBaseId () {
+        int id; if (instance.freeIds != null && instance.freeIds.size() > 0) id = instance.freeIds.get(0); else {id = instance.bases.size();}
+        return id;
     }
 
     public static void RemoveBase (BlockPos pos) {
@@ -85,15 +91,26 @@ public class InWorldBasesManager {
     public static boolean DeleteAllBases () {
         if (instance == null || instance.bases == null) return false;
         instance.bases.clear();
+        if (instance.freeIds != null)
+            instance.freeIds.clear();
         instance.SaveData();
         return true;
     }
 
     public static boolean IsPositionClaimed (BlockPos pos) {
         for (baseInfo base : instance.bases) {
-            if (base.ContainsChunk(ChunkPosFromBlockPos(pos))) return true;
+            if (base.ContainsChunk(ChunkPosFromBlockPos(pos)) && !base.pos.equals(BlockPos.ORIGIN)) return true;
         }
         return false;
+    }
+
+    public static int PlayerBaseCount (String PlayerName) {
+        int PlayerId = IDSmanager.instance.GetPlayerId(PlayerName);
+        int count = 0;
+        for (baseInfo base : instance.bases) {
+            if (base.OwnerId == PlayerId && !base.pos.equals(BlockPos.ORIGIN)) count++;
+        }
+        return count;
     }
 
     public static ChunkPos ChunkPosFromBlockPos (BlockPos pos) {

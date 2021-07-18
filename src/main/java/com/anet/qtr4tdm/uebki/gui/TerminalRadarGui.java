@@ -97,7 +97,7 @@ public class TerminalRadarGui extends GuiScreen {
     public void updateScreen() {
         if (counter <= 0) {
             try {
-                TdmMod.wrapper.sendToServer(new BasedRequest(terminalTile.getPos(), 2));
+                TdmMod.wrapper.sendToServer(new BasedRequest(terminalTile.getPos(), 2, mc.world.provider.getDimension()));
             }
             catch (Exception e) {
                 TdmMod.logger.info("network error");

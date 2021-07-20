@@ -36,7 +36,7 @@ public class PrivatesHandler {
         boolean result = true;
         baseInfo base = InWorldBasesManager.GetBaseOnTerritory(pos);
         if (base != null) {
-            base.isMember(IDSmanager.GetPlayerId(player));
+            result = base.isMember(IDSmanager.GetPlayerId(player));
         }
         return result;
     }

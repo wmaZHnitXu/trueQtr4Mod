@@ -35,6 +35,8 @@ public class baseInfo {
     }
 
     public boolean isMember (int id) {
+        if (id == OwnerId) return true;
+        if (members == null) return false;
         for (int i : members) if (i == id) return true;
         return false;
     }

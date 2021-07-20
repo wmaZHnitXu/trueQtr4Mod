@@ -13,14 +13,17 @@ public class baseInfo {
     public int level;
     public ChunkPos[] chunks;
     public int dimenision;
+    public int[] members; //Кроме хозяина
+    public String name;
 
-    public baseInfo (BlockPos pos, int OwnerId, int id, int level, ChunkPos[] chunks, int dimension) {
+    public baseInfo (BlockPos pos, int OwnerId, int id, int level, ChunkPos[] chunks, int dimension, String name) {
         this.pos = pos;
         this.OwnerId = OwnerId;
         this.id = id;
         this.level = level;
         this.chunks = chunks;
         this.dimenision = dimension;
+        this.name = name;
     }
 
     public boolean ContainsChunk (ChunkPos pos) {
@@ -29,5 +32,10 @@ public class baseInfo {
         }
         return false;
         
+    }
+
+    public boolean isMember (int id) {
+        for (int i : members) if (i == id) return true;
+        return false;
     }
 }

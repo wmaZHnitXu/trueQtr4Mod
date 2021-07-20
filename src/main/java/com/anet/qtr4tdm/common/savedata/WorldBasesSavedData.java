@@ -1,6 +1,7 @@
 package com.anet.qtr4tdm.common.savedata;
 
 import java.util.ArrayList;
+import java.util.jar.Attributes.Name;
 
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.bases.baseInfo;
@@ -57,7 +58,8 @@ public class WorldBasesSavedData extends WorldSavedData {
                 for (int j = 0; j < arrX.length; j++) {
                     chunks[j] = new ChunkPos(arrX[j], arrZ[j]);
                 }
-            bases.add(new baseInfo(pos, OwnerId, id, level, chunks, dimension)); //TODO
+            String name = nbt.getString("name");
+            bases.add(new baseInfo(pos, OwnerId, id, level, chunks, dimension, name)); //TODO
         }
 
         //FREEIDS
@@ -88,6 +90,7 @@ public class WorldBasesSavedData extends WorldSavedData {
             }
             compound.setIntArray("chunkX" + id, x);
             compound.setIntArray("chunkZ" + id, z);
+            compound.setString("name", base.name);
         }
 
         //FREEIDS

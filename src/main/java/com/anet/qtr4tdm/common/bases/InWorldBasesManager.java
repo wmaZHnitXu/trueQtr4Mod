@@ -51,7 +51,7 @@ public class InWorldBasesManager {
         if (instance.freeIds.contains(id)) instance.freeIds.remove(0);
         ChunkPos[] chunks = new ChunkPos[1];
         chunks[0] = owner.world.getChunkFromBlockCoords(pos).getPos();
-        baseInfo base = new baseInfo(pos, OwnerId, id, level, chunks, dimension);
+        baseInfo base = new baseInfo(pos, OwnerId, id, level, chunks, dimension, owner.getName() + "'s base");
         instance.bases.add(base);
         instance.SaveData();
         return base;
@@ -74,12 +74,23 @@ public class InWorldBasesManager {
         instance.SaveData();
     }
 
-    public static baseInfo GetInfo (BlockPos pos) { //Лучше заменить на tile
+    public static baseInfo GetInfo (BlockPos pos) { //Лучше заменить на tile P.S. ИСПОЛЬЗУЕТСЯ ДЛЯ ИНИЦИАЛИЗАЦИИ ТАЙЛА
         if (instance == null) { AddToDelayedInit(pos); System.out.println("delay"); return null;}
         for (baseInfo base : instance.bases) {
             if (base.pos.equals(pos)) return base;
         }
         System.out.println("nomatch");
+        return null;
+    }
+
+    public static baseInfo GetBaseOnTerritory (BlockPos pos) {
+        return GetBaseOfTerritory(new ChunkPos(pos));
+    }
+
+    public static baseInfo GetBaseOfTerritory (ChunkPos pos) {
+        for (baseInfo base : instance.bases) {
+            if (base.ContainsChunk(pos)) return base;
+        }
         return null;
     }
 

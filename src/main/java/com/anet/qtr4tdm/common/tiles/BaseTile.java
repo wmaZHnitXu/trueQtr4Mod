@@ -24,7 +24,10 @@ public class BaseTile extends TileEntity {
     public void onLoad() {
         if (!world.isRemote) {
             directInfo = InWorldBasesManager.GetInfo(pos);
-            if (directInfo != null) TdmMod.logger.info("base with id " + directInfo.id + " loaded, pos:" + directInfo.pos.toString());
+            if (directInfo != null) {
+                TdmMod.logger.info("base with id " + directInfo.id + " loaded, pos:" + directInfo.pos.toString());
+                
+            }
         }
         super.onLoad();
     }
@@ -43,7 +46,10 @@ public class BaseTile extends TileEntity {
 
     public void InsertDirectInfo (baseInfo info) {
         directInfo = info;
-        if (directInfo != null) TdmMod.logger.info("base with id " + directInfo.id + " loaded, pos:" + directInfo.pos.toString());
+        if (directInfo != null) {
+            TdmMod.logger.info("base with id " + directInfo.id + " loaded, pos:" + directInfo.pos.toString());
+            active = true;
+        }
     }
 
     public void BaseBlockDestroy () {

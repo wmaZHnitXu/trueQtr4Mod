@@ -16,7 +16,7 @@ public class WorldEventsCatcher {
 
         }
     }
-
+    @SubscribeEvent
     public static void BlockPlacedEvt (BlockEvent.EntityPlaceEvent evt) {
         if (!evt.getWorld().isRemote) {
             if (evt.getEntity() instanceof EntityPlayer) {
@@ -24,7 +24,7 @@ public class WorldEventsCatcher {
             }
         }
         else {
-            
+
         }
     }
 }

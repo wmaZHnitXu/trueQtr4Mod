@@ -88,6 +88,7 @@ public class TdmMod
         new IDSmanager();
         new InWorldBasesManager();
         new SqlHelper(cfgPath + "/baseinfo.cfg");
+        new PrivatesHandler();
     }
 
     @EventHandler

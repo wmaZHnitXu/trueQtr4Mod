@@ -1,0 +1,11 @@
+{
+  "parent": "block/bedrock",
+  "textures": {
+    "up": "qtr4tdm:blocks/base_top_inactive",
+    "down": "qtr4tdm:blocks/base_bottom",
+    "south": "qtr4tdm:blocks/base_side_inactive",
+    "north": "qtr4tdm:blocks/base_side_inactive",
+    "west": "qtr4tdm:blocks/base_side_inactive",
+    "east": "qtr4tdm:blocks/base_side_inactive"
+  }
+}

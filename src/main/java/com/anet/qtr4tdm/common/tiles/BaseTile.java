@@ -3,6 +3,7 @@ package com.anet.qtr4tdm.common.tiles;
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.bases.InWorldBasesManager;
 import com.anet.qtr4tdm.common.bases.baseInfo;
+import com.anet.qtr4tdm.common.blocks.BaseBlock;
 import com.anet.qtr4tdm.uebki.gui.BaseSetupGui;
 import com.typesafe.config.ConfigException.Null;
 
@@ -16,24 +17,29 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BaseTile extends TileEntity {
-    private boolean active;
     private int baseId;
     private baseInfo directInfo;
+    private BaseState state;
+
+    enum BaseState {
+        inactive,
+        active,
+        error
+    }
 
     @Override
     public void onLoad() {
         if (!world.isRemote) {
-            directInfo = InWorldBasesManager.GetInfo(pos);
-            if (directInfo != null) {
-                TdmMod.logger.info("base with id " + directInfo.id + " loaded, pos:" + directInfo.pos.toString());
-                
-            }
+            InsertDirectInfo(InWorldBasesManager.GetInfo(pos));
+        }
+        else {
+            state = BaseState.values()[world.getBlockState(pos).getValue(BaseBlock.status)];
         }
         super.onLoad();
     }
 
     public void Interaction (EntityPlayer player) {
-        if (!active) {
+        if (state == BaseState.inactive) {
             SetupGuiOpen(world, pos);
             TdmMod.logger.info("base setup");
         }
@@ -48,7 +54,11 @@ public class BaseTile extends TileEntity {
         directInfo = info;
         if (directInfo != null) {
             TdmMod.logger.info("base with id " + directInfo.id + " loaded, pos:" + directInfo.pos.toString());
-            active = true;
+            state = BaseState.active;
+            BaseBlock.SetState(world, pos, 1);
+        }
+        else {
+            BaseBlock.SetState(world, pos, 0);
         }
     }
 
@@ -70,6 +80,6 @@ public class BaseTile extends TileEntity {
 
     public void InsertClientData (int baseId, boolean active) {
         this.baseId = baseId;
-        this.active = active;
+        this.state = active ? BaseState.active : BaseState.inactive;
     }
 }

@@ -1,5 +1,7 @@
 {
     "variants": {
-      "normal": { "model": "qtr4tdm:energy_consumer" }
+      "status=0": { "model": "qtr4tdm:base_block_inactive" },
+      "status=1": { "model": "qtr4tdm:base_block_active" },
+      "status=2": { "model": "qtr4tdm:base_block_error" }
     }
   }

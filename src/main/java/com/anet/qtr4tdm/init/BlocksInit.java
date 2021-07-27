@@ -1,5 +1,7 @@
 package com.anet.qtr4tdm.init;
 
+import java.util.ArrayList;
+
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.blocks.BaseBlock;
 import com.anet.qtr4tdm.common.blocks.EnergyConsumerBlock;
@@ -17,6 +19,8 @@ import com.anet.qtr4tdm.common.entities.RocketEntity;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar1;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar2;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar3;
+import com.anet.qtr4tdm.common.items.BaseExpandItem;
+import com.anet.qtr4tdm.common.items.IMetadataItem;
 import com.anet.qtr4tdm.common.items.rocketItem;
 import com.anet.qtr4tdm.common.tiles.BaseTile;
 import com.anet.qtr4tdm.common.tiles.EnergyConsumerTile;
@@ -69,9 +73,11 @@ public class BlocksInit {
     };
 
     public static final Item ROCKET = new rocketItem();
+    public static final Item BASEEXPANDER = new BaseExpandItem();
 
     public static final Item[] ITEMS = new Item[] {
-        ROCKET
+        ROCKET,
+        BASEEXPANDER
     };
 
     @SubscribeEvent
@@ -144,10 +150,21 @@ public class BlocksInit {
     @SideOnly(Side.CLIENT)
     public static void setRenderForItems (Item... items) {
         for (Item item : items) {
-            final ResourceLocation regName = item.getRegistryName();
-            final ModelResourceLocation mrl = new ModelResourceLocation(regName, "inventory");
-            ModelBakery.registerItemVariants(item, mrl);
-            ModelLoader.setCustomModelResourceLocation(item, 0, mrl);
+            if (!item.getHasSubtypes()) {
+                final ResourceLocation regName = item.getRegistryName();
+                final ModelResourceLocation mrl = new ModelResourceLocation(regName, "inventory");
+                ModelBakery.registerItemVariants(item, mrl);
+                ModelLoader.setCustomModelResourceLocation(item, 0, mrl);
+            }
+            else {
+                ModelResourceLocation[] mrl = new ModelResourceLocation[((IMetadataItem)item).GetMetaCount()];
+                for (int i = 0; i < ((IMetadataItem)item).GetMetaCount(); i++) {
+                    ResourceLocation regName = new ResourceLocation(item.getRegistryName().toString() + i); 
+                    mrl[i] = new ModelResourceLocation(regName, "inventory");
+                    ModelBakery.registerItemVariants(item, mrl);
+                    ModelLoader.setCustomModelResourceLocation(item, i, mrl[i]);
+                }
+            }
         }
     }
 

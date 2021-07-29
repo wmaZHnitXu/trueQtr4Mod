@@ -158,10 +158,13 @@ public class BlocksInit {
             }
             else {
                 ModelResourceLocation[] mrl = new ModelResourceLocation[((IMetadataItem)item).GetMetaCount()];
-                for (int i = 0; i < ((IMetadataItem)item).GetMetaCount(); i++) {
+                int metacount = ((IMetadataItem)item).GetMetaCount();
+                for (int i = 0; i < metacount; i++) {
                     ResourceLocation regName = new ResourceLocation(item.getRegistryName().toString() + i); 
                     mrl[i] = new ModelResourceLocation(regName, "inventory");
-                    ModelBakery.registerItemVariants(item, mrl);
+                }
+                ModelBakery.registerItemVariants(item, mrl);
+                for (int i = 0; i < metacount; i++) {
                     ModelLoader.setCustomModelResourceLocation(item, i, mrl[i]);
                 }
             }

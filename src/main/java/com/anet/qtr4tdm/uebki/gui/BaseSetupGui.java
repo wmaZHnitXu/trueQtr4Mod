@@ -2,8 +2,6 @@ package com.anet.qtr4tdm.uebki.gui;
 
 import java.io.IOException;
 
-import javax.swing.text.AbstractDocument.BranchElement;
-
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.bases.InWorldBasesManager;
 import com.anet.qtr4tdm.common.tiles.BaseTile;

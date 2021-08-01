@@ -18,6 +18,8 @@ import com.anet.qtr4tdm.uebki.messages.BasedRequest;
 import com.anet.qtr4tdm.uebki.messages.BasedRequestHandler;
 import com.anet.qtr4tdm.uebki.messages.RadarInfoHandler;
 import com.anet.qtr4tdm.uebki.messages.RadarMessage;
+import com.anet.qtr4tdm.uebki.messages.baseInfoMessage;
+import com.anet.qtr4tdm.uebki.messages.baseInfoMessageHandler;
 
 import net.minecraft.init.Blocks;
 import net.minecraftforge.fml.common.Mod;
@@ -80,6 +82,8 @@ public class TdmMod
         wrapper.registerMessage(BasedAnswerHandler.class, BasedAnswer.class, 5, Side.CLIENT);
 
         wrapper.registerMessage(AskForRadarHandler.class, AskForRadarsMessage.class, 6, Side.SERVER);
+
+        wrapper.registerMessage(baseInfoMessageHandler.class, baseInfoMessage.class, 7, Side.CLIENT);
     }
 
     @EventHandler

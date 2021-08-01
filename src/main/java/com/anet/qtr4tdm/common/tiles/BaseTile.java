@@ -79,6 +79,10 @@ public class BaseTile extends TileEntity implements IInventory {
         }
     }
 
+    public baseInfo GetDirectInfo () {
+        return directInfo;
+    }
+
     public void BaseBlockDestroy () {
         InWorldBasesManager.RemoveBase(pos);
     }

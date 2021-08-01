@@ -24,6 +24,12 @@ public class baseInfo {
         this.chunks = chunks;
         this.dimenision = dimension;
         this.name = name;
+        this.members = new int[0];
+    }
+
+    public baseInfo (BlockPos pos, int OwnerId, int id, int level, ChunkPos[] chunks, int dimension, String name, int[] members) {
+        this(pos, OwnerId, id, level, chunks, dimension, name);
+        this.members = members;
     }
 
     public boolean ContainsChunk (ChunkPos pos) {

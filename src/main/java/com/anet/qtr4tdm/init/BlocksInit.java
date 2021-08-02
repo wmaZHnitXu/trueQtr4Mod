@@ -144,10 +144,28 @@ public class BlocksInit {
     @SideOnly(Side.CLIENT)
     public static void setRenderForItems (Item... items) {
         for (Item item : items) {
+<<<<<<< HEAD
             final ResourceLocation regName = item.getRegistryName();
             final ModelResourceLocation mrl = new ModelResourceLocation(regName, "inventory");
             ModelBakery.registerItemVariants(item, mrl);
             ModelLoader.setCustomModelResourceLocation(item, 0, mrl);
+=======
+            if (!item.getHasSubtypes()) {
+                final ResourceLocation regName = item.getRegistryName();
+                final ModelResourceLocation mrl = new ModelResourceLocation(regName, "inventory");
+                ModelBakery.registerItemVariants(item, mrl);
+                ModelLoader.setCustomModelResourceLocation(item, 0, mrl);
+            }
+            else {
+                ModelResourceLocation[] mrl = new ModelResourceLocation[((IMetadataItem)item).GetMetaCount()];
+                for (int i = 0; i < ((IMetadataItem)item).GetMetaCount(); i++) {
+                    ResourceLocation regName = new ResourceLocation(item.getRegistryName().toString() + i); 
+                    mrl[i] = new ModelResourceLocation(regName, "inventory");
+                    ModelBakery.registerItemVariants(item, mrl);
+                    ModelLoader.setCustomModelResourceLocation(item, i, mrl[i]);
+                }
+            }
+>>>>>>> parent of 5899205 (ExpandersAdded)
         }
     }
 

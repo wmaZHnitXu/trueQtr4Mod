@@ -46,8 +46,10 @@ public class BaseBlock extends BlockTileEntity<BaseTile>  {
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
     EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        TileEntity tile = worldIn.getTileEntity(pos);
-        if (tile instanceof BaseTile) ((BaseTile)tile).Interaction(playerIn);
+        if (worldIn.isRemote) {
+            TileEntity tile = worldIn.getTileEntity(pos);
+            if (tile instanceof BaseTile) ((BaseTile)tile).Interaction(playerIn);
+        }
         return true;
     }
     

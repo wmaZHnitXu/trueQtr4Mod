@@ -9,7 +9,6 @@ import com.anet.qtr4tdm.uebki.IDSmanager;
 import com.anet.qtr4tdm.uebki.RadarsInfo;
 import com.anet.qtr4tdm.uebki.Sounds;
 import com.anet.qtr4tdm.uebki.SqlHelper;
-import com.anet.qtr4tdm.uebki.gui.GuiHandler;
 import com.anet.qtr4tdm.uebki.messages.AskForRadarHandler;
 import com.anet.qtr4tdm.uebki.messages.AskForRadarsMessage;
 import com.anet.qtr4tdm.uebki.messages.BasedAnswer;
@@ -51,8 +50,6 @@ public class TdmMod
     public static SimpleNetworkWrapper wrapper;
     public static String cfgPath;
 
-    public static final int GUI_BASE = 0;
-
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
@@ -67,7 +64,6 @@ public class TdmMod
         BlocksInit.RegisterTileEntities();
         BlocksInit.RegisterEntities();
         Sounds.regSound();
-        NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
         logger.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
         wrapper = NetworkRegistry.INSTANCE.newSimpleChannel("myChannel");
 

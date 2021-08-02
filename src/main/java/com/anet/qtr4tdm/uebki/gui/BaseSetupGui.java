@@ -8,13 +8,16 @@ import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.bases.InWorldBasesManager;
 import com.anet.qtr4tdm.common.tiles.BaseTile;
 import com.anet.qtr4tdm.uebki.messages.BasedRequest;
+import com.jcraft.jogg.Page;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.MapItemRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.MapItemRenderer;
 
 public class BaseSetupGui extends GuiScreen{
 

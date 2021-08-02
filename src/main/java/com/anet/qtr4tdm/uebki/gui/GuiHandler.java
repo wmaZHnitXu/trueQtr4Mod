@@ -2,7 +2,7 @@ package com.anet.qtr4tdm.uebki.gui;
 
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.tiles.BaseTile;
-import com.anet.qtr4tdm.uebki.gui.baseGuiMisc.BaseContainer;
+import com.anet.qtr4tdm.uebki.gui.BaseGui;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;

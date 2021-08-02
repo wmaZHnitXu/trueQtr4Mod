@@ -14,22 +14,21 @@ public class BaseExpandItem extends Item implements IMetadataItem {
         this.setHasSubtypes(true);
         this.setRegistryName("base_expander");
         this.setMaxDamage(0);
-        //this.setCreativeTab(TdmMod.qtr4);
+        this.setCreativeTab(TdmMod.qtr4);
     }
-    
+
     @Override
     public String getUnlocalizedName(ItemStack item) {
         int metadata = item.getItemDamage();
-        return "base_expander_lvl" + (metadata + 1);
+        return "base_expander_lvl" + metadata;
     }
 
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        super.getSubItems(tab, items);
-        if (tab != TdmMod.qtr4) return;
-        for (int level = 0; level < GetMetaCount(); level++) {
+        for (int level = 0; level < 3; level++) {
             items.add(new ItemStack(BlocksInit.BASEEXPANDER, 1, level));
         }
+        super.getSubItems(tab, items);
     }
 
     @Override

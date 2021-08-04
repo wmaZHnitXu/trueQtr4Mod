@@ -12,6 +12,8 @@ import com.anet.qtr4tdm.uebki.SqlHelper;
 import com.anet.qtr4tdm.uebki.gui.GuiHandler;
 import com.anet.qtr4tdm.uebki.messages.AskForRadarHandler;
 import com.anet.qtr4tdm.uebki.messages.AskForRadarsMessage;
+import com.anet.qtr4tdm.uebki.messages.BaseUpgradeHandler;
+import com.anet.qtr4tdm.uebki.messages.BaseUpgradeMessage;
 import com.anet.qtr4tdm.uebki.messages.BasedAnswer;
 import com.anet.qtr4tdm.uebki.messages.BasedAnswerHandler;
 import com.anet.qtr4tdm.uebki.messages.BasedRequest;
@@ -84,6 +86,8 @@ public class TdmMod
         wrapper.registerMessage(AskForRadarHandler.class, AskForRadarsMessage.class, 6, Side.SERVER);
 
         wrapper.registerMessage(baseInfoMessageHandler.class, baseInfoMessage.class, 7, Side.CLIENT);
+
+        wrapper.registerMessage(BaseUpgradeHandler.class, BaseUpgradeMessage.class, 8, Side.SERVER);
     }
 
     @EventHandler

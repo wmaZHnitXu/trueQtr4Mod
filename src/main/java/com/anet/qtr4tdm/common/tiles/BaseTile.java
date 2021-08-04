@@ -135,7 +135,6 @@ public class BaseTile extends TileEntity implements IInventory {
         if (!item.isEmpty() && item.getCount() - count > 0) item.setCount(item.getCount() - count);
         else item = ItemStack.EMPTY;
         return bs;
-        
     }
 
     @Override

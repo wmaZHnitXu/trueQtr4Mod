@@ -1,10 +1,10 @@
 package com.anet.qtr4tdm.common.bases;
 
-import java.security.acl.Owner;
+
+import com.anet.qtr4tdm.uebki.gui.baseGuiMisc.BaseContainer;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.chunk.Chunk;
 
 public class baseInfo {
     public BlockPos pos;
@@ -15,6 +15,8 @@ public class baseInfo {
     public int dimenision;
     public int[] members; //Кроме хозяина
     public String name;
+    //TEMP
+    public BaseContainer container;
 
     public baseInfo (BlockPos pos, int OwnerId, int id, int level, ChunkPos[] chunks, int dimension, String name) {
         this.pos = pos;
@@ -45,5 +47,9 @@ public class baseInfo {
         if (members == null) return false;
         for (int i : members) if (i == id) return true;
         return false;
+    }
+
+    public int GetDefCount () {
+        return 2 + level * 2;
     }
 }

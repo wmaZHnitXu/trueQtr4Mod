@@ -111,7 +111,7 @@ public class BaseSetupGui extends GuiScreen{
                 content = new String[]{"Позиция: " + tile.getPos(),
                     "Базовый чанк: " + RedOrGreen(!AlreadyClaimed) + InWorldBasesManager.ChunkPosFromBlockPos(tile.getPos()),
                     "Владелец: " + RedOrGreen(PlayerCanMakeBase) + mc.getSession().getUsername(),
-                    "Первичное количество оборонительных орудий: 8",
+                    "Первичное количество оборонительных орудий: 4",
                     "id базы: " + BaseId};
                 smoll = (AlreadyClaimed ?  RedOrGreen(true) + "Невозможно создать базу: территория занята" : (PlayerCanMakeBase ? "Для создания базы нажмите \"Далее\"" :
                 RedOrGreen(true) + "Невозможно создать базу: вы достигли максимального количества баз"));

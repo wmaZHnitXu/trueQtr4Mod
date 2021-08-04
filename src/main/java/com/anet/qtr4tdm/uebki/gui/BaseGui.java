@@ -4,29 +4,31 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.annotation.Nullable;
 
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.bases.baseInfo;
+import com.anet.qtr4tdm.common.items.BaseExpandItem;
 import com.anet.qtr4tdm.common.tiles.BaseTile;
+import com.anet.qtr4tdm.init.BlocksInit;
 import com.anet.qtr4tdm.uebki.gui.baseGuiMisc.BaseContainer;
+import com.anet.qtr4tdm.uebki.messages.BaseUpgradeMessage;
 
-import it.unimi.dsi.fastutil.chars.CharIterable;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.MapItemRenderer;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import scala.collection.script.Update;
 
 public class BaseGui extends GuiContainer {
 
@@ -40,17 +42,25 @@ public class BaseGui extends GuiContainer {
     private int xOffset;
     private int yOffset;
     private static final HashMap<Block, Integer> colors = new HashMap<>();
-    private ArrayList<ChunkPos> selectedChunks; 
+    private ChunkPos selectedChunk; 
     private ChunkPos startchunk;
-    
+    private static int upgradeCountNeeded;
+    private static int upgradeMeta;
+    private static ItemStack neededStack;
+    private String[] rightBar;
+    private boolean baseContains = true;
+    private boolean nearBase = false;
+    private ArrayList<GuiWidget> widgets;
     
     public BaseGui(InventoryPlayer playerInventory, BaseTile baseTe) {
         super(new BaseContainer(playerInventory, baseTe));
         player = playerInventory;
         te = baseTe;
         LoadMap();
-        selectedChunks = new ArrayList<ChunkPos>();
         UpdateMap(1);
+        UpdatePrice();
+        widgets = new ArrayList<GuiWidget>();
+        rightBar = new String[5];
     }
 
     @Override
@@ -70,18 +80,42 @@ public class BaseGui extends GuiContainer {
                         drawRect(-81 + localx * 16, -50 + localy * 16, -81 + localx * 16 + 16, -50 + localy * 16 + 16, 0x9999FF99);
                     }
 
-                for (ChunkPos pos : selectedChunks) {
-                    int localx = pos.x - (startchunk.x - 6);
-                    int localy = pos.z - (startchunk.z - 6);
+                if (mouseX > guiLeft - 81 && mouseX < guiLeft - 81 + 208 && mouseY > guiTop - 50 && mouseY < guiTop - 50 + 208) {
+                    int onMapX = mouseX - (guiLeft - 81);
+                    int onmapY = mouseY - (guiTop - 50);
+                    ChunkPos pos = new ChunkPos(startchunk.x - 6 + onMapX / 16, startchunk.z - 6 + onmapY / 16);
+                    boolean shouldHighlight = false;
+                    for (ChunkPos poss : info.chunks) {
+                        if ((Math.abs(poss.x - pos.x) == 1 && Math.abs(poss.z - pos.z) == 0) || (Math.abs(poss.z - pos.z) == 1 && Math.abs(poss.x - pos.x) == 0)) {shouldHighlight = true; continue;}
+                    }
+                    if (shouldHighlight) {
+                        int localx = pos.x - (startchunk.x - 6);
+                        int localy = pos.z - (startchunk.z - 6);
+                        drawRect(-81 + localx * 16, -50 + localy * 16, -81 + localx * 16 + 16, -50 + localy * 16 + 16, 0xFFFFFFFF);
+                    }
+                }
+
+                if (selectedChunk != null) {
+                    int localx = selectedChunk.x - (startchunk.x - 6);
+                    int localy = selectedChunk.z - (startchunk.z - 6);
+                    drawRect(-81 + localx * 16, -50 + localy * 16, -81 + localx * 16 + 16, -50 + localy * 16 + 16, 0xAA00FFFF);
                     drawRect(-81 + localx * 16, -50 + localy * 16, -81 + localx * 16 + 1, -50 + localy * 16 + 1, 0xFFFFFFFF);
                     drawRect(-81 + localx * 16 + 15, -50 + localy * 16 + 15, -81 + localx * 16 + 16, -50 + localy * 16 + 16,0xFFFFFFFF);
                     drawRect(-81 + localx * 16, -50 + localy * 16 + 15, -81 + localx * 16 + 1, -50 + localy * 16 + 16, 0xFFFFFFFF);
                     drawRect(-81 + localx * 16 + 15, -50 + localy * 16, -81 + localx * 16 + 16, -50 + localy * 16 + 1, 0xFFFFFFFF);
-                    drawRect(-81 + localx * 16, -50 + localy * 16, -81 + localx * 16 + 16, -50 + localy * 16 + 16, 0x77777777);
                 }
             GlStateManager.popMatrix();
         GlStateManager.disableAlpha();
         GlStateManager.popMatrix();
+        mc.getRenderItem().renderItemAndEffectIntoGUI(neededStack, 256 - 100, 133 - 70);
+        drawString(fontRenderer, "x" + upgradeCountNeeded, 275 - 100, 133 - 70, 0xFFFFFFFF);
+
+        rightBar[0] = "Статус: §aПорядок";
+        rightBar[1] = "Уровень: " + info.level;
+        rightBar[2] = "Орудия: " + info.GetDefCount();
+        for (int i = 0; i < rightBar.length; i++) {
+            drawString(fontRenderer, rightBar[i], 230 - 100, 26 + i * 15 - 70, 0xFFFFFFFF);
+        }
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
     }
 
@@ -90,6 +124,7 @@ public class BaseGui extends GuiContainer {
         drawDefaultBackground();
         mc.renderEngine.bindTexture(background);
         drawScaledCustomSizeModalRect(guiLeft - 100, guiTop - 70, 0, 0, 365, 329, 365, 329, 512, 512);
+        drawWidgets(mouseX, mouseY);
         //this.drawTexturedModalRect(,  - 70, 0, 0, 365, 329);
     }
     
@@ -110,8 +145,6 @@ public class BaseGui extends GuiContainer {
         int startx = startchunk.x - 6;
         int startz = startchunk.z - 6;
 
-        HashMap<ChunkPos, int[]> cachedChunks = new HashMap<>();
-
         for (int i = 0; i < 13; i++) {
             for (int j = 0; j < 13; j++) {
                 Chunk workChunk = world.getChunkFromChunkCoords(startx + i, startz + j);
@@ -128,46 +161,61 @@ public class BaseGui extends GuiContainer {
                     BlockPos normalBlockCoords = workChunk.getPos().getBlock(xW, 0, zN);
                     int northHeight = world.getHeight(normalBlockCoords.north()).getY()-1;
                     int westHeight = world.getHeight(normalBlockCoords.west()).getY()-1;
-                    int southHeight = world.getHeight(normalBlockCoords.south()).getY()-1;
-                    int eastHeight = world.getHeight(normalBlockCoords.east()).getY()-1;
-                    int light = 255 - Math.max(((northHeight + westHeight + southHeight + eastHeight) / 2 - hmap[h]-1) * 40, 0);
+                    int light = 255 - Math.max(((northHeight + westHeight) / 2 - hmap[h]-1) * 40, 0);
                     color = color - 0xFF000000 + light * 16777216;
 
                     mapTextureData[j * 208 * 16 + i * 16 + h % 16 + (h / 16 * 208)] = color;
                 }
-                cachedChunks.put(workChunk.getPos(), hmap);
             }
         }
         mapTex.updateDynamicTexture();
+    }
 
-        /* 
-        int j = 0;
-        for (int i = 0; i < 16384; ++i) {
-            if (i % 128 == 0 && i != 0) j++;
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
+    }
 
-            int color = 0;
-            World world = te.getWorld();
-            chariot = startpos.add(new BlockPos(i % 128, 0, j));
-            chariot = world.getHeight(chariot).down();
-            int blockHeight = chariot.getY();
-            IBlockState state = world.getBlockState(chariot);
-            Block block = state.getBlock();
-            //if (colors.containsKey(block)) color = colors.get(block);
-            if (block.equals(Blocks.WATER)) color = 0xFF000000;
-            else { if (colors.containsKey(block)) color = 0xFF555555;
-                if (block.equals(Blocks.REDSTONE_TORCH)) {
-                    color = 0xFFFF0000;
-                }
-            }
-            int westHeight = world.getHeight(chariot.west()).getY();
-            int northHeight = world.getHeight(chariot.north()).getY();
-            int light = 255 - Math.max(((northHeight + westHeight) / 2 - blockHeight) * 40, 0);
-            color = color - 0xFF000000 + light * 16777216;
-            
-            mapTextureData[i] = color;
-            mapTex.updateDynamicTexture();
+    @Override
+    public void updateScreen() {
+        UpdateButton();
+        super.updateScreen();
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button) throws IOException {
+        switch (button.id) {
+            case 0:
+                SendExpand(selectedChunk);
+                baseContains = true;
+                nearBase = false;
+                selectedChunk = null;
+                buttonList.get(button.id).enabled = false;
+            break;
         }
-        */
+        super.actionPerformed(button);
+    }
+
+    public void UpdateButton () {
+        ItemStack inSlot = inventorySlots.getSlot(0).getStack();
+        if (inSlot != null && inSlot.getItem() instanceof BaseExpandItem) {
+            if (inSlot.getItemDamage() == upgradeMeta && inSlot.getCount() >= upgradeCountNeeded) {
+                buttonList.get(0).enabled = !baseContains && nearBase; return;
+            }
+        }
+        buttonList.get(0).enabled = false;
+    }
+
+
+    public static void UpdatePrice () {
+        int chunkCount = info.chunks.length;
+        if (chunkCount < 32) {
+            upgradeCountNeeded = (chunkCount) % 8 + 1;
+            upgradeMeta = chunkCount / 8;
+        }
+        neededStack = new ItemStack(BlocksInit.BASEEXPANDER);
+        neededStack.setItemDamage(upgradeMeta);
     }
 
     @Override
@@ -175,6 +223,11 @@ public class BaseGui extends GuiContainer {
         xOffset = width / 2 - xSize / 2;
         yOffset = height / 2 - ySize / 2;
         super.initGui();
+        buttonList.clear();
+        buttonList.add(new UpgradeButton(0, 132 + guiLeft, 130 + guiTop, 112, 24, "Расширить базу"));
+        buttonList.get(0).enabled = false;
+        widgets.clear();
+        widgets.add(new GuiWidget(true, guiLeft - 100 + 367, guiTop - 70, 200, 150, mc, background));
     }
 
     @Override
@@ -184,20 +237,59 @@ public class BaseGui extends GuiContainer {
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+
+        //MAP
+
         if (mouseX > guiLeft - 81 && mouseX < guiLeft - 81 + 208 && mouseY > guiTop - 50 && mouseY < guiTop - 50 + 208) {
             int onMapX = mouseX - (guiLeft - 81);
             int onmapY = mouseY - (guiTop - 50);
+            nearBase = false;
             ChunkPos pos = new ChunkPos(startchunk.x - 6 + onMapX / 16, startchunk.z - 6 + onmapY / 16);
-            if (selectedChunks.contains(pos)) selectedChunks.remove(pos);
-            else {
-                selectedChunks.add(pos);
+            if (selectedChunk != null && selectedChunk.equals(pos)) {
+                selectedChunk = null;
+                rightBar[3] = "";
+                rightBar[4] = "";
             }
-        } 
+            else {
+                rightBar[3] = "Чанк: x:" + pos.x + " z:" + pos.z;
+                baseContains = false;
+                for (ChunkPos poss : info.chunks) {
+                    if (poss.equals(pos)) {baseContains = true; continue;}
+                }
+                rightBar[3] = (baseContains ? "§a" : "") + rightBar[3];
+                for (ChunkPos poss : info.chunks) {
+                    if ((Math.abs(poss.x - pos.x) == 1 && Math.abs(poss.z - pos.z) == 0) || (Math.abs(poss.z - pos.z) == 1 && Math.abs(poss.x - pos.x) == 0))
+                     {nearBase = true; continue;}
+                }
+                rightBar[4] = (nearBase && !baseContains ? "Можно заприватить." : "Нельзя заприватить.");
+                selectedChunk = pos;
+            }
+        }
+
+        //WIDGET
+
+        for (GuiWidget widget : widgets) {
+            if (mouseX > widget.xPos && mouseX < widget.xPos + widget.iconWidth
+            && mouseY > widget.yPos && mouseY < widget.yPos + widget.iconHeight) widget.Click();
+        }
+
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     public static void InsertInfo (baseInfo infos) {
         info = infos;
+        UpdatePrice();
+    }
+
+    public void SendExpand (ChunkPos pos) {
+        TdmMod.wrapper.sendToServer(new BaseUpgradeMessage(info.id, selectedChunk));
+
+    }
+
+    public void drawWidgets (int mouseX, int mouseY) {
+        for (GuiWidget widget : widgets) {
+            widget.draw(mouseX, mouseY);
+        }
     }
 
     enum DyeColor {
@@ -218,25 +310,11 @@ public class BaseGui extends GuiContainer {
         RED(14, "red", 11546150, 11743532, 16711680),
         BLACK(15, "black", 1908001, 1973019, 0);
 
-        private final int id;
-        private final String translationKey;
         private final int colorValue;
-        private final int swappedColorValue;
-        private final float[] colorComponentValues;
-        private final int fireworkColor;
-        private final int textColor;
+
 
         private DyeColor(int idIn, String translationKeyIn, int colorValueIn, int fireworkColorIn, int textColorIn) {
-            this.id = idIn;
-            this.translationKey = translationKeyIn;
             this.colorValue = colorValueIn + 0xFF000000;
-            this.textColor = textColorIn;
-            int i = (colorValueIn & 16711680) >> 16;
-            int j = (colorValueIn & '\uff00') >> 8;
-            int k = (colorValueIn & 255) >> 0;
-            this.swappedColorValue = k << 16 | j << 8 | i << 0;
-            this.colorComponentValues = new float[]{(float)i / 255.0F, (float)j / 255.0F, (float)k / 255.0F};
-            this.fireworkColor = fireworkColorIn;
          }
     }
 
@@ -277,4 +355,51 @@ public class BaseGui extends GuiContainer {
       colors.put(b, i);
   }
 
+  class UpgradeButton extends GuiButton {
+
+    int buttonWidth, buttonHeight;
+
+    public UpgradeButton(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText) {
+        super(buttonId, x, y, widthIn, heightIn, buttonText);
+        buttonHeight = 24;
+        buttonWidth = 124;
+    }
+
+    @Override
+    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+        if (this.visible)
+            {
+                FontRenderer fontrenderer = mc.fontRenderer;
+                mc.getTextureManager().bindTexture(background);
+                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+                this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+                GlStateManager.enableBlend();
+                GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+                GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+                int stateTexY = 0;
+                int texX = 367;
+                if (this.hovered) stateTexY = 25;
+                if (!this.enabled) stateTexY = 50;
+                drawModalRectWithCustomSizedTexture(this.x, this.y, texX, stateTexY, buttonWidth, buttonHeight, 512, 512);
+                this.mouseDragged(mc, mouseX, mouseY);
+                int j = 0xAAAAAAAA;
+
+                if (packedFGColour != 0)
+                {
+                    j = 0xAAAAAAAA;
+                }
+                else
+                if (!this.enabled)
+                {
+                    j = 0xacacac;
+                }
+                else if (this.hovered)
+                {
+                    j = 0xFFFFFFFF;
+                }
+
+                fontrenderer.drawString( this.displayString, this.x + this.width / 2 - fontrenderer.getStringWidth(this.displayString) / 2, this.y + (this.height - 8) / 2, j, false);
+            }
+        }
+    }
 }

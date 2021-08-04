@@ -6,12 +6,13 @@ import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.savedata.WorldBasesSavedData;
 import com.anet.qtr4tdm.common.tiles.BaseTile;
 import com.anet.qtr4tdm.uebki.IDSmanager;
+import com.anet.qtr4tdm.uebki.gui.GuiHandler;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
-import scala.reflect.internal.Trees.Return;
 
 public class InWorldBasesManager {
     ArrayList<baseInfo> bases;
@@ -46,12 +47,17 @@ public class InWorldBasesManager {
 
     public static baseInfo AddNormalBase (BlockPos pos, EntityPlayer owner, int dimension) {
         int level = 1;
-        int OwnerId = IDSmanager.instance.GetPlayerId(owner);
+        int OwnerId = IDSmanager.GetPlayerId(owner);
         int id = GetNewBaseId();
-        if (instance.freeIds.contains(id)) instance.freeIds.remove(0);
         ChunkPos[] chunks = new ChunkPos[1];
         chunks[0] = owner.world.getChunkFromBlockCoords(pos).getPos();
         baseInfo base = new baseInfo(pos, OwnerId, id, level, chunks, dimension, owner.getName() + "'s base");
+        if (instance.freeIds.contains(id)) { 
+            instance.freeIds.remove(0);
+            for (int i = 0; i < instance.bases.size(); i++) {
+                if (instance.bases.get(i).id == id) {instance.bases.remove(i); i--;}
+            } 
+        }
         instance.bases.add(base);
         instance.SaveData();
         return base;
@@ -68,6 +74,7 @@ public class InWorldBasesManager {
             if (base == null || base.pos.equals(pos)) {
                 instance.freeIds.add(base.id);
                 instance.bases.get(i).pos = new BlockPos(0, 0, 0);
+                instance.bases.get(i).chunks = new ChunkPos[0];
                 i--;
             }
         }
@@ -80,6 +87,15 @@ public class InWorldBasesManager {
             if (base.pos.equals(pos)) return base;
         }
         System.out.println("nomatch");
+        return null;
+    }
+
+    public static baseInfo GetInfo (int id) {
+        baseInfo result = instance.bases.get(id);
+        if (result.id == id) return result;
+        for (baseInfo base : instance.bases) {
+            if (base.id == id) return base;
+        }
         return null;
     }
 
@@ -116,7 +132,7 @@ public class InWorldBasesManager {
     }
 
     public static int PlayerBaseCount (String PlayerName) {
-        int PlayerId = IDSmanager.instance.GetPlayerId(PlayerName);
+        int PlayerId = IDSmanager.GetPlayerId(PlayerName);
         int count = 0;
         for (baseInfo base : instance.bases) {
             if (base.OwnerId == PlayerId && !base.pos.equals(BlockPos.ORIGIN)) count++;
@@ -128,5 +144,27 @@ public class InWorldBasesManager {
         int x = Math.floorDiv(pos.getX(), 16);
         int z = Math.floorDiv(pos.getZ(), 16);
         return new ChunkPos(x,z);
+    }
+
+    public static boolean DoBaseUpgrade (int Baseid, ChunkPos chunk) {
+        baseInfo upgradeBase = GetInfo(Baseid);
+        //if (upgradeBase == null) return false;
+        TdmMod.logger.info(upgradeBase.pos);
+        TileEntity t = TdmMod.currentServer.getWorld(upgradeBase.dimenision).getTileEntity(upgradeBase.pos); //if (t == null || !(t instanceof BaseTile)) return false;
+        BaseTile te = (BaseTile)t;
+        //if (te.isEmpty()) return false;
+        te.decrStackSize(0, (upgradeBase.chunks.length < 32 ? upgradeBase.chunks.length % 8 + 1 : 8));
+        upgradeBase.level++;
+        ChunkPos[] newChunks = new ChunkPos[upgradeBase.chunks.length + 1];
+        int i = 0;
+        for (; i < upgradeBase.chunks.length; i++) {
+            newChunks[i] = upgradeBase.chunks[i];
+        }
+        newChunks[i] = chunk;
+        upgradeBase.chunks = newChunks;
+        //Рассылаем игрокам обновленную инфу о базах
+        GuiHandler.UpdateBaseGuis();
+        if (upgradeBase.container != null) upgradeBase.container.detectAndSendChanges();
+        return true;
     }
 }

@@ -2,7 +2,6 @@ package com.anet.qtr4tdm.uebki.messages;
 
 import java.util.List;
 
-import javax.swing.text.AbstractDocument.BranchElement;
 
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.bases.InWorldBasesManager;
@@ -15,7 +14,6 @@ import com.anet.qtr4tdm.common.tiles.BaseTile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

@@ -13,6 +13,8 @@ import com.anet.qtr4tdm.init.BlocksInit;
 import com.anet.qtr4tdm.uebki.gui.baseGuiMisc.BaseContainer;
 import com.anet.qtr4tdm.uebki.messages.BaseUpgradeMessage;
 
+import org.jline.reader.Widget;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -180,7 +182,19 @@ public class BaseGui extends GuiContainer {
     @Override
     public void updateScreen() {
         UpdateButton();
+        for (GuiWidget widget : widgets) {
+            widget.Update();
+        }
         super.updateScreen();
+    }
+
+    @Override
+    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+        for (GuiWidget widget : widgets) {
+            if (widget.deployProgress == 1)
+                widget.keyTyped(typedChar, keyCode);
+        }
+        super.keyTyped(typedChar, keyCode);
     }
 
     @Override
@@ -227,7 +241,7 @@ public class BaseGui extends GuiContainer {
         buttonList.add(new UpgradeButton(0, 132 + guiLeft, 130 + guiTop, 112, 24, "Расширить базу"));
         buttonList.get(0).enabled = false;
         widgets.clear();
-        widgets.add(new GuiWidget(true, guiLeft - 100 + 367, guiTop - 70, 200, 150, mc, background));
+        widgets.add(new GuiWidgetMembers(true, guiLeft - 100 + 367, guiTop - 70, 200, 150, mc, new ResourceLocation(TdmMod.MODID, "textures/gui/members.png")));
     }
 
     @Override
@@ -269,8 +283,7 @@ public class BaseGui extends GuiContainer {
         //WIDGET
 
         for (GuiWidget widget : widgets) {
-            if (mouseX > widget.xPos && mouseX < widget.xPos + widget.iconWidth
-            && mouseY > widget.yPos && mouseY < widget.yPos + widget.iconHeight) widget.Click();
+            widget.MouseClick(mouseX, mouseY);
         }
 
         super.mouseClicked(mouseX, mouseY, mouseButton);

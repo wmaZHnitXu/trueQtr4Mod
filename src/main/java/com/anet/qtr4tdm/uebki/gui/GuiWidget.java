@@ -16,8 +16,9 @@ public class GuiWidget extends Gui {
     private int YonTexIcon = 75, XonTexIcon = 367;
     public int iconWidth = 32, iconHeight = 32;
     public int DeployedWidth, DeployedHeight;
-    public int TexH = 512, TexW = 512;
+    public int TexH = 32, TexW = 32;
     public String name = "Участники";
+    private boolean hoverExitButton;
     public Minecraft mc;
 
     public GuiWidget (boolean rightSide, int x, int y, int dwidth, int dheight, Minecraft mc, ResourceLocation icon) {
@@ -29,6 +30,14 @@ public class GuiWidget extends Gui {
         this.DeployedHeight = dheight;
         this.mc = mc;
         this.iconLoc = icon;
+    }
+
+    public void keyTyped(char typedChar, int keyCode)  {
+
+    }
+
+    public void Update () {
+
     }
 
     public void draw (int mouseX, int mouseY) {
@@ -46,61 +55,64 @@ public class GuiWidget extends Gui {
         }
         else {
             if (alpha > 0.01d) {
-                alpha = lerp(alpha, 0, 0.1d);
+                alpha = lerp(alpha, 0, 0.5d);
             }
             else {
                 alpha = 0;
                 if (deployProgress > 0.01d) {
-                    deployProgress = lerp(deployProgress, 0, 0.05d);
+                    deployProgress = lerp(deployProgress, 0, 0.5d);
                 }
                 else deployProgress = 0;
             }
         }
-        GlStateManager.pushMatrix();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableBlend();
 
-        drawRect(xPos, yPos,xPos + Double.valueOf(iconWidth + (DeployedWidth - iconWidth) * deployProgress).intValue(),
-        yPos + Double.valueOf(iconHeight + (DeployedHeight - iconHeight) * deployProgress).intValue(), 0xAA50ff96);
+        hoverExitButton = (mouseX > xPos + DeployedWidth - 10) && (mouseX < xPos + DeployedWidth - 5) && mouseY > yPos + 5 && mouseY < yPos + 10;
 
-        drawRect(xPos + 2, yPos + 2, xPos + Double.valueOf(iconWidth + (DeployedWidth - iconWidth) * deployProgress).intValue() - 2,
-        yPos + Double.valueOf(iconHeight + (DeployedHeight - iconHeight) * deployProgress).intValue() - 2, 0xFF333333);
-
-        mc.renderEngine.bindTexture(iconLoc);
-        drawModalRectWithCustomSizedTexture(xPos, yPos, XonTexIcon, YonTexIcon, iconWidth, iconHeight, TexW, TexH);
-
-        /*GlStateManager.pushMatrix(); ЧЗХ Я ЕБАЛ ПОЧЕМУ НЕ РАБОТАЕТ
+        if (deployProgress != 0) {
+            GlStateManager.pushMatrix();
             GlStateManager.enableAlpha();
             GlStateManager.enableBlend();
-            GlStateManager.translate(xPos, yPos, 0);
-                drawContent();
-                GlStateManager.color(1, 1, 1, Double.valueOf(alpha).floatValue());
+
+            drawRect(xPos + 1, yPos + 1, xPos + Double.valueOf(iconWidth + (DeployedWidth - iconWidth) * deployProgress).intValue() - 1,
+            yPos + Double.valueOf(iconHeight + (DeployedHeight - iconHeight) * deployProgress).intValue() - 1, 0xFF333333);
+
+            
+
+            /*GlStateManager.pushMatrix(); ЧЗХ Я ЕБАЛ ПОЧЕМУ НЕ РАБОТАЕТ
+                GlStateManager.enableAlpha();
+                GlStateManager.enableBlend();
+                GlStateManager.translate(xPos, yPos, 0);
+                    drawContent();
+                    GlStateManager.color(1, 1, 1, Double.valueOf(alpha).floatValue());
+                GlStateManager.disableBlend();
+                GlStateManager.disableAlpha();
+            GlStateManager.popMatrix();
+            */
+
+        
+            GlStateManager.pushMatrix();
+            if (deployProgress == 1) drawContent(mouseX, mouseY);
+            GlStateManager.popMatrix();
+            drawRect(xPos + 1, yPos + 1, xPos + Double.valueOf(iconWidth + (DeployedWidth - iconWidth  - 1) * deployProgress).intValue(), //ДАДА АХУЕННОЕ РЕШЕНИЕ
+            yPos + Double.valueOf(iconHeight + (DeployedHeight - iconHeight  - 1) * deployProgress).intValue(), 0x00333333 + Double.valueOf((1 - alpha) * 255).intValue() * 16777216);
+
+            drawRect(xPos, yPos,xPos + Double.valueOf(iconWidth + (DeployedWidth - iconWidth) * deployProgress).intValue(),
+            yPos + 15, 0xFF111111);
+            if (deployProgress > 0.60f) drawCenteredString(mc.fontRenderer, name, xPos + DeployedWidth / 2, yPos + 4, 0xFFAAAAAA);
+            if (deployProgress > 0.94f) drawRect(xPos + DeployedWidth - 10 , yPos + 5, xPos + DeployedWidth - 5, yPos + 10, Double.valueOf((hoverExitButton ? 0xFFFFDDDD : 0xFFFF1111)).intValue());
+
             GlStateManager.disableBlend();
             GlStateManager.disableAlpha();
-        GlStateManager.popMatrix();
-        */
-
-       
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(xPos, yPos, 0);
-        if (deployProgress == 1) drawContent();
-        GlStateManager.popMatrix();
-        drawRect(xPos + 2, yPos + 2, xPos + Double.valueOf(iconWidth + (DeployedWidth - iconWidth) * deployProgress).intValue() - 2, //ДАДА АХУЕННОЕ РЕШЕНИЕ
-        yPos + Double.valueOf(iconHeight + (DeployedHeight - iconHeight) * deployProgress).intValue() - 2, 0x00333333 + Double.valueOf((1 - alpha) * 255).intValue() * 16777216);
-
-        if (deployed) {
-            drawRect(xPos, yPos,xPos + Double.valueOf(((mc.fontRenderer.getStringWidth(name) + 4) * Math.min(deployProgress * 2, 1))).intValue(),
-            yPos + 15, 0xFF111111);
-            drawString(mc.fontRenderer, name, xPos + 2, yPos + 2, 0x00AAAAAA + Double.valueOf(Math.min(deployProgress * 1.5, 1) * 255).intValue() * 16777216);
+            GlStateManager.popMatrix();
         }
-
-        GlStateManager.disableBlend();
-        GlStateManager.disableAlpha();
-        GlStateManager.popMatrix();
+        else {
+            mc.renderEngine.bindTexture(iconLoc);
+            drawModalRectWithCustomSizedTexture(xPos, yPos, 0, 0, 32, 32, 32, 32);
+        }
     }
 
-    public void drawContent () {
-        drawString(mc.fontRenderer, "СУКА", 70, 10, 0xFFFFFF);
+    public void drawContent (int mouseX, int mouseY) {
+        drawString(mc.fontRenderer, "СУКА", 20, 20, 0xFFFFFF);
     }
 
     public void Deploy () {
@@ -111,8 +123,9 @@ public class GuiWidget extends Gui {
         deployed = false;
     }
 
-    public void Click () {
-        if (deployed) Minimize(); else Deploy(); 
+    public void MouseClick (int x, int y) {
+        if (x > xPos && x < xPos + 32 && y > yPos && y < yPos + 32 && !deployed) Deploy();
+        if (hoverExitButton) Minimize();
     }
 
     public static double lerp(double a, double b, double f) {

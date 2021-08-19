@@ -4,6 +4,7 @@ import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.bases.InWorldBasesManager;
 import com.anet.qtr4tdm.common.bases.baseInfo;
 import com.anet.qtr4tdm.common.blocks.BaseBlock;
+import com.anet.qtr4tdm.uebki.IDSmanager;
 import com.anet.qtr4tdm.uebki.gui.BaseGui;
 import com.anet.qtr4tdm.uebki.gui.BaseSetupGui;
 import com.typesafe.config.ConfigException.Null;
@@ -15,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -48,8 +50,14 @@ public class BaseTile extends TileEntity implements IInventory {
             GuiOpen(world, player, pos);
         }
         else if (state == BaseState.active) {
-            player.openGui(TdmMod.instance, TdmMod.GUI_BASE, world, pos.getX(), pos.getY(), pos.getZ());
+            if (directInfo.isMember(IDSmanager.GetPlayerId(player)))
+                player.openGui(TdmMod.instance, TdmMod.GUI_BASE, world, pos.getX(), pos.getY(), pos.getZ());
+            else player.sendMessage(new TextComponentString("Доступ запрещён."));
         }
+    }
+
+    public int GetId () {
+        return directInfo.id;
     }
 
     @SideOnly(Side.CLIENT)

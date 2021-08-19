@@ -85,7 +85,20 @@ public class SqlHelper {
         }
         catch (SQLException e) {
             System.out.println(e.toString());
-            return 0;
+            return -1;
+        }
+    }
+
+    public String GetPlayerName (int id) {
+        try {
+            statement = (Statement) connection.createStatement();
+            resSet = statement.executeQuery("SELECT name FROM users WHERE id='" + id + "'");
+            resSet.first();
+            return resSet.getString("name");
+        }
+        catch (SQLException e) {
+            System.out.println(e.toString());
+            return "sqlError";
         }
     }
 
@@ -102,7 +115,7 @@ public class SqlHelper {
             System.out.println("Player registered");
             return true;
         } else {
-            System.out.println("PLayer not registered");
+            System.out.println("Player not registered");
             return false;
         }
 

@@ -48,10 +48,12 @@ public class InWorldBasesManager {
     public static baseInfo AddNormalBase (BlockPos pos, EntityPlayer owner, int dimension) {
         int level = 1;
         int OwnerId = IDSmanager.GetPlayerId(owner);
+        int[] members = new int[1];
+        members[0] = OwnerId;
         int id = GetNewBaseId();
         ChunkPos[] chunks = new ChunkPos[1];
         chunks[0] = owner.world.getChunkFromBlockCoords(pos).getPos();
-        baseInfo base = new baseInfo(pos, OwnerId, id, level, chunks, dimension, owner.getName() + "'s base");
+        baseInfo base = new baseInfo(pos, OwnerId, id, level, chunks, dimension, owner.getName() + "'s base", members);
         if (instance.freeIds.contains(id)) { 
             instance.freeIds.remove(0);
             for (int i = 0; i < instance.bases.size(); i++) {
@@ -166,5 +168,31 @@ public class InWorldBasesManager {
         GuiHandler.UpdateBaseGuis();
         if (upgradeBase.container != null) upgradeBase.container.detectAndSendChanges();
         return true;
+    }
+
+    public static void SetMember (BlockPos pos, String name, int level) {
+        baseInfo b = GetInfo(pos);
+        int id = IDSmanager.GetPlayerId(name);
+        if (id == -1) return;
+        if (level != -1) {
+            int[] currentm = b.members;
+            int[] nm = new int[currentm.length+1];
+            for (int i = 0; i < currentm.length; i++) {
+                if (currentm[i] == id) return;
+                nm[i] = currentm[i];
+            }
+            nm[nm.length-1] = id;
+            b.members = nm;
+        }
+        else {
+            int[] currentm = b.members;
+            int[] nm = new int[currentm.length-1];
+            boolean ba = false;
+            for (int i = 0; i < nm.length; i++) {
+                if (currentm[i] == id) {i++; ba = true;}
+                nm[ba ? i-1 : i] = currentm[i];
+            }
+            b.members = nm;
+        }
     }
 }

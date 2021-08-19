@@ -58,8 +58,9 @@ public class WorldBasesSavedData extends WorldSavedData {
                 for (int j = 0; j < arrX.length; j++) {
                     chunks[j] = new ChunkPos(arrX[j], arrZ[j]);
                 }
+            int[] members = nbt.getIntArray("members" + i);
             String name = nbt.getString("name");
-            bases.add(new baseInfo(pos, OwnerId, id, level, chunks, dimension, name)); //TODO
+            bases.add(new baseInfo(pos, OwnerId, id, level, chunks, dimension, name, members)); //TODO
         }
 
         //FREEIDS
@@ -90,6 +91,7 @@ public class WorldBasesSavedData extends WorldSavedData {
             }
             compound.setIntArray("chunkX" + id, x);
             compound.setIntArray("chunkZ" + id, z);
+            compound.setIntArray("members" + id, base.members);
             compound.setString("name", base.name);
         }
 

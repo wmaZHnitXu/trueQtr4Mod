@@ -18,8 +18,12 @@ import com.anet.qtr4tdm.uebki.messages.BasedAnswer;
 import com.anet.qtr4tdm.uebki.messages.BasedAnswerHandler;
 import com.anet.qtr4tdm.uebki.messages.BasedRequest;
 import com.anet.qtr4tdm.uebki.messages.BasedRequestHandler;
+import com.anet.qtr4tdm.uebki.messages.GetBaseMembersHandler;
+import com.anet.qtr4tdm.uebki.messages.GetBaseMembersMessage;
 import com.anet.qtr4tdm.uebki.messages.RadarInfoHandler;
 import com.anet.qtr4tdm.uebki.messages.RadarMessage;
+import com.anet.qtr4tdm.uebki.messages.SetBaseMember;
+import com.anet.qtr4tdm.uebki.messages.SetBaseMemberHandler;
 import com.anet.qtr4tdm.uebki.messages.baseInfoMessage;
 import com.anet.qtr4tdm.uebki.messages.baseInfoMessageHandler;
 
@@ -88,6 +92,10 @@ public class TdmMod
         wrapper.registerMessage(baseInfoMessageHandler.class, baseInfoMessage.class, 7, Side.CLIENT);
 
         wrapper.registerMessage(BaseUpgradeHandler.class, BaseUpgradeMessage.class, 8, Side.SERVER);
+        
+        wrapper.registerMessage(SetBaseMemberHandler.class, SetBaseMember.class, 9, Side.SERVER);
+
+        wrapper.registerMessage(GetBaseMembersHandler.class, GetBaseMembersMessage.class, 10, Side.CLIENT);
     }
 
     @EventHandler

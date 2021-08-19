@@ -32,7 +32,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
-public class BaseGui extends GuiContainer {
+public class BaseGui extends GuiContainer implements ITextFieldFocus {
 
     public final BaseTile te;
     public final InventoryPlayer player;
@@ -53,6 +53,7 @@ public class BaseGui extends GuiContainer {
     private boolean baseContains = true;
     private boolean nearBase = false;
     private ArrayList<GuiWidget> widgets;
+    public boolean InputFieldFocused;
     
     public BaseGui(InventoryPlayer playerInventory, BaseTile baseTe) {
         super(new BaseContainer(playerInventory, baseTe));
@@ -163,7 +164,7 @@ public class BaseGui extends GuiContainer {
                     BlockPos normalBlockCoords = workChunk.getPos().getBlock(xW, 0, zN);
                     int northHeight = world.getHeight(normalBlockCoords.north()).getY()-1;
                     int westHeight = world.getHeight(normalBlockCoords.west()).getY()-1;
-                    int light = 255 - Math.max(((northHeight + westHeight) / 2 - hmap[h]-1) * 40, 0);
+                    int light = 255 - Math.max(((northHeight + westHeight) / 2 - hmap[h]-1) * 100, 0);
                     color = color - 0xFF000000 + light * 16777216;
 
                     mapTextureData[j * 208 * 16 + i * 16 + h % 16 + (h / 16 * 208)] = color;
@@ -194,7 +195,9 @@ public class BaseGui extends GuiContainer {
             if (widget.deployProgress == 1)
                 widget.keyTyped(typedChar, keyCode);
         }
-        super.keyTyped(typedChar, keyCode);
+        if (!InputFieldFocused) {
+            super.keyTyped(typedChar, keyCode);
+        }
     }
 
     @Override
@@ -241,7 +244,7 @@ public class BaseGui extends GuiContainer {
         buttonList.add(new UpgradeButton(0, 132 + guiLeft, 130 + guiTop, 112, 24, "Расширить базу"));
         buttonList.get(0).enabled = false;
         widgets.clear();
-        widgets.add(new GuiWidgetMembers(true, guiLeft - 100 + 367, guiTop - 70, 200, 150, mc, new ResourceLocation(TdmMod.MODID, "textures/gui/members.png")));
+        widgets.add(new GuiWidgetMembers(true, guiLeft - 100 + 367, guiTop - 70, 200, 150, mc, new ResourceLocation(TdmMod.MODID, "textures/gui/members.png"), this));
     }
 
     @Override
@@ -367,6 +370,16 @@ public class BaseGui extends GuiContainer {
   static void addColor(Block b, int i) {
       colors.put(b, i);
   }
+
+    @Override
+    public void SetFocused(boolean b) {
+        InputFieldFocused = b;
+    }
+
+    @Override
+    public BlockPos GetBlockPos() {
+        return te.getPos();
+    }
 
   class UpgradeButton extends GuiButton {
 

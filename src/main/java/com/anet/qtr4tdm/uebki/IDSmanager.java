@@ -49,6 +49,15 @@ public class IDSmanager {
         }
         return result;
     }
+
+    public static String GetName (int id) {
+        String result;
+        for (PlayerIdsInfo p : instance.CachedIds) {
+            if (p.id == id && p.GetPlayer() != null) {result = p.GetPlayer().getName(); return result;}
+        }
+        result = SqlHelper.instance.GetPlayerName(id);
+        return result;
+    }
     
     class PlayerIdsInfo {
 

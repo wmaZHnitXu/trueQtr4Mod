@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 public class RocketEntity extends Entity {
 
-    public EntityLivingBase target;
+    public Entity target;
     private Vec3d targetVector;
     private Vec3d currentVector;
     private double accell;

@@ -13,6 +13,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.ChunkPos;
 
 public class BaseSetupGui extends GuiScreen{
 
@@ -109,7 +110,7 @@ public class BaseSetupGui extends GuiScreen{
             case 1:
                 title = "§lИнформация о базе";
                 content = new String[]{"Позиция: " + tile.getPos(),
-                    "Базовый чанк: " + RedOrGreen(!AlreadyClaimed) + InWorldBasesManager.ChunkPosFromBlockPos(tile.getPos()),
+                    "Базовый чанк: " + RedOrGreen(!AlreadyClaimed) + new ChunkPos(tile.getPos()),
                     "Владелец: " + RedOrGreen(PlayerCanMakeBase) + mc.getSession().getUsername(),
                     "Первичное количество оборонительных орудий: 4",
                     "id базы: " + BaseId};

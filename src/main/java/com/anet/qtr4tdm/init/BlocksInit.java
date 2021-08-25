@@ -12,13 +12,16 @@ import com.anet.qtr4tdm.common.blocks.RadarSlaveBlock;
 import com.anet.qtr4tdm.common.blocks.RadarSlaveCornerBlock;
 import com.anet.qtr4tdm.common.blocks.RadarSlaveEdgeBlock;
 import com.anet.qtr4tdm.common.blocks.TerminalRadarBlock;
+import com.anet.qtr4tdm.common.blocks.ThermalBaseBlock;
 import com.anet.qtr4tdm.common.entities.Radar1Entity;
 import com.anet.qtr4tdm.common.entities.Radar2Entity;
 import com.anet.qtr4tdm.common.entities.Radar3Entity;
+import com.anet.qtr4tdm.common.entities.RadarThermal1Entity;
 import com.anet.qtr4tdm.common.entities.RocketEntity;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar1;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar2;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar3;
+import com.anet.qtr4tdm.common.entities.render.RenderThermalRadar1;
 import com.anet.qtr4tdm.common.items.BaseExpandItem;
 import com.anet.qtr4tdm.common.items.IMetadataItem;
 import com.anet.qtr4tdm.common.items.rocketItem;
@@ -28,6 +31,7 @@ import com.anet.qtr4tdm.common.tiles.MiniSiloTile;
 import com.anet.qtr4tdm.common.tiles.RadarBaseTile;
 import com.anet.qtr4tdm.common.tiles.RadarWorkerTile;
 import com.anet.qtr4tdm.common.tiles.TerminalRadarTile;
+import com.anet.qtr4tdm.common.tiles.ThermalBaseTile;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.*;
@@ -59,6 +63,7 @@ public class BlocksInit {
     public static final Block ENERGYCONSUMER = new EnergyConsumerBlock();
     public static final Block MINISILO = new MiniSiloBlock();
     public static final Block BASE = new BaseBlock();
+    public static final Block RADARTHERMALBASE = new ThermalBaseBlock();
 
     public static final Block[] BLOCKS = new Block[] {
     
@@ -68,7 +73,8 @@ public class BlocksInit {
             RADART,
             ENERGYCONSUMER,
             MINISILO,
-            BASE
+            BASE,
+            RADARTHERMALBASE
 
     };
 
@@ -145,6 +151,13 @@ public class BlocksInit {
                 return new RenderRadar1(manager);
             }
         });
+        RenderingRegistry.registerEntityRenderingHandler(RadarThermal1Entity.class, new IRenderFactory() {
+            @Override
+            public Render createRenderFor(RenderManager manager) 
+            {
+                return new RenderThermalRadar1(manager);
+            }
+        });
     }
 
     @SideOnly(Side.CLIENT)
@@ -179,13 +192,17 @@ public class BlocksInit {
         GameRegistry.registerTileEntity(EnergyConsumerTile.class, new ResourceLocation(TdmMod.MODID + ":" + "energyconsumertile"));
         GameRegistry.registerTileEntity(MiniSiloTile.class, new ResourceLocation(TdmMod.MODID + ":" + "minisilotile"));
         GameRegistry.registerTileEntity(BaseTile.class, new ResourceLocation(TdmMod.MODID + ":" + "basetile"));
+        GameRegistry.registerTileEntity(ThermalBaseTile.class, new ResourceLocation(TdmMod.MODID + ":" + "thermalbasetile"));
 
     }
 
     public static void RegisterEntities () {
+
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "radar1"), Radar1Entity.class, "Radar1", 1335, TdmMod.instance, 150, 3, false);
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "radar2"), Radar2Entity.class, "Radar2", 1336, TdmMod.instance, 150, 3, false);
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "radar3"), Radar3Entity.class, "Radar3", 1337, TdmMod.instance, 150, 3, false);
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "rocket1"), RocketEntity.class, "rocket1", 1338, TdmMod.instance, 1000, 2, true);
+        EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "radarthermal1"), RadarThermal1Entity.class, "RadarThermal1", 1339, TdmMod.instance, 150, 3, false);
+
     }
 }

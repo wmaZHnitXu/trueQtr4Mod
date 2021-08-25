@@ -101,7 +101,7 @@ public class InWorldBasesManager {
         return null;
     }
 
-    public static baseInfo GetBaseOnTerritory (BlockPos pos) {
+    public static baseInfo GetBaseOfTerritory (BlockPos pos) {
         return GetBaseOfTerritory(new ChunkPos(pos));
     }
 
@@ -126,9 +126,17 @@ public class InWorldBasesManager {
         return true;
     }
 
+    public static int GetPlayerRelationsWithBase (EntityPlayer p, baseInfo b) {
+        int result = -2;
+        int id = IDSmanager.GetPlayerId(p);
+        if (b.isMember(id)) result = 0;
+        if (b.OwnerId == id) result = 2;
+        return result;
+    }
+
     public static boolean IsPositionClaimed (BlockPos pos) {
         for (baseInfo base : instance.bases) {
-            if (base.ContainsChunk(ChunkPosFromBlockPos(pos)) && !base.pos.equals(BlockPos.ORIGIN)) return true;
+            if (base.ContainsChunk(new ChunkPos(pos)) && !base.pos.equals(BlockPos.ORIGIN)) return true;
         }
         return false;
     }
@@ -142,19 +150,11 @@ public class InWorldBasesManager {
         return count;
     }
 
-    public static ChunkPos ChunkPosFromBlockPos (BlockPos pos) {
-        int x = Math.floorDiv(pos.getX(), 16);
-        int z = Math.floorDiv(pos.getZ(), 16);
-        return new ChunkPos(x,z);
-    }
-
     public static boolean DoBaseUpgrade (int Baseid, ChunkPos chunk) {
         baseInfo upgradeBase = GetInfo(Baseid);
-        //if (upgradeBase == null) return false;
         TdmMod.logger.info(upgradeBase.pos);
-        TileEntity t = TdmMod.currentServer.getWorld(upgradeBase.dimenision).getTileEntity(upgradeBase.pos); //if (t == null || !(t instanceof BaseTile)) return false;
+        TileEntity t = TdmMod.currentServer.getWorld(upgradeBase.dimenision).getTileEntity(upgradeBase.pos);
         BaseTile te = (BaseTile)t;
-        //if (te.isEmpty()) return false;
         te.decrStackSize(0, (upgradeBase.chunks.length < 32 ? upgradeBase.chunks.length % 8 + 1 : 8));
         upgradeBase.level++;
         ChunkPos[] newChunks = new ChunkPos[upgradeBase.chunks.length + 1];
@@ -167,32 +167,14 @@ public class InWorldBasesManager {
         //Рассылаем игрокам обновленную инфу о базах
         GuiHandler.UpdateBaseGuis();
         if (upgradeBase.container != null) upgradeBase.container.detectAndSendChanges();
+        
+        instance.SaveData();
         return true;
     }
 
     public static void SetMember (BlockPos pos, String name, int level) {
         baseInfo b = GetInfo(pos);
-        int id = IDSmanager.GetPlayerId(name);
-        if (id == -1) return;
-        if (level != -1) {
-            int[] currentm = b.members;
-            int[] nm = new int[currentm.length+1];
-            for (int i = 0; i < currentm.length; i++) {
-                if (currentm[i] == id) return;
-                nm[i] = currentm[i];
-            }
-            nm[nm.length-1] = id;
-            b.members = nm;
-        }
-        else {
-            int[] currentm = b.members;
-            int[] nm = new int[currentm.length-1];
-            boolean ba = false;
-            for (int i = 0; i < nm.length; i++) {
-                if (currentm[i] == id) {i++; ba = true;}
-                nm[ba ? i-1 : i] = currentm[i];
-            }
-            b.members = nm;
-        }
+        b.SetMember(name, level);
+        instance.SaveData();
     }
 }

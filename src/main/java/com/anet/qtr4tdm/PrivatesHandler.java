@@ -34,7 +34,7 @@ public class PrivatesHandler {
 
     public static boolean isPlayerAllowedToEditHere (EntityPlayer player, BlockPos pos) {
         boolean result = true;
-        baseInfo base = InWorldBasesManager.GetBaseOnTerritory(pos);
+        baseInfo base = InWorldBasesManager.GetBaseOfTerritory(pos);
         if (base != null) {
             result = base.isMember(IDSmanager.GetPlayerId(player));
         }

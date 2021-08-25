@@ -102,7 +102,14 @@ public class MiniSiloBlock extends BlockTileEntity<MiniSiloTile> {
                 }
             }
         }
-    } 
+    }
+
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        TileEntity te = worldIn.getTileEntity(pos);
+        ((MiniSiloTile)te).DisconnectFromBase();
+        super.breakBlock(worldIn, pos, state);
+    }
     
     @Override
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {

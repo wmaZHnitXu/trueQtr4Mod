@@ -15,13 +15,14 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BaseTile extends TileEntity implements IInventory {
+public class BaseTile extends TileEntity implements IInventory, ITickable {
     private int baseId;
     private baseInfo directInfo;
     private BaseState state;
@@ -206,5 +207,10 @@ public class BaseTile extends TileEntity implements IInventory {
     public void clear() {
         item = ItemStack.EMPTY;
         
+    }
+
+    @Override
+    public void update() {
+        if (!world.isRemote && directInfo != null) directInfo.Tick();  
     }
 }

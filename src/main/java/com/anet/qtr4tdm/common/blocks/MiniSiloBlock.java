@@ -118,4 +118,15 @@ public class MiniSiloBlock extends BlockTileEntity<MiniSiloTile> {
         if (state.getValue(armed)) items.add(new ItemStack(BlocksInit.ROCKET));
         return items;
     }
+
+    @Override
+    public boolean hasTileEntity(IBlockState blockState) {
+        return true;
+    }
+
+    @Override
+    public boolean hasTileEntity() {
+        // TODO Auto-generated method stub
+        return true;
+    }
 }

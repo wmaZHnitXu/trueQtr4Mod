@@ -113,9 +113,9 @@ public class BaseGui extends GuiContainer implements ITextFieldFocus {
         mc.getRenderItem().renderItemAndEffectIntoGUI(neededStack, 256 - 100, 133 - 70);
         drawString(fontRenderer, "x" + upgradeCountNeeded, 275 - 100, 133 - 70, 0xFFFFFFFF);
 
-        rightBar[0] = "Статус: §aПорядок";
+        rightBar[0] = "Статус: " + info.status.toString();
         rightBar[1] = "Уровень: " + info.level;
-        rightBar[2] = "Орудия: " + info.GetDefCount();
+        rightBar[2] = "Орудия: " + info.defcount + " / " +  info.GetDefCount();
         for (int i = 0; i < rightBar.length; i++) {
             drawString(fontRenderer, rightBar[i], 230 - 100, 26 + i * 15 - 70, 0xFFFFFFFF);
         }
@@ -278,7 +278,7 @@ public class BaseGui extends GuiContainer implements ITextFieldFocus {
                     if ((Math.abs(poss.x - pos.x) == 1 && Math.abs(poss.z - pos.z) == 0) || (Math.abs(poss.z - pos.z) == 1 && Math.abs(poss.x - pos.x) == 0))
                      {nearBase = true; continue;}
                 }
-                rightBar[4] = (nearBase && !baseContains ? "Можно заприватить." : "Нельзя заприватить.");
+                rightBar[4] = (nearBase ? baseContains ? "Уже запривачен." : "Можно заприватить." : "Нельзя заприватить.");
                 selectedChunk = pos;
             }
         }

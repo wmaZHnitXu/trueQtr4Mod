@@ -2,6 +2,7 @@ package com.anet.qtr4tdm.common.supers;
 
 import java.util.ArrayList;
 
+import com.anet.qtr4tdm.common.bases.InWorldBasesManager;
 import com.anet.qtr4tdm.common.bases.baseInfo;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,34 +19,18 @@ public abstract class Radar extends EntityBaseConnectable {
         super(worldIn);
     }
 
-    public ArrayList<RadarTrackingInfo> ReportTargetsToBase () {
+    public ArrayList<RadarTrackingInfo> ReportTargetsToBase (baseInfo info) {
+        base = info;
         ArrayList<RadarTrackingInfo> result = new ArrayList<RadarTrackingInfo>();
         for (EntityPlayer player : world.playerEntities) {
             if (player != null && isInRange(player)) {
-                result.add(new RadarTrackingInfo(player, 0));
+                result.add(new RadarTrackingInfo(player, InWorldBasesManager.GetPlayerRelationsWithBase(player, base)));
             }
         }
         return result;
     }
 
     public abstract boolean isInRange (EntityPlayer e);
-
-    @Override
-    protected void entityInit() {
-        
-    }
-
-    @Override
-    protected void readEntityFromNBT(NBTTagCompound compound) {
-        super.readEntityFromNBT(compound);
-        
-    }
-
-    @Override
-    protected void writeEntityToNBT(NBTTagCompound compound) {
-        super.writeEntityToNBT(compound);
-        
-    }
 
     @Override
     public void Refresh() {

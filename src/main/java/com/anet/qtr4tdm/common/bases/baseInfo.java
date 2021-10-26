@@ -23,11 +23,14 @@ public class baseInfo {
     public int dimenision;
     public int[] members;
     public String name;
+    public baseStatus status;
+
     //TEMP
     public BaseContainer container;
     public ArrayList<RadarTrackingInfo> radarTrackingData;
     public ArrayList<Radar> radars;
     public ArrayList<IDefenceSystem> defenders;
+    public int defcount; // clientside only
     public int timeExisted;
 
     public baseInfo (BlockPos pos, int OwnerId, int id, int level, ChunkPos[] chunks, int dimension, String name) {
@@ -39,6 +42,7 @@ public class baseInfo {
         this.dimenision = dimension;
         this.name = name;
         this.members = new int[0];
+        this.status = baseStatus.Peace;
 
         radars = new ArrayList<Radar>();
         defenders = new ArrayList<IDefenceSystem>();
@@ -71,13 +75,20 @@ public class baseInfo {
 
     public boolean ConnectDefenceSystem (IBaseConnectable sys) {
         if (sys instanceof IDefenceSystem) {
-            if (GetDefCount() < defenders.size()) {
+            if (GetDefCount() > defenders.size() && !defenders.contains(sys)) {
+
+                for (int i = 0; i < defenders.size(); i++) {
+                    if (sys.getPosForBase().equals(defenders.get(i).getPosForBase())) { defenders.remove(i); i--;}
+                }
                 defenders.add((IDefenceSystem)sys);
                 return true;
             }
             return false;
         }
-        else if (sys instanceof Radar) {
+        else if (sys instanceof Radar && !radars.contains(sys)) {
+            for (int i = 0; i < radars.size(); i++) {
+                if (sys.getPosForBase().equals(radars.get(i).getPosForBase())) { radars.remove(i); i--;}
+            }
             radars.add((Radar)sys);
             return true;
         }
@@ -86,6 +97,14 @@ public class baseInfo {
 
     public void DisconnectDefenceSystem (IBaseConnectable sys) {
         if (sys instanceof IDefenceSystem) {
+
+            for (int i = 0; i < defenders.size(); i++) {
+                if (defenders.get(i) == null) {
+                    defenders.remove(i);
+                    i--;
+                }
+            }
+
             defenders.remove((IDefenceSystem)sys);
         }
         else if (sys instanceof Radar) {
@@ -130,7 +149,7 @@ public class baseInfo {
     public void UpdateAllRadars () {
         ArrayList<RadarTrackingInfo> result = new ArrayList<RadarTrackingInfo>();
         for (Radar s : radars) {
-            for (RadarTrackingInfo info : s.ReportTargetsToBase()) {
+            for (RadarTrackingInfo info : s.ReportTargetsToBase(this)) {
                 if (!result.contains(info)) {
                     result.add(info);
                 }
@@ -139,13 +158,25 @@ public class baseInfo {
         radarTrackingData = null;
         radarTrackingData = result;
 
-        //DEBYG
-        for (IDefenceSystem def : defenders) {
-            if (result.size() > 0) {
-                ArrayList<Entity> list = new ArrayList<Entity>();
-                list.add(result.get(0).ent);
-                def.SetTargetsFromBase(list);
+        SendTargets();
+    }
+
+    public void SendTargets () {
+        ArrayList<Entity> validTargets = new ArrayList<Entity>();
+        for (RadarTrackingInfo i : radarTrackingData) {
+            if (i.type < 0 && i.ent != null && !i.ent.isDead) {
+                validTargets.add(i.ent);
+                if (status != baseStatus.Emergency) status = baseStatus.Threat;
+                if (ContainsChunk(new ChunkPos(i.ent.getPosition()))) status = baseStatus.Emergency;
             }
+        }
+
+        if (validTargets.size() == 0) {
+            status = baseStatus.Peace;
+        }
+        
+        for (IDefenceSystem def : defenders) {
+            def.SetTargetsFromBase(validTargets);
         }
     }
 

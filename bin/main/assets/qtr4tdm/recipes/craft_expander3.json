@@ -1,0 +1,30 @@
+  {
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "FSF",
+      "FAS",
+      "FSF"
+    ],
+    "key": {
+      "S": {
+        "item": "ic2:dust",
+          "data": 6
+      },
+      "A": [
+        {
+          "item": "qtr4tdm:base_expander",
+          "data": 1
+        }
+      ],
+      "F": [
+        {
+          "item": "ic2:crafting",
+          "data": 3
+        }
+      ]
+    },
+    "result": {
+      "item": "qtr4tdm:base_expander",
+      "data": 2
+    }
+  }

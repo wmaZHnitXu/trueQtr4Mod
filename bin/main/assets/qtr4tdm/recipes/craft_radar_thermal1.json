@@ -1,0 +1,38 @@
+  {
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "FAF",
+      "FBF",
+      "FCF"
+    ],
+    "key": {
+      "A": [
+        {
+          "item": "minecraft:redstone_torch",
+          "data": 0
+        }
+      ],
+      "B": [
+        {
+          "item": "qtr4tdm:radar_base",
+          "data": 0
+        }
+      ],
+      "C": [
+        {
+          "item": "ic2:crafting",
+          "data": 1
+        }
+      ],
+      "F": [
+        {
+          "item": "ic2:plate",
+          "data": 8
+        }
+      ]
+    },
+    "result": {
+      "item": "qtr4tdm:thermal_base",
+      "data": 0
+    }
+  }

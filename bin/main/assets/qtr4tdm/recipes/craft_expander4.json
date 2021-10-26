@@ -1,0 +1,26 @@
+  {
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "FFF",
+      "FAF",
+      "FFF"
+    ],
+    "key": {
+      "A": [
+        {
+          "item": "qtr4tdm:base_expander",
+          "data": 2
+        }
+      ],
+      "F": [
+        {
+          "item": "ic2:crafting",
+          "data": 4
+        }
+      ]
+    },
+    "result": {
+      "item": "qtr4tdm:base_expander",
+      "data": 3
+    }
+  }

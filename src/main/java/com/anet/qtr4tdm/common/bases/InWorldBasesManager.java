@@ -4,11 +4,14 @@ import java.util.ArrayList;
 
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.savedata.WorldBasesSavedData;
+import com.anet.qtr4tdm.common.supers.IBaseConnectable;
 import com.anet.qtr4tdm.common.tiles.BaseTile;
 import com.anet.qtr4tdm.uebki.IDSmanager;
 import com.anet.qtr4tdm.uebki.gui.GuiHandler;
+import com.anet.qtr4tdm.uebki.messages.TopBarMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -17,6 +20,7 @@ import net.minecraft.world.World;
 public class InWorldBasesManager {
     ArrayList<baseInfo> bases;
     private static ArrayList<BlockPos> delayed;
+    private static ArrayList<IBaseConnectable> needConnections;
     public static InWorldBasesManager instance;
     public ArrayList<Integer> freeIds;
 
@@ -37,6 +41,12 @@ public class InWorldBasesManager {
                     System.out.println(base.pos.toString() + " == " + pos.toString() + " : " + base.pos.equals(pos));
                     if (base.pos.equals(pos)) baseTile.InsertDirectInfo(base);
                 }
+            }
+        }
+        if (needConnections != null) {
+            System.out.println("resolvedel");
+            for (IBaseConnectable con : needConnections) {
+                con.ConnectToBase();
             }
         }
     }
@@ -77,8 +87,9 @@ public class InWorldBasesManager {
                 instance.freeIds.add(base.id);
                 instance.bases.get(i).pos = new BlockPos(0, 0, 0);
                 instance.bases.get(i).chunks = new ChunkPos[0];
-                i--;
             }
+            EntityPlayer owner = IDSmanager.GetPlayer(base.OwnerId);
+            if (owner != null) TdmMod.wrapper.sendTo(new TopBarMessage("§cВаша база уничтожена.", "Ну нет её больше...", 1, 500), (EntityPlayerMP)owner);
         }
         instance.SaveData();
     }
@@ -88,8 +99,23 @@ public class InWorldBasesManager {
         for (baseInfo base : instance.bases) {
             if (base.pos.equals(pos)) return base;
         }
-        System.out.println("nomatch");
         return null;
+    }
+
+    public static void GetBaseConnection (IBaseConnectable con) {
+        if (instance == null) { AddDelayedToConnect(con); System.out.println("IBaseConnectableDelay");}
+        else con.ConnectToBase();
+    }
+
+    private static void AddDelayedToConnect (IBaseConnectable con) {
+        if (con.getPosForBase().equals(BlockPos.ORIGIN)) return;
+        if (needConnections == null) needConnections = new ArrayList<IBaseConnectable>();
+        for (int i = 0; i < needConnections.size(); i++) {
+            if (needConnections.get(i).getPosForBase().equals(con.getPosForBase())) {
+                needConnections.set(i, con); return;
+            }
+        }
+        needConnections.add(con);
     }
 
     public static baseInfo GetInfo (int id) {
@@ -153,6 +179,7 @@ public class InWorldBasesManager {
     public static boolean DoBaseUpgrade (int Baseid, ChunkPos chunk) {
         baseInfo upgradeBase = GetInfo(Baseid);
         TdmMod.logger.info(upgradeBase.pos);
+        if (upgradeBase.ContainsChunk(chunk)) return false;
         TileEntity t = TdmMod.currentServer.getWorld(upgradeBase.dimenision).getTileEntity(upgradeBase.pos);
         BaseTile te = (BaseTile)t;
         te.decrStackSize(0, (upgradeBase.chunks.length < 32 ? upgradeBase.chunks.length % 8 + 1 : 8));

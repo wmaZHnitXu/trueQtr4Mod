@@ -28,7 +28,7 @@ public class BaseBlock extends BlockTileEntity<BaseTile>  {
     public static PropertyInteger status = PropertyInteger.create("status", 0, 2);
 
     public BaseBlock() {
-        super("base_block", Material.IRON, 1, 1, SoundType.METAL);
+        super("base_block", Material.IRON, 1, 1000, SoundType.METAL);
         this.setDefaultState(this.blockState.getBaseState().withProperty(status, Integer.valueOf(0)));
         this.setCreativeTab(TdmMod.qtr4);
     }

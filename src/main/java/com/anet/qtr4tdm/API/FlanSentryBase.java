@@ -10,8 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
-public class FlanSentryBase extends EntityBaseConnectable implements IDefenceSystem {
-
+public abstract class FlanSentryBase extends EntityBaseConnectable implements IDefenceSystem {
 
     class atkInfo {
         EntityPlayer p;
@@ -19,8 +18,7 @@ public class FlanSentryBase extends EntityBaseConnectable implements IDefenceSys
         public atkInfo(EntityPlayer p, boolean can) {this.p = p; this.can = can;}
     }
 
-    private Entity priorityTarget;
-
+    protected ArrayList<Entity> targetsFromBase;
     public ArrayList<atkInfo> cachedAttackInfo;
 
     public FlanSentryBase(World worldIn) {
@@ -40,13 +38,11 @@ public class FlanSentryBase extends EntityBaseConnectable implements IDefenceSys
 
     @Override
     public void SetTargetsFromBase(ArrayList<Entity> targets) {
-        // TODO Auto-generated method stub
-        
+        targetsFromBase = targets;
     }
 
     @Override
     public void Refresh () {
-        priorityTarget = null;
         cachedAttackInfo.clear();
     }
 }

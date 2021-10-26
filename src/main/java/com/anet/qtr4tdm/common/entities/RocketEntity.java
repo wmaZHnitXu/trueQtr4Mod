@@ -45,9 +45,9 @@ public class RocketEntity extends Entity {
             dispX = rand.nextGaussian();
             dispZ = rand.nextGaussian();
             currentVector = new Vec3d(0,2d,0);
-            countdown = 40;
-            speed = 1.5d;
-            accell = 0.03d;            
+            countdown = 20;
+            speed = 2.5d;
+            accell = 0.06d;            
         }
     }
 
@@ -65,7 +65,7 @@ public class RocketEntity extends Entity {
     
     @Override
     public void onUpdate() {
-        if (countdown == 40) target = ((MiniSiloTile)world.getTileEntity(getPosition())).target;
+        if (countdown == 20) target = ((MiniSiloTile)world.getTileEntity(getPosition())).target;
         Vec3d pos = getPositionVector();
         if (!world.isRemote) {
             if (target == null) {super.onUpdate(); setDead(); return;}

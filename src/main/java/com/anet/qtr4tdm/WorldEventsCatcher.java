@@ -1,6 +1,8 @@
 package com.anet.qtr4tdm;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -25,6 +27,13 @@ public class WorldEventsCatcher {
         }
         else {
 
+        }
+    }
+
+    @SubscribeEvent
+    public static void EntityEnterChunkEvt (EntityEvent.EnteringChunk evt) {
+        if (evt.getEntity() instanceof EntityPlayer && !evt.getEntity().world.isRemote) {
+            PrivatesHandler.OnPlayerEntersChunk((EntityPlayer)evt.getEntity(), new ChunkPos(evt.getOldChunkX(), evt.getOldChunkZ()), new ChunkPos(evt.getNewChunkX(), evt.getNewChunkZ()));
         }
     }
 }

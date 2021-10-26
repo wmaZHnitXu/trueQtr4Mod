@@ -24,6 +24,8 @@ import com.anet.qtr4tdm.uebki.messages.RadarInfoHandler;
 import com.anet.qtr4tdm.uebki.messages.RadarMessage;
 import com.anet.qtr4tdm.uebki.messages.SetBaseMember;
 import com.anet.qtr4tdm.uebki.messages.SetBaseMemberHandler;
+import com.anet.qtr4tdm.uebki.messages.TopBarMessage;
+import com.anet.qtr4tdm.uebki.messages.TopBarMessageHandler;
 import com.anet.qtr4tdm.uebki.messages.baseInfoMessage;
 import com.anet.qtr4tdm.uebki.messages.baseInfoMessageHandler;
 
@@ -96,6 +98,7 @@ public class TdmMod
         wrapper.registerMessage(SetBaseMemberHandler.class, SetBaseMember.class, 9, Side.SERVER);
 
         wrapper.registerMessage(GetBaseMembersHandler.class, GetBaseMembersMessage.class, 10, Side.CLIENT);
+        wrapper.registerMessage(TopBarMessageHandler.class, TopBarMessage.class, 11, Side.CLIENT);
     }
 
     @EventHandler

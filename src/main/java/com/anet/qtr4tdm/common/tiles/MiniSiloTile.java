@@ -10,6 +10,7 @@ import com.anet.qtr4tdm.common.supers.TileEntityDefence;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
@@ -18,15 +19,17 @@ public class MiniSiloTile extends TileEntityDefence implements net.minecraft.uti
     public boolean armed;
     public Entity target;
     private int counter;
-    
+
     @Override
-    public void onLoad () {
+    public void onLoad() {
+        DisconnectFromBase();
+        InWorldBasesManager.GetBaseConnection(this);
+        armed = world.getBlockState(pos).getValue(MiniSiloBlock.armed);
     }
 
     public void Arm () {
         armed = true;
         MiniSiloBlock.SetState(world, pos, true);
-        ConnectToBase(); //blya ydalipotom
     }
 
     public void Disarm () {
@@ -39,6 +42,20 @@ public class MiniSiloTile extends TileEntityDefence implements net.minecraft.uti
         rocket.setPosition(pos.getX() + 0.5d, pos.getY(), pos.getZ() + 0.5d);
         world.spawnEntity(rocket);
         Disarm();
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound compound) { //vajno
+        super.readFromNBT(compound);
+        System.out.println("connecting2");
+
+    }
+
+    @Override
+    public void setPos(BlockPos posIn) {
+        super.setPos(posIn);
+        //DisconnectFromBase();
+        //InWorldBasesManager.GetBaseConnection(this);
     }
 
     @Override
@@ -56,11 +73,13 @@ public class MiniSiloTile extends TileEntityDefence implements net.minecraft.uti
     public void SetTargetsFromBase(ArrayList<Entity> targets) {
         if (targets != null && targets.size() > 0) {
             target = targets.get(0);
-        }   
+        }
+        else target = null;
     }
 
     @Override
     public void Refresh() {
+        // TODO Auto-generated method stub
         
     }
 }

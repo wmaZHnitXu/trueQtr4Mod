@@ -12,7 +12,7 @@ public class BaseUpgradeHandler implements IMessageHandler<BaseUpgradeMessage, I
     @Override
     public IMessage onMessage(BaseUpgradeMessage message, MessageContext ctx) {
         InWorldBasesManager.DoBaseUpgrade(message.Baseid, new ChunkPos(message.ChunkX, message.ChunkZ));
-        return null;
+        return new baseInfoMessage(InWorldBasesManager.GetInfo(message.Baseid));
     }
     
 }

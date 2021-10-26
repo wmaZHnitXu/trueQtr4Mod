@@ -1,0 +1,38 @@
+  {
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "FAF",
+      "CBC",
+      "FCF"
+    ],
+    "key": {
+      "A": [
+        {
+          "item": "minecraft:stained_glass_pane",
+          "data": 9
+        }
+      ],
+      "B": [
+        {
+          "item": "ic2:misc_resource",
+          "data": 6
+        }
+      ],
+      "C": [
+        {
+          "item": "ic2:crafting",
+          "data": 2
+        }
+      ],
+      "F": [
+        {
+          "item": "ic2:crafting",
+          "data": 15
+        }
+      ]
+    },
+    "result": {
+      "item": "qtr4tdm:base_block",
+      "data": 0
+    }
+  }

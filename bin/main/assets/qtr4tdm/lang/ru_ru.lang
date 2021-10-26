@@ -1,6 +1,11 @@
-itemGroup.qtr4=QTR4
+itemGroup.qtr4=lt
 tile.radar_base.name=Блок радара
 tile.terminal_radar.name=Радар
 tile.minisilo.name=Ракетная шахта
 item.rocket.name=Ракета для шахты
 tile.energy_consumer.name=Энергетический буфер
+base_expander_lvl1.name=Расширение базы 1
+base_expander_lvl2.name=Расширение базы 2
+base_expander_lvl3.name=Расширение базы 3
+base_expander_lvl4.name=Расширение базы 4
+tile.base_block.name=Блок базы

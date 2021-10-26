@@ -45,7 +45,9 @@ public abstract class EntityBaseConnectable extends Entity implements IBaseConne
 
     @Override
     public void DisconnectFromBase() {
-        base.DisconnectDefenceSystem(this);
+        if (base != null) {
+            base.DisconnectDefenceSystem(this);
+        }
         base = null;
         
     }
@@ -56,30 +58,23 @@ public abstract class EntityBaseConnectable extends Entity implements IBaseConne
     }
 
     @Override
-    protected void entityInit() {        
-    }
-
-    @Override
-    protected void readEntityFromNBT(NBTTagCompound compound) {
-        lastBaseId = compound.getInteger("lastid");
-        
-    }
-
-    @Override
-    protected void writeEntityToNBT(NBTTagCompound compound) {
-        compound.setInteger("lastid", lastBaseId);        
-    }
-
-    @Override
-    public void setPosition(double x, double y, double z) {
-        super.setPosition(x, y, z);
+    public void setDead() {
         DisconnectFromBase();
-        ConnectToBase();
+        super.setDead();
     }
+    
 
     @Override
     public BlockPos getPosForBase () {
         return getPosition();
+    }
+
+    @Override
+    public void onUpdate() {
+        if (base == null && ticksExisted % 10 == 0) {
+            InWorldBasesManager.GetBaseConnection(this);
+        }
+        super.onUpdate();
     }
     
 }

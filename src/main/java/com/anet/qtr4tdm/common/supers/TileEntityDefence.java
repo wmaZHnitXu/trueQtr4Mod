@@ -13,13 +13,13 @@ import net.minecraftforge.common.ForgeChunkManager;
 public abstract class TileEntityDefence extends TileEntity implements IDefenceSystem {
     
     private int lastBaseId;
-    private baseInfo base;
+    protected baseInfo base;
 
     @Override
     public boolean ConnectToBase() {
         if (world.isRemote) return false;
         baseInfo candidate = InWorldBasesManager.GetBaseOfTerritory(getPos());
-        if (candidate == null) return false;
+        if (candidate == null) { System.out.println("nocand"); return false;}
         if (candidate.ConnectDefenceSystem(this)) {
             base = candidate;
             lastBaseId = candidate.id;
@@ -36,6 +36,7 @@ public abstract class TileEntityDefence extends TileEntity implements IDefenceSy
             markDirty();
             return true;
         }
+        System.out.println("noway");
         return false;
     }
 
@@ -58,13 +59,14 @@ public abstract class TileEntityDefence extends TileEntity implements IDefenceSy
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
         lastBaseId = compound.getInteger("lastid");
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound.setInteger("lastid", lastBaseId);    
-        return compound;    
+        compound.setInteger("lastid", lastBaseId);
+        return super.writeToNBT(compound);
     }
 
 }

@@ -25,6 +25,8 @@ import com.anet.qtr4tdm.common.entities.render.RenderThermalRadar1;
 import com.anet.qtr4tdm.common.items.BaseExpandItem;
 import com.anet.qtr4tdm.common.items.IMetadataItem;
 import com.anet.qtr4tdm.common.items.rocketItem;
+import com.anet.qtr4tdm.common.supers.EntityBaseConnectable;
+import com.anet.qtr4tdm.common.supers.Radar;
 import com.anet.qtr4tdm.common.tiles.BaseTile;
 import com.anet.qtr4tdm.common.tiles.EnergyConsumerTile;
 import com.anet.qtr4tdm.common.tiles.MiniSiloTile;

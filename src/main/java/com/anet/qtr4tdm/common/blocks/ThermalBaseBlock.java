@@ -2,6 +2,7 @@ package com.anet.qtr4tdm.common.blocks;
 
 import java.util.List;
 
+import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.entities.RadarThermal1Entity;
 import com.anet.qtr4tdm.common.tiles.ThermalBaseTile;
 import com.anet.qtr4tdm.uebki.BlockTileEntity;
@@ -19,6 +20,7 @@ public class ThermalBaseBlock extends BlockTileEntity<ThermalBaseTile> {
 
     public ThermalBaseBlock() {
         super("thermal_base", Material.IRON, 3, 1, SoundType.METAL);
+        setCreativeTab(TdmMod.qtr4);
     }
 
     @Override
@@ -47,6 +49,7 @@ public class ThermalBaseBlock extends BlockTileEntity<ThermalBaseTile> {
         AxisAlignedBB bb = new AxisAlignedBB(pos.up());
         List<RadarThermal1Entity> entities = worldIn.getEntitiesWithinAABB(RadarThermal1Entity.class, bb);
         if (entities.size() != 0) entities.get(0).setDead();
+        ((ThermalBaseTile)worldIn.getTileEntity(pos)).OnDestroy();
         super.breakBlock(worldIn, pos, state);
     }
     

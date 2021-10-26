@@ -1,0 +1,30 @@
+  {
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "FAF",
+      "FSF",
+      "AFF"
+    ],
+    "key": {
+      "S": {
+        "item": "minecraft:diamond",
+          "data": 0
+      },
+      "A": [
+        {
+          "item": "ic2:cable",
+          "data": 0
+        }
+      ],
+      "F": [
+        {
+          "item": "ic2:plate",
+          "data": 8
+        }
+      ]
+    },
+    "result": {
+      "item": "qtr4tdm:base_expander",
+      "data": 0
+    }
+  }

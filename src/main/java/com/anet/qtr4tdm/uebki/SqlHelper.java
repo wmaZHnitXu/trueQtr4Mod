@@ -25,6 +25,7 @@ public class SqlHelper {
     public static ResultSet resSet;
 
     public static SqlHelper instance;
+    public static boolean nosqlMode = true;
 
     public SqlHelper(String path) {
         instance = this;
@@ -49,7 +50,7 @@ public class SqlHelper {
         }
         catch (IOException e) {
             TdmMod.logger.info(e.toString());
-            TdmMod.logger.info("failed to read database config");
+            TdmMod.logger.info("failed to read database config!");
         }
 
     }
@@ -77,6 +78,9 @@ public class SqlHelper {
     }
 
     public int GetPlayerId (String name) {
+        if (nosqlMode) {
+            return 0;
+        }
         try {
             statement = (Statement) connection.createStatement();
             resSet = statement.executeQuery("SELECT id FROM users WHERE name='" + name + "'");

@@ -7,10 +7,12 @@ import com.anet.qtr4tdm.common.blocks.BaseBlock;
 import com.anet.qtr4tdm.uebki.IDSmanager;
 import com.anet.qtr4tdm.uebki.gui.BaseGui;
 import com.anet.qtr4tdm.uebki.gui.BaseSetupGui;
+import com.anet.qtr4tdm.uebki.messages.TopBarMessage;
 import com.typesafe.config.ConfigException.Null;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -53,7 +55,7 @@ public class BaseTile extends TileEntity implements IInventory, ITickable {
         else if (state == BaseState.active) {
             if (directInfo.isMember(IDSmanager.GetPlayerId(player)))
                 player.openGui(TdmMod.instance, TdmMod.GUI_BASE, world, pos.getX(), pos.getY(), pos.getZ());
-            else player.sendMessage(new TextComponentString("Доступ запрещён."));
+            else TdmMod.wrapper.sendTo(new TopBarMessage("Доступ запрещён.", "Вы не являетесь участником базы.", 1, 300), (EntityPlayerMP)player);
         }
     }
 

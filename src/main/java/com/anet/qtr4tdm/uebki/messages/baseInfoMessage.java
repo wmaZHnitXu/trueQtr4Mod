@@ -1,6 +1,7 @@
 package com.anet.qtr4tdm.uebki.messages;
 
 import com.anet.qtr4tdm.common.bases.baseInfo;
+import com.anet.qtr4tdm.common.bases.baseStatus;
 import com.anet.qtr4tdm.uebki.gui.BaseGui;
 
 import io.netty.buffer.ByteBuf;
@@ -47,7 +48,12 @@ public class baseInfoMessage implements IMessage {
             members[i] = buf.readInt();
         }
 
+        int defcount = buf.readInt();
+        int status = buf.readInt();
+
         this.info = new baseInfo(pos, owner, id, level, chunks, dim, "", members);
+        info.defcount = defcount;
+        info.status = baseStatus.values()[status];
         BaseGui.InsertInfo(info);
     }
 
@@ -68,6 +74,8 @@ public class baseInfoMessage implements IMessage {
         buf.writeInt(info.members.length);
         for (int i : info.members) {
             buf.writeInt(i);
-        }   
+        }
+        buf.writeInt(info.defenders.size());
+        buf.writeInt(info.status.ordinal());
     }
 }

@@ -62,6 +62,7 @@ public class TdmMod
     public static String cfgPath;
 
     public static final int GUI_BASE = 0;
+    public static final int GUI_KAZ = 1;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)

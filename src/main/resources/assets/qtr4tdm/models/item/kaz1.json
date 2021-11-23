@@ -1,5 +1,5 @@
 {
-    "parent": "qtr4tdm:block/minisilo",
+    "parent": "qtr4tdm:block/kaz1_empty",
     "gui_light": "side",
     "display": {
         "gui": {

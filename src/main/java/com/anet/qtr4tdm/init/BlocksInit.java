@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.blocks.BaseBlock;
 import com.anet.qtr4tdm.common.blocks.EnergyConsumerBlock;
+import com.anet.qtr4tdm.common.blocks.Kaz1Block;
 import com.anet.qtr4tdm.common.blocks.MiniSiloBlock;
 import com.anet.qtr4tdm.common.blocks.RadarBaseBlock;
 import com.anet.qtr4tdm.common.blocks.RadarMasterBlock;
@@ -24,11 +25,13 @@ import com.anet.qtr4tdm.common.entities.render.RenderRadar3;
 import com.anet.qtr4tdm.common.entities.render.RenderThermalRadar1;
 import com.anet.qtr4tdm.common.items.BaseExpandItem;
 import com.anet.qtr4tdm.common.items.IMetadataItem;
+import com.anet.qtr4tdm.common.items.KAZAmmoItem;
 import com.anet.qtr4tdm.common.items.rocketItem;
 import com.anet.qtr4tdm.common.supers.EntityBaseConnectable;
 import com.anet.qtr4tdm.common.supers.Radar;
 import com.anet.qtr4tdm.common.tiles.BaseTile;
 import com.anet.qtr4tdm.common.tiles.EnergyConsumerTile;
+import com.anet.qtr4tdm.common.tiles.Kaz1Tile;
 import com.anet.qtr4tdm.common.tiles.MiniSiloTile;
 import com.anet.qtr4tdm.common.tiles.RadarBaseTile;
 import com.anet.qtr4tdm.common.tiles.RadarWorkerTile;
@@ -66,6 +69,7 @@ public class BlocksInit {
     public static final Block MINISILO = new MiniSiloBlock();
     public static final Block BASE = new BaseBlock();
     public static final Block RADARTHERMALBASE = new ThermalBaseBlock();
+    public static final Block KAZ1 = new Kaz1Block();
 
     public static final Block[] BLOCKS = new Block[] {
     
@@ -76,16 +80,19 @@ public class BlocksInit {
             ENERGYCONSUMER,
             MINISILO,
             BASE,
-            RADARTHERMALBASE
+            RADARTHERMALBASE,
+            KAZ1
 
     };
 
     public static final Item ROCKET = new rocketItem();
     public static final Item BASEEXPANDER = new BaseExpandItem();
+    public static final Item KAZAMMO = new KAZAmmoItem();
 
     public static final Item[] ITEMS = new Item[] {
         ROCKET,
-        BASEEXPANDER
+        BASEEXPANDER,
+        KAZAMMO
     };
 
     @SubscribeEvent
@@ -195,6 +202,7 @@ public class BlocksInit {
         GameRegistry.registerTileEntity(MiniSiloTile.class, new ResourceLocation(TdmMod.MODID + ":" + "minisilotile"));
         GameRegistry.registerTileEntity(BaseTile.class, new ResourceLocation(TdmMod.MODID + ":" + "basetile"));
         GameRegistry.registerTileEntity(ThermalBaseTile.class, new ResourceLocation(TdmMod.MODID + ":" + "thermalbasetile"));
+        GameRegistry.registerTileEntity(Kaz1Tile.class, new ResourceLocation(TdmMod.MODID + ":" + "kaz1tile"));
 
     }
 

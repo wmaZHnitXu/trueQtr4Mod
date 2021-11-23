@@ -11,7 +11,7 @@ public class ThermalBaseTile extends Sink implements IHasEnergy {
 
     public boolean hasEnergy;
     public ThermalBaseTile() {
-        super(1000, 1);
+        super(10, 1);
     }
     
     @Override

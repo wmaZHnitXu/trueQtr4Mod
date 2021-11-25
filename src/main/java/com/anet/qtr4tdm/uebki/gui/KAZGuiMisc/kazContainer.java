@@ -7,13 +7,20 @@ import com.anet.qtr4tdm.common.tiles.Kaz1Tile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityDispenser;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class kazContainer extends Container {
 
     private Kaz1Tile te;
+    private boolean connected;
+    private boolean powered;
 
     @Override
     public boolean canInteractWith(EntityPlayer playerIn) {
@@ -70,6 +77,40 @@ public class kazContainer extends Container {
         }
         return itemstack;
 	}
+
+    @Override
+    public void addListener(IContainerListener listener) {
+        super.addListener(listener);
+        listener.sendAllWindowProperties(this, te);
+    }
+
+    @Override
+    public void detectAndSendChanges() {
+        super.detectAndSendChanges();
+        for (int i = 0; i < this.listeners.size(); ++i)
+        {
+            IContainerListener icontainerlistener = this.listeners.get(i);
+
+            if (this.connected != (this.te.getField(0) == 1))
+            {
+                icontainerlistener.sendWindowProperty(this, 0, this.te.getField(0));
+            }
+
+            if (this.powered != (this.te.getField(1) == 1))
+            {
+                icontainerlistener.sendWindowProperty(this, 1, this.te.getField(1));
+            }
+        }
+
+        this.connected = this.te.getField(0) == 1;
+        this.powered = this.te.getField(1) == 1;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void updateProgressBar(int id, int data)
+    {
+        this.te.setField(id, data);
+    }
 
     class KazSlot extends Slot {
 

@@ -14,11 +14,13 @@ import com.anet.qtr4tdm.common.blocks.RadarSlaveCornerBlock;
 import com.anet.qtr4tdm.common.blocks.RadarSlaveEdgeBlock;
 import com.anet.qtr4tdm.common.blocks.TerminalRadarBlock;
 import com.anet.qtr4tdm.common.blocks.ThermalBaseBlock;
+import com.anet.qtr4tdm.common.entities.KazAmmoEntity;
 import com.anet.qtr4tdm.common.entities.Radar1Entity;
 import com.anet.qtr4tdm.common.entities.Radar2Entity;
 import com.anet.qtr4tdm.common.entities.Radar3Entity;
 import com.anet.qtr4tdm.common.entities.RadarThermal1Entity;
 import com.anet.qtr4tdm.common.entities.RocketEntity;
+import com.anet.qtr4tdm.common.entities.render.RenderKazAmmo1;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar1;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar2;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar3;
@@ -167,6 +169,8 @@ public class BlocksInit {
                 return new RenderThermalRadar1(manager);
             }
         });
+
+        RenderingRegistry.registerEntityRenderingHandler(KazAmmoEntity.class, new RenderKazAmmo1.Factory());
     }
 
     @SideOnly(Side.CLIENT)
@@ -213,6 +217,7 @@ public class BlocksInit {
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "radar3"), Radar3Entity.class, "Radar3", 1337, TdmMod.instance, 150, 3, false);
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "rocket1"), RocketEntity.class, "rocket1", 1338, TdmMod.instance, 1000, 2, true);
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "radarthermal1"), RadarThermal1Entity.class, "RadarThermal1", 1339, TdmMod.instance, 150, 3, false);
+        EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "kazammo"), KazAmmoEntity.class, "kazammo1", 1340, TdmMod.instance, 5, 3, true);
 
     }
 }

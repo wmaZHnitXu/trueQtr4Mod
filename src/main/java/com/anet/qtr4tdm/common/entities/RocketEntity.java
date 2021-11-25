@@ -120,6 +120,7 @@ public class RocketEntity extends Entity {
         BlockPos pos = getPosition();
         world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, pos.getX(), pos.getY(), pos.getZ(), 0, 0, 0);
     }
+    
     @Override
     public void setDead() {
         if (world.isRemote) {

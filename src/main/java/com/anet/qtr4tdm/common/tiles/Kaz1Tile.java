@@ -4,25 +4,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.anet.qtr4tdm.TdmMod;
+import com.anet.qtr4tdm.common.bases.InWorldBasesManager;
 import com.anet.qtr4tdm.common.blocks.Kaz1Block;
+import com.anet.qtr4tdm.common.entities.KazAmmoEntity;
 import com.anet.qtr4tdm.common.items.KAZAmmoItem;
 import com.anet.qtr4tdm.common.supers.TileEntityDefence;
 import com.anet.qtr4tdm.init.BlocksInit;
 import com.anet.qtr4tdm.uebki.gui.KAZGuiMisc.kazContainer;
+import com.flansmod.common.driveables.EnumWeaponType;
+import com.flansmod.common.guns.BulletType;
+import com.flansmod.common.guns.EntityBullet;
+import com.flansmod.common.guns.FiredShot;
 
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.energy.tile.IEnergySink;
+import net.minecraft.block.BlockHopper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.MinecraftForge;
 
 public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInventory, IEnergySink {
@@ -38,6 +49,8 @@ public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInve
     private double maxEnergy = 100;
     private int ticksexisted;
     public kazContainer container;
+    public Entity target;
+    private int cooldown = 0;
 
     //TEMPTEMP
     private int currentammo;
@@ -53,6 +66,8 @@ public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInve
         }
         MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
         currentammo = world.getBlockState(pos).getValue(Kaz1Block.AMMO);
+        DisconnectFromBase();
+        InWorldBasesManager.GetBaseConnection(this);
     }
 
     @Override
@@ -93,7 +108,7 @@ public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInve
     public void Destruction () {
         MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
         DisconnectFromBase();
-        //Снаряд выбрасывается в getdropitems класса блока.
+        InventoryHelper.dropInventoryItems(world, pos, this);
     }
 
     public int getAmmoCount () {
@@ -108,15 +123,39 @@ public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInve
     @Override
     public void update() {
         if (!world.isRemote) {
-            if (ticksexisted % interval == 0) {
-                if (energy > 0) {
+            connected = base != null;
+            if (ticksexisted % interval == 0 && cooldown == 0) {
+                if (energy > 0 && getAmmoCount() > 0) {
                     energy = Math.max(energy-10, 0);
+                    SearchForTargets();
                 }
             }
+            if (cooldown > 0) cooldown--;
             powered = energy > 0;
             AmmoUpdate();
         }
         ticksexisted++;
+    }
+
+    public void SearchForTargets () {
+        AxisAlignedBB bb = new AxisAlignedBB(pos.add(range, 1, range), pos.add(-range, range, -range));
+        List<EntityBullet> bullets = world.getEntitiesWithinAABB(EntityBullet.class, bb);
+        for (EntityBullet bullet : bullets) {
+            BulletType type = bullet.shot.getBulletType();
+            if ((type.explodeOnImpact || type.emp)) {
+                target = bullet;
+                Launch();
+                return;
+            }
+        }
+    }
+
+    public void Launch () {
+        KazAmmoEntity charge = new KazAmmoEntity(world);
+        charge.setPosition(pos.getX() + 0.5d, pos.getY(), pos.getZ() + 0.5d);
+        world.spawnEntity(charge);
+        ammo.get(0).setCount(ammo.get(0).getCount()-1);
+        cooldown = 20;
     }
 
     private void AmmoUpdate () {
@@ -192,20 +231,24 @@ public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInve
 
     @Override
     public int getField(int id) {
-        // TODO Auto-generated method stub
+        switch (id) {
+            case 0: return connected ? 1 : 0;
+            case 1: return powered ? 1 : 0;
+        }
         return 0;
     }
 
     @Override
     public void setField(int id, int value) {
-        // TODO Auto-generated method stub
-        
+        switch (id) {
+            case 0: connected = value==1; break;
+            case 1: powered = value==1; break;
+        }
     }
 
     @Override
     public int getFieldCount() {
-        // TODO Auto-generated method stub
-        return 0;
+        return 2;
     }
 
     @Override

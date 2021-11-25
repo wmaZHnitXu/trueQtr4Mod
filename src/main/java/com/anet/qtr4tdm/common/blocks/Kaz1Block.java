@@ -70,18 +70,6 @@ public class Kaz1Block extends BlockTileEntity<Kaz1Tile> {
         super.breakBlock(worldIn, pos, state);
     }
 
-    @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state,
-            int fortune) {
-        super.getDrops(drops, world, pos, state, fortune);
-        if (world.getTileEntity(pos) instanceof Kaz1Tile) {
-            Kaz1Tile tile = (Kaz1Tile)world.getTileEntity(pos);
-            if (!tile.isEmpty()) {
-                drops.add(tile.ammo.get(0));
-            }
-        }
-    }
-
     public static void SetAmmo(World world, BlockPos pos, int ammo) {
         
         TileEntity tile = world.getTileEntity(pos);

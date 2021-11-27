@@ -10,5 +10,13 @@
     "beep": {
         "category": "block",
         "sounds": ["qtr4tdm:beep"]
+    },
+    "active_protection": {
+        "category": "block",
+        "sounds": ["qtr4tdm:active_protection"]
+    },
+    "active_protection_shot": {
+        "category": "block",
+        "sounds": ["qtr4tdm:active_protection_shot"]
     }
 }

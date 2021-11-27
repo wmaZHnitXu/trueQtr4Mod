@@ -30,7 +30,7 @@ public class kazContainer extends Container {
     public kazContainer (InventoryPlayer player, Kaz1Tile tile) {
         te = tile;
 
-        addSlotToContainer(new Slot(tile, 0, 83, 30));
+        addSlotToContainer(new KazSlot(tile, 0, 83, 30));
 
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
@@ -53,7 +53,7 @@ public class kazContainer extends Container {
         {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
-            if (!(itemstack1.getItem() instanceof KAZAmmoItem)) return ItemStack.EMPTY;
+            if (!(te.isItemValidForSlot(0, itemstack1))) return ItemStack.EMPTY;
             if (index < 1)
             {
                 if (!this.mergeItemStack(itemstack1, 1, this.inventorySlots.size(), true))
@@ -120,7 +120,7 @@ public class kazContainer extends Container {
         
         @Override
         public boolean isItemValid(ItemStack stack) {
-            return stack != null && stack.getItem() instanceof KAZAmmoItem;
+            return te.isItemValidForSlot(0, stack);
         }
     }
 }

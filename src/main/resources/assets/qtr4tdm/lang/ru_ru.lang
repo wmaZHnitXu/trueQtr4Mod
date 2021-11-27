@@ -9,3 +9,7 @@ base_expander_lvl2.name=Расширение базы 2
 base_expander_lvl3.name=Расширение базы 3
 base_expander_lvl4.name=Расширение базы 4
 tile.base_block.name=Блок базы
+tile.kaz1.name=Комплекс Активной Защиты
+tile.kaz2.name=Улучшенный КАЗ
+kazammo1.name=Заряд для КАЗ
+kazammo2.name=Заряд для улучшенного КАЗ

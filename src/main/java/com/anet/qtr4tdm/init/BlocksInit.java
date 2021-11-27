@@ -6,6 +6,7 @@ import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.blocks.BaseBlock;
 import com.anet.qtr4tdm.common.blocks.EnergyConsumerBlock;
 import com.anet.qtr4tdm.common.blocks.Kaz1Block;
+import com.anet.qtr4tdm.common.blocks.Kaz2Block;
 import com.anet.qtr4tdm.common.blocks.MiniSiloBlock;
 import com.anet.qtr4tdm.common.blocks.RadarBaseBlock;
 import com.anet.qtr4tdm.common.blocks.RadarMasterBlock;
@@ -72,6 +73,7 @@ public class BlocksInit {
     public static final Block BASE = new BaseBlock();
     public static final Block RADARTHERMALBASE = new ThermalBaseBlock();
     public static final Block KAZ1 = new Kaz1Block();
+    public static final Block KAZ2 = new Kaz2Block();
 
     public static final Block[] BLOCKS = new Block[] {
     
@@ -83,7 +85,8 @@ public class BlocksInit {
             MINISILO,
             BASE,
             RADARTHERMALBASE,
-            KAZ1
+            KAZ1,
+            KAZ2
 
     };
 
@@ -217,7 +220,7 @@ public class BlocksInit {
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "radar3"), Radar3Entity.class, "Radar3", 1337, TdmMod.instance, 150, 3, false);
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "rocket1"), RocketEntity.class, "rocket1", 1338, TdmMod.instance, 1000, 2, true);
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "radarthermal1"), RadarThermal1Entity.class, "RadarThermal1", 1339, TdmMod.instance, 150, 3, false);
-        EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "kazammo"), KazAmmoEntity.class, "kazammo1", 1340, TdmMod.instance, 5, 3, true);
+        EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "kazammo"), KazAmmoEntity.class, "kazammo1", 1340, TdmMod.instance, 75, 3, true);
 
     }
 }

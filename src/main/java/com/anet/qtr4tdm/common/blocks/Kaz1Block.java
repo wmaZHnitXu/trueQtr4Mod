@@ -34,7 +34,11 @@ public class Kaz1Block extends BlockTileEntity<Kaz1Tile> {
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
     public Kaz1Block() {
-        super("kaz1", Material.IRON, 5, 3, SoundType.METAL);
+        this("kaz1");
+    }
+
+    public Kaz1Block(String name) {
+        super(name, Material.IRON, 5, 3, SoundType.METAL);
         this.setDefaultState(this.blockState.getBaseState().withProperty(CONNECTED, false).withProperty(POWERED, false).withProperty(AMMO, 0).withProperty(FACING, EnumFacing.NORTH));
         this.setCreativeTab(TdmMod.qtr4);
     }
@@ -45,8 +49,8 @@ public class Kaz1Block extends BlockTileEntity<Kaz1Tile> {
         TileEntity tile = worldIn.getTileEntity(pos);
         if (tile instanceof Kaz1Tile) {
             Kaz1Tile kaztile = (Kaz1Tile)tile;
-            boolean connected = kaztile.connected;
-            boolean powered = kaztile.powered;
+            boolean connected = kaztile.highlightTime > 0;
+            boolean powered = kaztile.highlightTime > 0;
             state = state.withProperty(CONNECTED, connected).withProperty(POWERED, powered);
         }
         return state;
@@ -72,6 +76,7 @@ public class Kaz1Block extends BlockTileEntity<Kaz1Tile> {
 
     public static void SetAmmo(World world, BlockPos pos, int ammo) {
         
+        ammo = Math.min(ammo, 3);
         TileEntity tile = world.getTileEntity(pos);
 
         IBlockState state = world.getBlockState(pos);
@@ -92,7 +97,7 @@ public class Kaz1Block extends BlockTileEntity<Kaz1Tile> {
 
     @Override
     public Kaz1Tile createTileEntity(World world, IBlockState blockState) {
-        return new Kaz1Tile();
+        return new Kaz1Tile(1);
     }
 
     @Override

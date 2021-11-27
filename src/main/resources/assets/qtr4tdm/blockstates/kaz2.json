@@ -1,0 +1,30 @@
+{
+    "forge_marker": 1,
+    "defaults": {},
+    "variants": {
+
+      "facing": {
+        "north": { "y": 0   },
+        "east":  { "y": 90  },
+        "south": { "y": 180 },
+        "west":  { "y": 270 }
+		  },
+
+      "ammo": {
+        "0": {"model": "qtr4tdm:kaz2_empty"},
+        "1": {"model": "qtr4tdm:kaz2_full"},
+        "2": {"model": "qtr4tdm:kaz2_full"},
+        "3": {"model": "qtr4tdm:kaz2_full"}
+      },
+
+      "powered": {
+        "false": {"textures": { "0": "qtr4tdm:blocks/kaz2_off" }},
+        "true": {"textures": { "0": "qtr4tdm:blocks/kaz2_on" }}
+      },
+
+      "connected": {
+        "false": {"textures": { "0": "qtr4tdm:blocks/kaz2_off" }},
+        "true": {"textures": { "0": "qtr4tdm:blocks/kaz2_on" }}
+      }
+    }
+  }

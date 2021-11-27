@@ -9,3 +9,7 @@ item.base_expander_lvl2.name=Base expander 2
 item.base_expander_lvl3.name=Base expander 3
 item.base_expander_lvl4.name=Base expander 4
 tile.base_block.name=Base block
+tile.kaz1.name=Active Protection Complex
+tile.kaz2.name=Improved APC
+kazammo1.name=APC charge
+kazammo2.name=Imporved APC charge

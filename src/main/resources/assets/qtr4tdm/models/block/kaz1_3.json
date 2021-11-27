@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [128, 128],
 	"textures": {
-		"0": "qtr4tdm:blocks/kaz1_on",
-		"particle": "qtr4tdm:blocks/kaz1_on"
+		"0": "qtr4tdm:blocks/kaz1_off",
+		"particle": "qtr4tdm:blocks/kaz1_off"
 	},
 	"elements": [
 		{

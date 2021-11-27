@@ -1,15 +1,18 @@
 package com.anet.qtr4tdm.common.tiles;
 
+import java.security.interfaces.RSAPrivateCrtKey;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.bases.InWorldBasesManager;
 import com.anet.qtr4tdm.common.blocks.Kaz1Block;
+import com.anet.qtr4tdm.common.blocks.Kaz2Block;
 import com.anet.qtr4tdm.common.entities.KazAmmoEntity;
 import com.anet.qtr4tdm.common.items.KAZAmmoItem;
 import com.anet.qtr4tdm.common.supers.TileEntityDefence;
 import com.anet.qtr4tdm.init.BlocksInit;
+import com.anet.qtr4tdm.uebki.Sounds;
 import com.anet.qtr4tdm.uebki.gui.KAZGuiMisc.kazContainer;
 import com.flansmod.common.driveables.EnumWeaponType;
 import com.flansmod.common.guns.BulletType;
@@ -33,7 +36,9 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.Explosion;
 import net.minecraftforge.common.MinecraftForge;
 
 public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInventory, IEnergySink {
@@ -41,19 +46,56 @@ public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInve
     public boolean connected;
     public boolean powered;
     private int maxAmmo = 3;
-    private int range = 10;
+    private int range = 20;
     public List<ItemStack> ammo;
 
+    private int level = 1;
     private int interval = 10;
     private double energy = 0;
     private double maxEnergy = 100;
+    private double usage = 20;
     private int ticksexisted;
     public kazContainer container;
     public Entity target;
     private int cooldown = 0;
+    public int highlightTime = 0;
+    private int ammometatype;
+
+    protected static ArrayList<EntityBullet> lockedOn;
 
     //TEMPTEMP
     private int currentammo;
+
+    public Kaz1Tile () {
+        if (lockedOn == null) lockedOn = new ArrayList<EntityBullet>();
+    }
+
+    public Kaz1Tile(int level) {
+        this();
+        LevelInit(level);
+    }
+
+    private void LevelInit (int level) {
+        this.level = level;
+        switch (level) {
+            case 1:
+                range = 20;
+                maxAmmo = 3;
+                interval = 10;
+                usage = 20;
+                maxEnergy = 100;
+                ammometatype = 0;
+            break;
+            case 2:
+                range = 20;
+                maxAmmo = 5;
+                interval = 7;
+                usage = 50;
+                maxEnergy = 200;
+                ammometatype = 1;
+            break;
+        } 
+    }
 
     @Override
     public void onLoad() {
@@ -63,6 +105,11 @@ public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInve
         }
         if (!world.isRemote) {
             markDirty();
+        }
+        else {
+            int lvl = 1;
+            if (world.getBlockState(pos).getBlock() instanceof Kaz2Block) lvl = 2;
+            LevelInit(lvl);
         }
         MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
         currentammo = world.getBlockState(pos).getValue(Kaz1Block.AMMO);
@@ -84,15 +131,21 @@ public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInve
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        super.writeToNBT(compound);
         compound.setInteger("ammocount", ammo.get(0).getCount());
-        return super.writeToNBT(compound);
+        compound.setInteger("ammometa", ammo.get(0).getItemDamage());
+        compound.setInteger("level", level);
+        return compound;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
-        ammo = new ArrayList<ItemStack>(); 
-        ammo.add(0, new ItemStack(BlocksInit.KAZAMMO, compound.getInteger("ammocount")));
         super.readFromNBT(compound);
+        LevelInit(compound.getInteger("level"));
+        ammo = new ArrayList<ItemStack>();
+        ItemStack stack = new ItemStack(BlocksInit.KAZAMMO, compound.getInteger("ammocount"));
+        stack.setItemDamage(compound.getInteger("ammometa"));
+        ammo.add(0, stack);
     }
 
     @Override
@@ -126,13 +179,16 @@ public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInve
             connected = base != null;
             if (ticksexisted % interval == 0 && cooldown == 0) {
                 if (energy > 0 && getAmmoCount() > 0) {
-                    energy = Math.max(energy-10, 0);
+                    energy = Math.max(energy-usage, 0);
                     SearchForTargets();
                 }
             }
             if (cooldown > 0) cooldown--;
             powered = energy > 0;
             AmmoUpdate();
+        }
+        else {
+            if (highlightTime>0) highlightTime--;
         }
         ticksexisted++;
     }
@@ -142,9 +198,10 @@ public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInve
         List<EntityBullet> bullets = world.getEntitiesWithinAABB(EntityBullet.class, bb);
         for (EntityBullet bullet : bullets) {
             BulletType type = bullet.shot.getBulletType();
-            if ((type.explodeOnImpact || type.emp)) {
+            if ((type.explodeOnImpact || type.emp) && !lockedOn.contains(bullet) && !bullet.isDead) {
                 target = bullet;
                 Launch();
+                lockedOn.add(bullet);
                 return;
             }
         }
@@ -152,17 +209,29 @@ public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInve
 
     public void Launch () {
         KazAmmoEntity charge = new KazAmmoEntity(world);
-        charge.setPosition(pos.getX() + 0.5d, pos.getY(), pos.getZ() + 0.5d);
+        charge.setPositionAndRotation(pos.getX() + 0.5d, pos.getY(), pos.getZ() + 0.5d, world.getBlockState(pos).getValue(Kaz1Block.FACING).getHorizontalAngle(), 0);
+        charge.SetTarget(target);
         world.spawnEntity(charge);
+        world.playSound(null, pos, Sounds.active_protection_shot, SoundCategory.BLOCKS, 4f, 1f);
         ammo.get(0).setCount(ammo.get(0).getCount()-1);
         cooldown = 20;
+    }
+
+    public static void RefreshLocked () {
+        for (int i = 0; i < lockedOn.size(); i++) {
+            Entity e = lockedOn.get(i);
+            if (e.isDead) {
+                lockedOn.remove(i);
+                i--;
+            }
+        }
     }
 
     private void AmmoUpdate () {
         int _ammo = ammo.get(0).getCount();
         if (_ammo != currentammo) {
-            Kaz1Block.SetAmmo(world, pos, _ammo);
-            currentammo = _ammo;
+                Kaz1Block.SetAmmo(world, pos, _ammo);
+                currentammo = _ammo;
         }
     }
 
@@ -204,7 +273,7 @@ public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInve
 
     @Override
     public int getInventoryStackLimit() {
-        return 3;
+        return maxAmmo;
     }
 
     @Override
@@ -226,7 +295,7 @@ public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInve
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return stack != null && stack.getItem() instanceof KAZAmmoItem;
+        return stack != null && stack.getItem() instanceof KAZAmmoItem && stack.getItemDamage() == ammometatype;
     }
 
     @Override
@@ -279,7 +348,7 @@ public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInve
 
     @Override
     public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
-        if (direction != EnumFacing.UP && itemStackIn != null && itemStackIn.getItem() instanceof KAZAmmoItem && index == 0 && (ammo.get(0).getCount() < 3)) {
+        if (direction != EnumFacing.UP && itemStackIn != null && isItemValidForSlot(0, itemStackIn) && index == 0 && (ammo.get(0).getCount() < maxAmmo)) {
             return true;
         }
         return false;
@@ -303,7 +372,7 @@ public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInve
 
     @Override
     public int getSinkTier() {
-        return 2;
+        return 3;
     }
 
     @Override

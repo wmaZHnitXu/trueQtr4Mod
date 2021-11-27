@@ -13,6 +13,8 @@ public class Sounds
     public static final SoundEvent system_active = reg("system_active");
     public static final SoundEvent pidoras_naiden = reg("pidoras_found");
     public static final SoundEvent beep = reg("beep");
+    public static final SoundEvent active_protection = reg("active_protection");
+    public static final SoundEvent active_protection_shot = reg("active_protection_shot");
 
     public static void regSound()
     {
@@ -21,6 +23,8 @@ public class Sounds
         ForgeRegistries.SOUND_EVENTS.register(system_active);
         ForgeRegistries.SOUND_EVENTS.register(pidoras_naiden);
         ForgeRegistries.SOUND_EVENTS.register(beep);
+        ForgeRegistries.SOUND_EVENTS.register(active_protection);
+        ForgeRegistries.SOUND_EVENTS.register(active_protection_shot);
     }
 
     //Упрощённая регистрация звука

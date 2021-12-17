@@ -164,7 +164,7 @@ public class baseInfo {
     public void SendTargets () {
         ArrayList<Entity> validTargets = new ArrayList<Entity>();
         for (RadarTrackingInfo i : radarTrackingData) {
-            if (i.type < 0 && i.ent != null && !i.ent.isDead) {
+            if (i.type < 10 && i.ent != null && !i.ent.isDead) {
                 validTargets.add(i.ent);
                 if (status != baseStatus.Emergency) status = baseStatus.Threat;
                 if (ContainsChunk(new ChunkPos(i.ent.getPosition()))) status = baseStatus.Emergency;

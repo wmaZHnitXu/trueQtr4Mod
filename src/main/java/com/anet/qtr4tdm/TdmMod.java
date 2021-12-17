@@ -63,6 +63,7 @@ public class TdmMod
 
     public static final int GUI_BASE = 0;
     public static final int GUI_KAZ = 1;
+    public static final int GUI_COMMONDEF = 2;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)

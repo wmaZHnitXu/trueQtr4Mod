@@ -80,8 +80,13 @@ public class Kaz1Block extends BlockTileEntity<Kaz1Tile> {
         TileEntity tile = world.getTileEntity(pos);
 
         IBlockState state = world.getBlockState(pos);
+        boolean highlight = false;
         if (state.getBlock() instanceof Kaz1Block) {
-            world.setBlockState(pos, state.withProperty(AMMO, ammo));
+            if (state.getValue(AMMO) > ammo && tile != null && tile instanceof Kaz1Tile) {
+                ((Kaz1Tile)tile).highlightTime = 40;
+                highlight = true;
+            }
+            world.setBlockState(pos, state.withProperty(AMMO, ammo).withProperty(POWERED, highlight).withProperty(CONNECTED, highlight));
         }
 
         if (tile != null) {

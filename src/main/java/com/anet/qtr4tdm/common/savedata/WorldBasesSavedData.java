@@ -105,13 +105,9 @@ public class WorldBasesSavedData extends WorldSavedData {
         return compound;
     }
 
-    public void SetData (ArrayList<baseInfo> data) {
+    public void SetData (ArrayList<baseInfo> data, ArrayList<Integer> freeIdsdata) {
         bases = data;
+        freeIds = freeIdsdata;
         markDirty();
     }
-
-    public ArrayList<baseInfo> GetData () {
-        return bases;
-    }
-    
 }

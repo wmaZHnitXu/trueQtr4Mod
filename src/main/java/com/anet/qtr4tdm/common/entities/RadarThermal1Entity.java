@@ -35,7 +35,7 @@ public class RadarThermal1Entity extends Radar implements IHasEnergy {
 
     @Override
     public boolean isInRange(EntityPlayer e) {
-        return (e.getPosition().distanceSq(getPosition()) < 100 && hasEnergy);
+        return (e.getPosition().distanceSq(getPosition()) < 1000 && hasEnergy);
     }
 
     @Override

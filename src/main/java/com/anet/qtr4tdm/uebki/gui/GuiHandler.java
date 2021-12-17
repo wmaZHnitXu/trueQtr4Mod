@@ -4,10 +4,12 @@ import java.util.ArrayList;
 
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.bases.baseInfo;
+import com.anet.qtr4tdm.common.supers.TEDefenceInvEnrg;
 import com.anet.qtr4tdm.common.tiles.BaseTile;
 import com.anet.qtr4tdm.common.tiles.Kaz1Tile;
 import com.anet.qtr4tdm.uebki.IDSmanager;
 import com.anet.qtr4tdm.uebki.gui.KAZGuiMisc.kazContainer;
+import com.anet.qtr4tdm.uebki.gui.TEDefInvEnrgGuiMisc.TEDefContainer;
 import com.anet.qtr4tdm.uebki.gui.baseGuiMisc.BaseContainer;
 import com.anet.qtr4tdm.uebki.messages.baseInfoMessage;
 
@@ -41,6 +43,10 @@ public class GuiHandler implements IGuiHandler {
                 Kaz1Tile kaz = (Kaz1Tile)world.getTileEntity(new BlockPos(x,y,z));
                 kaz.container = new kazContainer(player.inventory, kaz);
                 return kaz.container;
+            case TdmMod.GUI_COMMONDEF:
+                TEDefenceInvEnrg def = (TEDefenceInvEnrg)world.getTileEntity(new BlockPos(x,y,z));
+                def.container = new TEDefContainer(player.inventory, def);
+                return def.container;
         }
         return null;
     }
@@ -62,6 +68,8 @@ public class GuiHandler implements IGuiHandler {
                 return new BaseGui(player.inventory, (BaseTile)world.getTileEntity(new BlockPos(x,y,z)));
             case TdmMod.GUI_KAZ:
                 return new KazGui(player.inventory, (Kaz1Tile)world.getTileEntity(new BlockPos(x,y,z)));
+            case TdmMod.GUI_COMMONDEF:
+                return new TEDefInvEnrgGui(player.inventory, (TEDefenceInvEnrg)world.getTileEntity(new BlockPos(x,y,z)));
         }
         return null;
     }

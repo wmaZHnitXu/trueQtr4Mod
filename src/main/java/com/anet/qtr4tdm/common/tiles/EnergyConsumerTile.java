@@ -43,9 +43,6 @@ public class EnergyConsumerTile extends BasicEnergyTe.Sink implements ITickable 
 
     @Override
     public void onLoad () {
-        if (!world.isRemote) {
-            markDirty();
-        }
         MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getEnergyBuffer()));
     }
 

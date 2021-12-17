@@ -36,12 +36,12 @@ public class KazAmmoEntity extends Entity implements IEntityAdditionalSpawnData 
 
     @Override
     protected void readEntityFromNBT(NBTTagCompound compound) {
-        
+        super.readFromNBT(compound);
     }
 
     @Override
     protected void writeEntityToNBT(NBTTagCompound compound) {
-        
+        super.writeToNBT(compound);
     }
 
     @Override

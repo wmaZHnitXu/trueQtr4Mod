@@ -26,10 +26,11 @@ public class InWorldBasesManager {
 
     public InWorldBasesManager() {
         instance = this;
+
         WorldBasesSavedData data = WorldBasesSavedData.get((World)TdmMod.currentServer.getWorld(0));
-        bases = data.bases;
-        freeIds = data.freeIds;
-        if (bases == null) bases = new ArrayList<baseInfo>();
+        if (data.bases != null) bases = data.bases; else bases = new ArrayList<baseInfo>();
+        if (data.freeIds != null) freeIds = data.freeIds; else freeIds = new ArrayList<Integer>();
+
         TdmMod.logger.info(bases.size());
         //Resolve delayed
         if (delayed != null) {
@@ -52,7 +53,7 @@ public class InWorldBasesManager {
     }
 
     private void SaveData () {
-        WorldBasesSavedData.get((World)TdmMod.currentServer.getWorld(0)).SetData(bases);
+        WorldBasesSavedData.get((World)TdmMod.currentServer.getWorld(0)).SetData(bases, freeIds);
     }
 
     public static baseInfo AddNormalBase (BlockPos pos, EntityPlayer owner, int dimension) {
@@ -95,7 +96,8 @@ public class InWorldBasesManager {
     }
 
     public static baseInfo GetInfo (BlockPos pos) { //Лучше заменить на tile P.S. ИСПОЛЬЗУЕТСЯ ДЛЯ ИНИЦИАЛИЗАЦИИ ТАЙЛА
-        if (instance == null) { AddToDelayedInit(pos); System.out.println("delay"); return null;}
+        if (instance == null) { //AddToDelayedInit(pos);
+             System.out.println("delay"); return null;}
         for (baseInfo base : instance.bases) {
             if (base.pos.equals(pos)) return base;
         }

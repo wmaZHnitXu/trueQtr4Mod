@@ -47,7 +47,6 @@ public class MiniSiloTile extends TileEntityDefence implements net.minecraft.uti
     @Override
     public void readFromNBT(NBTTagCompound compound) { //vajno
         super.readFromNBT(compound);
-        System.out.println("connecting2");
 
     }
 

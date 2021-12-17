@@ -5,6 +5,9 @@ import com.anet.qtr4tdm.common.supers.IHasEnergy;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.prefab.BasicEnergyTe.Sink;
+import net.minecraft.tileentity.TileEntityDropper;
+import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ThermalBaseTile extends Sink implements IHasEnergy {
@@ -16,9 +19,6 @@ public class ThermalBaseTile extends Sink implements IHasEnergy {
     
     @Override
     public void onLoad () {
-        if (!world.isRemote) {
-            markDirty();
-        }
         MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getEnergyBuffer()));
     }
 

@@ -10,6 +10,7 @@ import com.anet.qtr4tdm.common.blocks.Kaz1Block;
 import com.anet.qtr4tdm.common.blocks.Kaz2Block;
 import com.anet.qtr4tdm.common.entities.KazAmmoEntity;
 import com.anet.qtr4tdm.common.items.KAZAmmoItem;
+import com.anet.qtr4tdm.common.supers.TEDefenceInvEnrg;
 import com.anet.qtr4tdm.common.supers.TileEntityDefence;
 import com.anet.qtr4tdm.init.BlocksInit;
 import com.anet.qtr4tdm.uebki.Sounds;
@@ -24,12 +25,14 @@ import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.energy.tile.IEnergySink;
 import net.minecraft.block.BlockHopper;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
@@ -40,8 +43,9 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.Explosion;
 import net.minecraftforge.common.MinecraftForge;
+import scala.reflect.internal.Trees.Return;
 
-public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInventory, IEnergySink {
+public class Kaz1Tile extends TEDefenceInvEnrg implements ITickable {
 
     public boolean connected;
     public boolean powered;
@@ -103,9 +107,6 @@ public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInve
             ammo = new ArrayList<ItemStack>();
             ammo.add(0, ItemStack.EMPTY);
         }
-        if (!world.isRemote) {
-            markDirty();
-        }
         else {
             int lvl = 1;
             if (world.getBlockState(pos).getBlock() instanceof Kaz2Block) lvl = 2;
@@ -131,21 +132,16 @@ public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInve
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        super.writeToNBT(compound);
         compound.setInteger("ammocount", ammo.get(0).getCount());
         compound.setInteger("ammometa", ammo.get(0).getItemDamage());
         compound.setInteger("level", level);
-        return compound;
+        return super.writeToNBT(compound);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
         LevelInit(compound.getInteger("level"));
-        ammo = new ArrayList<ItemStack>();
-        ItemStack stack = new ItemStack(BlocksInit.KAZAMMO, compound.getInteger("ammocount"));
-        stack.setItemDamage(compound.getInteger("ammometa"));
-        ammo.add(0, stack);
+        super.readFromNBT(compound);
     }
 
     @Override
@@ -183,9 +179,13 @@ public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInve
                     SearchForTargets();
                 }
             }
+            if (cooldown == 1) {
+                IBlockState state = world.getBlockState(pos);
+                world.setBlockState(pos, state, 2);
+            }
             if (cooldown > 0) cooldown--;
             powered = energy > 0;
-            AmmoUpdate();
+            doAmmoUpdate();
         }
         else {
             if (highlightTime>0) highlightTime--;
@@ -227,11 +227,13 @@ public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInve
         }
     }
 
-    private void AmmoUpdate () {
+    @Override
+    protected void doAmmoUpdate () {
         int _ammo = ammo.get(0).getCount();
         if (_ammo != currentammo) {
                 Kaz1Block.SetAmmo(world, pos, _ammo);
                 currentammo = _ammo;
+                markDirty();
         }
     }
 
@@ -380,5 +382,10 @@ public class Kaz1Tile extends TileEntityDefence implements ITickable, ISidedInve
         energy = Math.min(energy + amount, maxEnergy);
         //return Math.max(energy - maxEnergy, 0); V DOKAX SKAZALI, 4TO TAK LY$WE DLYA PROIZVODITELNOSTI
         return 0;
+    }
+
+    @Override
+    public Item GetAmmoType() {
+        return BlocksInit.KAZAMMO;
     } 
 }

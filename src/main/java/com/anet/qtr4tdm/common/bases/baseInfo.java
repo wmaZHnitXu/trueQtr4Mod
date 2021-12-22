@@ -112,6 +112,15 @@ public class baseInfo {
         }
     }
 
+    public void DisconnectAllDefenceSystems () {
+        for (IBaseConnectable sys : defenders) {
+            sys.DisconnectFromBase();
+        }
+        for (IBaseConnectable rad : radars) {
+            rad.DisconnectFromBase();
+        }
+    }
+
     public void SetMember (String name, int level) {
         int id = IDSmanager.GetPlayerId(name);
         if (id == -1) return;

@@ -30,12 +30,15 @@ import com.anet.qtr4tdm.uebki.messages.baseInfoMessage;
 import com.anet.qtr4tdm.uebki.messages.baseInfoMessageHandler;
 
 import net.minecraft.init.Blocks;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -49,6 +52,7 @@ import net.minecraft.server.MinecraftServer;
 
 
 @Mod(modid = TdmMod.MODID, name = TdmMod.NAME, version = TdmMod.VERSION)
+@Mod.EventBusSubscriber(modid = TdmMod.MODID)
 public class TdmMod
 {
     public static final String MODID = "qtr4tdm";
@@ -104,16 +108,31 @@ public class TdmMod
     }
 
     @EventHandler
-    public void initServerStart(FMLServerStartingEvent event)
+    public void initServerStart(FMLServerAboutToStartEvent event)
     {
         logger.info("initalise FMLServerStartingEvent :" + NAME);
         currentServer = event.getServer();
-        event.registerServerCommand(new AdminManagementCommands());
-        new RadarsInfo();
         new IDSmanager();
-        new InWorldBasesManager();
         new SqlHelper(cfgPath + "/baseinfo.cfg");
-        new PrivatesHandler();
+    }
+
+
+    @EventHandler
+    public void ServerStarting(FMLServerStartingEvent event)
+    {
+        logger.info("Server Starting");
+        event.registerServerCommand(new AdminManagementCommands()); //ИНИЦИАЛИЗИРОВАТЬ ВСЕ МАНАГЕРЫ ХЕЛПЕРЫ ХАНДЛЕРЫ
+    }
+
+    @SubscribeEvent
+    public void WorldLoad (WorldEvent.Load event) {
+        if (event.getWorld().provider.getDimension() == 0) {
+            System.out.println("Main init"); //НЕ работает ничего, что способно выводить текст
+            new InWorldBasesManager();
+            new PrivatesHandler();
+            new RadarsInfo();
+
+        }
     }
 
     @EventHandler

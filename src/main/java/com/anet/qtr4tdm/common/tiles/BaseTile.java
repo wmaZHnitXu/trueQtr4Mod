@@ -21,6 +21,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -39,13 +40,16 @@ public class BaseTile extends TileEntity implements IInventory, ITickable {
     @Override
     public void onLoad() {
         if (!world.isRemote) {
-            InsertDirectInfo(InWorldBasesManager.GetInfo(pos));
+            System.out.println("onLoadBase" + pos);
+                if (InWorldBasesManager.instance == null) {
+                    new InWorldBasesManager();
+                }
+                InsertDirectInfo(InWorldBasesManager.GetInfo(pos));
         }
         else {
             state = BaseState.values()[world.getBlockState(pos).getValue(BaseBlock.status)];
         }
         item = ItemStack.EMPTY;
-        super.onLoad();
     }
 
     public void Interaction (EntityPlayer player) {

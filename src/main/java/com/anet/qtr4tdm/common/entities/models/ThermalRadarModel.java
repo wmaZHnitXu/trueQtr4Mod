@@ -11,8 +11,8 @@ import net.minecraft.entity.Entity;
 
 
 public class ThermalRadarModel extends ModelBase {
-	private final ModelRenderer rotatin;
-	private final ModelRenderer bone;
+	public final ModelRenderer rotatin;
+	public final ModelRenderer bone;
 
 	public ThermalRadarModel() {
 		textureWidth = 128;
@@ -34,8 +34,7 @@ public class ThermalRadarModel extends ModelBase {
 		bone.cubeList.add(new ModelBox(bone, 0, 0, -8.0F, -2.0F, -8.0F, 16, 2, 16, 0.0F, false));
 	}
 
-	@Override
-	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+	public void render(float f, float f1, float f2, float f3, float f4, float f5) {
 		rotatin.render(f5);
 		bone.render(f5);
 	}

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import com.anet.qtr4tdm.common.supers.IBaseConnectable;
 import com.anet.qtr4tdm.common.supers.IDefenceSystem;
-import com.anet.qtr4tdm.common.supers.Radar;
+import com.anet.qtr4tdm.common.supers.IRadar;
 import com.anet.qtr4tdm.common.supers.RadarTrackingInfo;
 import com.anet.qtr4tdm.uebki.IDSmanager;
 import com.anet.qtr4tdm.uebki.gui.baseGuiMisc.BaseContainer;
@@ -28,7 +28,7 @@ public class baseInfo {
     //TEMP
     public BaseContainer container;
     public ArrayList<RadarTrackingInfo> radarTrackingData;
-    public ArrayList<Radar> radars;
+    public ArrayList<IRadar> radars;
     public ArrayList<IDefenceSystem> defenders;
     public int defcount; // clientside only
     public int timeExisted;
@@ -44,7 +44,7 @@ public class baseInfo {
         this.members = new int[0];
         this.status = baseStatus.Peace;
 
-        radars = new ArrayList<Radar>();
+        radars = new ArrayList<IRadar>();
         defenders = new ArrayList<IDefenceSystem>();
         
     }
@@ -75,22 +75,26 @@ public class baseInfo {
 
     public boolean ConnectDefenceSystem (IBaseConnectable sys) {
         if (sys instanceof IDefenceSystem) {
-            if (GetDefCount() > defenders.size() && !defenders.contains(sys)) {
 
-                for (int i = 0; i < defenders.size(); i++) {
-                    if (sys.getPosForBase().equals(defenders.get(i).getPosForBase())) { defenders.remove(i); i--;}
+            if (sys instanceof IRadar && !radars.contains(sys)) { //РАДАР В ОТДЕЛЬНЫЙ ПОДКЛЮЧАЕМ
+                for (int i = 0; i < radars.size(); i++) {
+                    if (sys.getPosForBase().equals(radars.get(i).getPosForBase())) { radars.remove(i); i--;}
                 }
-                defenders.add((IDefenceSystem)sys);
+                radars.add((IRadar)sys);
                 return true;
             }
-            return false;
-        }
-        else if (sys instanceof Radar && !radars.contains(sys)) {
-            for (int i = 0; i < radars.size(); i++) {
-                if (sys.getPosForBase().equals(radars.get(i).getPosForBase())) { radars.remove(i); i--;}
+
+            else {
+                if (GetDefCount() > defenders.size() && !defenders.contains(sys)) {
+
+                    for (int i = 0; i < defenders.size(); i++) {
+                        if (sys.getPosForBase().equals(defenders.get(i).getPosForBase())) { defenders.remove(i); i--;}
+                    }
+                    defenders.add((IDefenceSystem)sys);
+                    return true;
+                }
             }
-            radars.add((Radar)sys);
-            return true;
+
         }
         return false;
     }
@@ -98,17 +102,19 @@ public class baseInfo {
     public void DisconnectDefenceSystem (IBaseConnectable sys) {
         if (sys instanceof IDefenceSystem) {
 
-            for (int i = 0; i < defenders.size(); i++) {
-                if (defenders.get(i) == null) {
-                    defenders.remove(i);
-                    i--;
-                }
+            if (sys instanceof IRadar) {
+                radars.remove((IRadar)sys);
             }
 
-            defenders.remove((IDefenceSystem)sys);
-        }
-        else if (sys instanceof Radar) {
-            radars.remove((Radar)sys);
+            else {
+                for (int i = 0; i < defenders.size(); i++) {
+                    if (defenders.get(i) == null) {
+                        defenders.remove(i);
+                        i--;
+                    }
+                }
+                defenders.remove((IDefenceSystem)sys);
+            }
         }
     }
 
@@ -157,7 +163,7 @@ public class baseInfo {
 
     public void UpdateAllRadars () {
         ArrayList<RadarTrackingInfo> result = new ArrayList<RadarTrackingInfo>();
-        for (Radar s : radars) {
+        for (IRadar s : radars) {
             for (RadarTrackingInfo info : s.ReportTargetsToBase(this)) {
                 if (!result.contains(info)) {
                     result.add(info);

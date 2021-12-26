@@ -45,7 +45,7 @@ import net.minecraft.world.Explosion;
 import net.minecraftforge.common.MinecraftForge;
 import scala.reflect.internal.Trees.Return;
 
-public class Kaz1Tile extends TEDefenceInvEnrg implements ITickable {
+public class Kaz1Tile extends TEDefenceInvEnrg {
 
     public boolean connected;
     public boolean powered;
@@ -171,6 +171,7 @@ public class Kaz1Tile extends TEDefenceInvEnrg implements ITickable {
 
     @Override
     public void update() {
+        super.update();
         if (!world.isRemote) {
             connected = base != null;
             if (ticksexisted % interval == 0 && cooldown == 0) {

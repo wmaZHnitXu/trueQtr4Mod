@@ -124,11 +124,12 @@ public class InWorldBasesManager {
 
     public static void ConnectDefenceFromChunk (baseInfo base, ChunkPos pos) {
         World world = TdmMod.currentServer.getWorld(base.dimenision);
-        for (int x = pos.getXStart(); x < pos.getXEnd(); x++) {
-            for (int z = pos.getZStart(); z < pos.getZEnd(); z++) {
-                int y = world.getHeight(x, z);
+        for (int x = pos.getXStart(); x <= pos.getXEnd(); x++) {
+            for (int z = pos.getZStart(); z <= pos.getZEnd(); z++) {
+                int y = world.getHeight(x, z)-1;
                 BlockPos pos2 = new BlockPos(x,y,z);
                 TileEntity te = world.getTileEntity(pos2);
+                System.out.println(x + " - x; " + y + " - y" + z + " - z; " + (te == null ? "da" : "net"));
                 if (te instanceof IBaseConnectable) {
                     ((IBaseConnectable)te).ConnectToBase();
                 }

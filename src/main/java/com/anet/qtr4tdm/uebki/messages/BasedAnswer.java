@@ -7,9 +7,7 @@ import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.bases.InWorldBasesManager;
 import com.anet.qtr4tdm.common.bases.baseInfo;
 import com.anet.qtr4tdm.common.entities.Radar1Entity;
-import com.anet.qtr4tdm.common.entities.RadarThermal1Entity;
 import com.anet.qtr4tdm.common.supers.IHasEnergy;
-import com.anet.qtr4tdm.common.supers.Radar;
 import com.anet.qtr4tdm.common.tiles.EnergyConsumerTile;
 import com.anet.qtr4tdm.uebki.RadarsInfo;
 import com.anet.qtr4tdm.uebki.gui.BaseSetupGui;
@@ -127,10 +125,6 @@ public class BasedAnswer implements IMessage {
 
                 case 6:
                     BlockPos pos1 = new BlockPos(answer[1], answer[2], answer[3]);
-                    List<RadarThermal1Entity> ent1 = Minecraft.getMinecraft().world.getEntitiesWithinAABB(RadarThermal1Entity.class, new AxisAlignedBB(pos1));
-                    if (ent1.size() != 0) {
-                        ent1.get(0).hasEnergy = answer[4] > 0;
-                    }
             }
         }
         catch (Exception e) {

@@ -1,5 +1,6 @@
 {
     "variants": {
-      "normal": { "model": "qtr4tdm:thermal_base" }
+      "active=false": { "model": "qtr4tdm:thermal_base" },
+      "active=true": { "model": "qtr4tdm:thermal_base" }
     }
   }

@@ -7,10 +7,8 @@ import com.anet.qtr4tdm.common.supers.TEDefenceInvEnrg;
 import com.anet.qtr4tdm.init.BlocksInit;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
-import net.minecraft.launchwrapper.Launch;
-import net.minecraft.util.ITickable;
 
-public class Mrk1Tile extends TEDefenceInvEnrg implements ITickable {
+public class Mrk1Tile extends TEDefenceInvEnrg {
 
     private int cooldown;
     private ArrayList<Entity> targets;
@@ -36,6 +34,7 @@ public class Mrk1Tile extends TEDefenceInvEnrg implements ITickable {
 
     @Override
     public void update() {
+        super.update();
         if (!world.isRemote) {
             if (!isEmpty()) {
                 if (targets != null) {

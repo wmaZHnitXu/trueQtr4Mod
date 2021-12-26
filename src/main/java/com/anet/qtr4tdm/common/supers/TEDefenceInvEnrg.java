@@ -10,7 +10,6 @@ import com.anet.qtr4tdm.uebki.gui.TEDefInvEnrgGuiMisc.TEDefContainer;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyEmitter;
-import ic2.api.energy.tile.IEnergySink;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryHelper;
@@ -21,14 +20,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
 
-public abstract class TEDefenceInvEnrg extends TileEntityDefence implements ISidedInventory, IEnergySink {
+public abstract class TEDefenceInvEnrg extends TEDefenceEnrg implements ISidedInventory {
     
     public TEDefContainer container;
     protected List<ItemStack> ammo;
     protected int maxAmmo;
-    public boolean connected;
-    public boolean powered;
-    protected double energy, maxEnergy;
     private int currentammo;
 
     public abstract Item GetAmmoType ();
@@ -221,7 +217,7 @@ public abstract class TEDefenceInvEnrg extends TileEntityDefence implements ISid
 
     @Override
     public int getSinkTier() {
-        return 3;
+        return 2;
     }
 
     @Override

@@ -1,11 +1,5 @@
 {
-    "parent": "block/bedrock",
-    "textures": {
-      "up": "qtr4tdm:blocks/thermalbaseconnector",
-      "down": "qtr4tdm:blocks/thermalbaseconnector",
-      "south": "qtr4tdm:blocks/thermalbaseconnector",
-      "north": "qtr4tdm:blocks/thermalbaseconnector",
-      "west": "qtr4tdm:blocks/thermalbaseconnector",
-      "east": "qtr4tdm:blocks/thermalbaseconnector"
-    }
+  "textures" : {
+	  "particle" : "qtr4tdm:entity/radar2"
   }
+}

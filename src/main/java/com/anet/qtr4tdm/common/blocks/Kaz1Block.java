@@ -1,6 +1,7 @@
 package com.anet.qtr4tdm.common.blocks;
 
 import com.anet.qtr4tdm.TdmMod;
+import com.anet.qtr4tdm.common.supers.BlockDefenceSystem;
 import com.anet.qtr4tdm.common.supers.TileEntityDefence;
 import com.anet.qtr4tdm.common.tiles.Kaz1Tile;
 import com.anet.qtr4tdm.uebki.BlockTileEntity;
@@ -26,7 +27,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.GameData;
 
-public class Kaz1Block extends BlockTileEntity<Kaz1Tile> {
+public class Kaz1Block extends BlockDefenceSystem<Kaz1Tile> {
 
     public static PropertyBool POWERED = PropertyBool.create("powered");
     public static PropertyBool CONNECTED = PropertyBool.create("connected");

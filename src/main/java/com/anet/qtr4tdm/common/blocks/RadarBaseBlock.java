@@ -64,6 +64,7 @@ public class RadarBaseBlock extends BlockTileEntity<RadarBaseTile> {
 
         return new RadarBaseTile();
     }
+    
     @Override
     public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
         tooltip.add("§l§2multiblock stroish', potom pkm, 4tobi sobrat'");

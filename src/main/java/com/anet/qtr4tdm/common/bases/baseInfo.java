@@ -28,7 +28,6 @@ public class baseInfo {
     //TEMP
     public BaseContainer container;
     public ArrayList<RadarTrackingInfo> radarTrackingData;
-    public ArrayList<IRadar> radars;
     public ArrayList<IDefenceSystem> defenders;
     public int defcount; // clientside only
     public int timeExisted;
@@ -44,7 +43,6 @@ public class baseInfo {
         this.members = new int[0];
         this.status = baseStatus.Peace;
 
-        radars = new ArrayList<IRadar>();
         defenders = new ArrayList<IDefenceSystem>();
         
     }
@@ -76,15 +74,6 @@ public class baseInfo {
     public boolean ConnectDefenceSystem (IBaseConnectable sys) {
         if (sys instanceof IDefenceSystem) {
 
-            if (sys instanceof IRadar && !radars.contains(sys)) { //РАДАР В ОТДЕЛЬНЫЙ ПОДКЛЮЧАЕМ
-                for (int i = 0; i < radars.size(); i++) {
-                    if (sys.getPosForBase().equals(radars.get(i).getPosForBase())) { radars.remove(i); i--;}
-                }
-                radars.add((IRadar)sys);
-                return true;
-            }
-
-            else {
                 if (GetDefCount() > defenders.size() && !defenders.contains(sys)) {
 
                     for (int i = 0; i < defenders.size(); i++) {
@@ -93,7 +82,6 @@ public class baseInfo {
                     defenders.add((IDefenceSystem)sys);
                     return true;
                 }
-            }
 
         }
         return false;
@@ -102,11 +90,6 @@ public class baseInfo {
     public void DisconnectDefenceSystem (IBaseConnectable sys) {
         if (sys instanceof IDefenceSystem) {
 
-            if (sys instanceof IRadar) {
-                radars.remove((IRadar)sys);
-            }
-
-            else {
                 for (int i = 0; i < defenders.size(); i++) {
                     if (defenders.get(i) == null) {
                         defenders.remove(i);
@@ -114,16 +97,12 @@ public class baseInfo {
                     }
                 }
                 defenders.remove((IDefenceSystem)sys);
-            }
         }
     }
 
     public void DisconnectAllDefenceSystems () {
         for (IBaseConnectable sys : defenders) {
             sys.DisconnectFromBase();
-        }
-        for (IBaseConnectable rad : radars) {
-            rad.DisconnectFromBase();
         }
     }
 
@@ -153,9 +132,6 @@ public class baseInfo {
     }
 
     public void RefreshAllSystems () {
-        for (IBaseConnectable s : radars) {
-            s.Refresh();
-        }
         for (IBaseConnectable s : defenders) {
             s.Refresh();
         }
@@ -163,10 +139,13 @@ public class baseInfo {
 
     public void UpdateAllRadars () {
         ArrayList<RadarTrackingInfo> result = new ArrayList<RadarTrackingInfo>();
-        for (IRadar s : radars) {
-            for (RadarTrackingInfo info : s.ReportTargetsToBase(this)) {
-                if (!result.contains(info)) {
-                    result.add(info);
+        for (IDefenceSystem s : defenders) {
+            if (s instanceof IRadar) {
+                IRadar rad = (IRadar)s;
+                for (RadarTrackingInfo info : rad.ReportTargetsToBase(this)) {
+                    if (!result.contains(info)) {
+                        result.add(info);
+                    }
                 }
             }
         }

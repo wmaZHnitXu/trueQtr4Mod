@@ -388,5 +388,20 @@ public class Kaz1Tile extends TEDefenceInvEnrg {
     @Override
     public Item GetAmmoType() {
         return BlocksInit.KAZAMMO;
-    } 
+    }
+
+    @Override
+    public int getPoints() {
+        return 45;
+    }
+
+    @Override
+    public int getRange() {
+        return 25;
+    }
+
+    @Override
+    public int getConsumptionPerTick() {
+        return 0;
+    }
 }

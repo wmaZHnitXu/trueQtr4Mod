@@ -81,4 +81,14 @@ public class MiniSiloTile extends TileEntityDefence implements net.minecraft.uti
         // TODO Auto-generated method stub
         
     }
+
+    @Override
+    public int getPoints() {
+        return 35;
+    }
+
+    @Override
+    public int getRange() {
+        return 100;
+    }
 }

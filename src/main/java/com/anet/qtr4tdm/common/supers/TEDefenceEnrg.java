@@ -81,4 +81,7 @@ public abstract class TEDefenceEnrg extends TileEntityDefence implements IEnergy
             addedToEnet = true;
         }
     }
+
+    public abstract int getConsumptionPerTick ();
+
 }

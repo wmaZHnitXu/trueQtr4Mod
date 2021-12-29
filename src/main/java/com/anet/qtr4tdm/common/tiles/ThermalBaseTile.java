@@ -92,4 +92,19 @@ public class ThermalBaseTile extends RadarTile {
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
     }
+
+    @Override
+    public int getPoints() {
+        return 20;
+    }
+
+    @Override
+    public int getRange() {
+        return 100;
+    }
+
+    @Override
+    public int getConsumptionPerTick() {
+        return 16;
+    }
 }

@@ -5,10 +5,9 @@ import java.util.List;
 
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.items.rocketItem;
+import com.anet.qtr4tdm.common.supers.BlockDefenceSystem;
 import com.anet.qtr4tdm.common.tiles.MiniSiloTile;
 import com.anet.qtr4tdm.init.BlocksInit;
-import com.anet.qtr4tdm.uebki.BlockTileEntity;
-import com.jcraft.jorbis.Block;
 
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -16,16 +15,10 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -34,7 +27,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 
 @Mod.EventBusSubscriber(modid = TdmMod.MODID)
-public class MiniSiloBlock extends BlockTileEntity<MiniSiloTile> {
+public class MiniSiloBlock extends BlockDefenceSystem<MiniSiloTile> {
 
     public static final PropertyBool armed = PropertyBool.create("armed");
 

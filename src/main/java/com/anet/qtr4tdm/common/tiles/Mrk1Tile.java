@@ -76,5 +76,19 @@ public class Mrk1Tile extends TEDefenceInvEnrg {
         target = null;
         targets = null;
     }
+
+    @Override
+    public int getPoints() {
+        return 30;
+    }
+
+    @Override
+    public int getRange() {
+        return Double.valueOf(range).intValue();
+    }
     
+    @Override
+    public int getConsumptionPerTick() {
+        return 0;
+    }
 }

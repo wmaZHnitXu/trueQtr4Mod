@@ -13,6 +13,7 @@ import net.minecraftforge.common.ForgeChunkManager;
 public abstract class TileEntityDefence extends TileEntity implements IDefenceSystem {
     
     private int lastBaseId;
+    public static int points;
     protected baseInfo base;
 
     @Override
@@ -68,5 +69,4 @@ public abstract class TileEntityDefence extends TileEntity implements IDefenceSy
         compound.setInteger("lastid", lastBaseId);
         return super.writeToNBT(compound);
     }
-
 }

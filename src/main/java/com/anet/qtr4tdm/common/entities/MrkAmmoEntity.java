@@ -1,9 +1,19 @@
 package com.anet.qtr4tdm.common.entities;
 
+import java.util.List;
+
+import com.anet.qtr4tdm.common.entities.render.Trail;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -21,6 +31,9 @@ public class MrkAmmoEntity extends Entity implements IEntityAdditionalSpawnData 
     private Vec3d velocityNormal;
     private Vec3d dirNormal;
     private Vec3d velocityActual;
+    public Trail trail;
+    public static final float damage = 8f;
+    private boolean isTargetGone;
 
     public MrkAmmoEntity(World worldIn) {
         super(worldIn);
@@ -28,7 +41,7 @@ public class MrkAmmoEntity extends Entity implements IEntityAdditionalSpawnData 
 
     @Override
     protected void entityInit() {
-        velocityNormal = new Vec3d(rand.nextGaussian() * 0.1d, 1, rand.nextGaussian() * 0.0d);
+        velocityNormal = new Vec3d(0, 1, 0);
         speed = maxSpeed * 0.5d;
     }
 
@@ -52,13 +65,16 @@ public class MrkAmmoEntity extends Entity implements IEntityAdditionalSpawnData 
         super.onUpdate();
 
         //MOVEMENT
-        if (target != null) targetPos = target.getPositionVector();
-        else targetPos = getPositionVector().addVector(0, -255, 0);
+        if (target == null) targetPos = getPositionVector().addVector(0, -255, 0);
+        if (getPositionVector().distanceTo(targetPos) < 4) isTargetGone = true;
+        
 
         //VELOCITY
-        dirNormal = targetPos.subtract(getPositionVector()).normalize();
-        turnSpeed = ticksExisted > 20 ? maxTurnSpeed : maxTurnSpeed * 0.03d;
-        velocityNormal = slerp(velocityNormal, dirNormal, turnSpeed);
+        if (!isTargetGone) {
+            dirNormal = targetPos.subtract(getPositionVector()).normalize();
+            turnSpeed = ticksExisted > 20 ? maxTurnSpeed : maxTurnSpeed * 0.03d;
+            velocityNormal = slerp(velocityNormal, dirNormal, turnSpeed);
+        }
 
         speed = speed + accelleration * (maxSpeed - speed);
 
@@ -80,16 +96,16 @@ public class MrkAmmoEntity extends Entity implements IEntityAdditionalSpawnData 
 
         //EFFECT
         if (world.isRemote) {
-            for (int i = 0; i < 7; i++) {
-                Vec3d paritcleVel = Vec3d.ZERO.subtract(velocityNormal).scale(maxSpeed * 0.5d);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, true, posX, posY, posZ, paritcleVel.x * Math.abs(rand.nextGaussian()),
-                paritcleVel.y * Math.abs(rand.nextGaussian()),
-                paritcleVel.z * Math.abs(rand.nextGaussian()));
-            }
+            
+            Vec3d paritcleVel = Vec3d.ZERO.subtract(velocityNormal).scale(maxSpeed * 0.2d);
+            world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, true, posX, posY, posZ, 
+            paritcleVel.x * Math.abs(rand.nextGaussian()),
+            paritcleVel.y * Math.abs(rand.nextGaussian()),
+            paritcleVel.z * Math.abs(rand.nextGaussian()));
         }
 
         //IMPACT
-        if ((!world.isAirBlock(getPosition()) && ticksExisted > 5) || targetPos.squareDistanceTo(getPositionVector()) <= 1) {
+        if ((!world.isAirBlock(getPosition()) && ticksExisted > 5) || (target != null && target.getPositionVector().squareDistanceTo(getPositionVector()) <= 1)) {
             Detonate();
         }
     }
@@ -109,7 +125,11 @@ public class MrkAmmoEntity extends Entity implements IEntityAdditionalSpawnData 
     public void SetTargetAndTargetPos (Entity target) {
         this.target = target;
         if (target != null) {
-            targetPos = target.getPositionVector();
+
+            Vec3d velocityCorrective = (new Vec3d(motionX, motionY, motionZ)).scale(target.getPositionVector().distanceTo(getPositionVector()) / maxSpeed);
+
+            targetPos = (new Vec3d(target.getPositionVector().x + rand.nextGaussian() * 5, target.getPositionVector().y, target.getPositionVector().z + rand.nextGaussian() * 5))
+            .add(velocityCorrective);
         }
     }
 
@@ -130,17 +150,34 @@ public class MrkAmmoEntity extends Entity implements IEntityAdditionalSpawnData 
     }
 
     public void Detonate () {
+
         if (world.isRemote) {
             world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, true, getPosition().getX() + 0.5d, getPosition().getY(), getPosition().getZ() + 0.5d, 0, 0, 0);
+            for (int i = 0; i < 50; i++) {
+                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, true, getPosition().getX() + 0.5d, getPosition().getY(), getPosition().getZ() + 0.5d,
+                rand.nextGaussian() * 0.3d,
+                rand.nextGaussian() * 0.3d,
+                rand.nextGaussian() * 0.3d);
+            }
         }
+        else {
+            world.playSound((EntityPlayer)null, getPosition().getX() + 0.5d, getPosition().getY(), getPosition().getZ() + 0.5d, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+            List<EntityLivingBase> inImpactZone = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(getPosition().add(-4, -4, -4), getPosition().add(4,4,4)));
+            for (EntityLivingBase entity : inImpactZone) {
+                entity.attackEntityFrom(DamageSource.FIREWORKS, damage);
+            }
+        }
+
         setDead();
     }
 
     @Override
     public void readSpawnData(ByteBuf additionalData) {
         int targetId = additionalData.readInt();
-        Vec3d targetPos = new Vec3d(additionalData.readFloat(), additionalData.readFloat(), additionalData.readFloat());
+        Vec3d targetPos = new Vec3d(additionalData.readDouble(), additionalData.readDouble(), additionalData.readDouble());
         this.target = world.getEntityByID(targetId);
         this.targetPos = targetPos;
+        Trail.TrailOn(this, 0.2f, 70, 1, false);
+        trail = new Trail(this, 0.3f, 10, 1, true);
     }    
 }

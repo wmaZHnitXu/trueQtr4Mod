@@ -1,6 +1,7 @@
 package com.anet.qtr4tdm.common.blocks;
 
 import com.anet.qtr4tdm.TdmMod;
+import com.anet.qtr4tdm.common.supers.BlockDefenceSystem;
 import com.anet.qtr4tdm.common.tiles.ThermalBaseTile;
 import com.anet.qtr4tdm.uebki.BlockTileEntity;
 
@@ -19,7 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class ThermalRadarBlock extends BlockTileEntity<ThermalBaseTile> {
+public class ThermalRadarBlock extends BlockDefenceSystem<ThermalBaseTile> {
 
     public static final PropertyBool ACTIVE = PropertyBool.create("active");
 
@@ -102,5 +103,4 @@ public class ThermalRadarBlock extends BlockTileEntity<ThermalBaseTile> {
     public IBlockState getStateFromMeta(int meta) {
         return getDefaultState().withProperty(ACTIVE, meta == 1);
     }
-    
 }

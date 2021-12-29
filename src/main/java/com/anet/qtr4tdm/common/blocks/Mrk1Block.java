@@ -1,6 +1,7 @@
 package com.anet.qtr4tdm.common.blocks;
 
 import com.anet.qtr4tdm.TdmMod;
+import com.anet.qtr4tdm.common.supers.BlockDefenceSystem;
 import com.anet.qtr4tdm.common.tiles.Mrk1Tile;
 import com.anet.qtr4tdm.uebki.BlockTileEntity;
 
@@ -18,7 +19,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class Mrk1Block extends BlockTileEntity<Mrk1Tile> {
+public class Mrk1Block extends BlockDefenceSystem<Mrk1Tile> {
 
     public static PropertyBool FACING = PropertyBool.create("facing");
     public static PropertyBool ARMED = PropertyBool.create("armed");

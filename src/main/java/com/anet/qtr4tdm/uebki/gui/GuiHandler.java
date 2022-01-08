@@ -11,7 +11,7 @@ import com.anet.qtr4tdm.uebki.IDSmanager;
 import com.anet.qtr4tdm.uebki.gui.KAZGuiMisc.kazContainer;
 import com.anet.qtr4tdm.uebki.gui.TEDefInvEnrgGuiMisc.TEDefContainer;
 import com.anet.qtr4tdm.uebki.gui.baseGuiMisc.BaseContainer;
-import com.anet.qtr4tdm.uebki.messages.baseInfoMessage;
+import com.anet.qtr4tdm.uebki.messages.primitive.baseInfoMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

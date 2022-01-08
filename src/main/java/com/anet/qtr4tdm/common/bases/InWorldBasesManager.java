@@ -8,7 +8,7 @@ import com.anet.qtr4tdm.common.supers.IBaseConnectable;
 import com.anet.qtr4tdm.common.tiles.BaseTile;
 import com.anet.qtr4tdm.uebki.IDSmanager;
 import com.anet.qtr4tdm.uebki.gui.GuiHandler;
-import com.anet.qtr4tdm.uebki.messages.TopBarMessage;
+import com.anet.qtr4tdm.uebki.messages.primitive.TopBarMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -33,6 +33,8 @@ public class InWorldBasesManager {
     public InWorldBasesManager() {
         System.out.println("delay3");
         instance = this;
+
+        if (TdmMod.currentServer == null) return;
 
         WorldBasesSavedData data = WorldBasesSavedData.get((World)TdmMod.currentServer.getWorld(0));
         if (data.bases != null) bases = data.bases; else bases = new ArrayList<baseInfo>();

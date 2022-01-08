@@ -3,7 +3,7 @@ package com.anet.qtr4tdm;
 import com.anet.qtr4tdm.common.bases.InWorldBasesManager;
 import com.anet.qtr4tdm.common.bases.baseInfo;
 import com.anet.qtr4tdm.uebki.IDSmanager;
-import com.anet.qtr4tdm.uebki.messages.TopBarMessage;
+import com.anet.qtr4tdm.uebki.messages.primitive.TopBarMessage;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

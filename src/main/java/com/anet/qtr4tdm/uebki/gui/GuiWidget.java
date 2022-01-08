@@ -6,7 +6,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiWidget extends Gui {
+public abstract class GuiWidget extends Gui {
     public boolean rightSide;
     public boolean deployed;
     public double deployProgress = 0;
@@ -19,6 +19,7 @@ public class GuiWidget extends Gui {
     public int TexH = 32, TexW = 32;
     public String name = "Участники";
     private boolean hoverExitButton;
+    public int yBasic;
     public Minecraft mc;
 
     public GuiWidget (boolean rightSide, int x, int y, int dwidth, int dheight, Minecraft mc, ResourceLocation icon) {
@@ -26,6 +27,7 @@ public class GuiWidget extends Gui {
         this.rightSide = rightSide;
         this.xPos = x;
         this.yPos = y;
+        this.yBasic = y;
         this.DeployedWidth = dwidth;
         this.DeployedHeight = dheight;
         this.mc = mc;
@@ -41,6 +43,8 @@ public class GuiWidget extends Gui {
     }
 
     public void draw (int mouseX, int mouseY) {
+        GlStateManager.pushMatrix();
+        GlStateManager.color(1, 1, 1);
         if (deployed) {
             if (deployProgress < 0.99) {
                 deployProgress = lerp(deployProgress, 1, 0.05d);
@@ -109,10 +113,11 @@ public class GuiWidget extends Gui {
             mc.renderEngine.bindTexture(iconLoc);
             drawModalRectWithCustomSizedTexture(xPos, yPos, 0, 0, 32, 32, 32, 32);
         }
+        GlStateManager.popMatrix();
     }
 
     public void drawContent (int mouseX, int mouseY) {
-        drawString(mc.fontRenderer, "СУКА", 20, 20, 0xFFFFFF);
+        //drawString(mc.fontRenderer, "СУКА", 20, 20, 0xFFFFFF);
     }
 
     public void Deploy () {
@@ -124,11 +129,13 @@ public class GuiWidget extends Gui {
     }
 
     public void MouseClick (int x, int y) {
-        if (x > xPos && x < xPos + 32 && y > yPos && y < yPos + 32 && !deployed) Deploy();
+        if (x > xPos && x < xPos + iconWidth && y > yPos && y < yPos + iconHeight && !deployed) Deploy();
         if (hoverExitButton) Minimize();
     }
 
     public static double lerp(double a, double b, double f) {
         return a + f * (b - a);
     }
+
+    public abstract void SetPosition (int xPos, int yPos);
 }

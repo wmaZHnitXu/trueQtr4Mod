@@ -10,24 +10,28 @@ import com.anet.qtr4tdm.uebki.RadarsInfo;
 import com.anet.qtr4tdm.uebki.Sounds;
 import com.anet.qtr4tdm.uebki.SqlHelper;
 import com.anet.qtr4tdm.uebki.gui.GuiHandler;
-import com.anet.qtr4tdm.uebki.messages.AskForRadarHandler;
-import com.anet.qtr4tdm.uebki.messages.AskForRadarsMessage;
-import com.anet.qtr4tdm.uebki.messages.BaseUpgradeHandler;
-import com.anet.qtr4tdm.uebki.messages.BaseUpgradeMessage;
-import com.anet.qtr4tdm.uebki.messages.BasedAnswer;
-import com.anet.qtr4tdm.uebki.messages.BasedAnswerHandler;
-import com.anet.qtr4tdm.uebki.messages.BasedRequest;
-import com.anet.qtr4tdm.uebki.messages.BasedRequestHandler;
-import com.anet.qtr4tdm.uebki.messages.GetBaseMembersHandler;
-import com.anet.qtr4tdm.uebki.messages.GetBaseMembersMessage;
-import com.anet.qtr4tdm.uebki.messages.RadarInfoHandler;
-import com.anet.qtr4tdm.uebki.messages.RadarMessage;
-import com.anet.qtr4tdm.uebki.messages.SetBaseMember;
-import com.anet.qtr4tdm.uebki.messages.SetBaseMemberHandler;
-import com.anet.qtr4tdm.uebki.messages.TopBarMessage;
-import com.anet.qtr4tdm.uebki.messages.TopBarMessageHandler;
-import com.anet.qtr4tdm.uebki.messages.baseInfoMessage;
-import com.anet.qtr4tdm.uebki.messages.baseInfoMessageHandler;
+import com.anet.qtr4tdm.uebki.messages.primitive.AskDefenceDataToPlayer;
+import com.anet.qtr4tdm.uebki.messages.primitive.AskForRadarHandler;
+import com.anet.qtr4tdm.uebki.messages.primitive.AskForRadarsMessage;
+import com.anet.qtr4tdm.uebki.messages.primitive.BaseUpgradeHandler;
+import com.anet.qtr4tdm.uebki.messages.primitive.BaseUpgradeMessage;
+import com.anet.qtr4tdm.uebki.messages.primitive.BasedAnswer;
+import com.anet.qtr4tdm.uebki.messages.primitive.BasedAnswerHandler;
+import com.anet.qtr4tdm.uebki.messages.primitive.BasedRequest;
+import com.anet.qtr4tdm.uebki.messages.primitive.BasedRequestHandler;
+import com.anet.qtr4tdm.uebki.messages.primitive.DefDataHandler;
+import com.anet.qtr4tdm.uebki.messages.primitive.DefDataRecHandler;
+import com.anet.qtr4tdm.uebki.messages.primitive.DefenceDataToPlayer;
+import com.anet.qtr4tdm.uebki.messages.primitive.GetBaseMembersHandler;
+import com.anet.qtr4tdm.uebki.messages.primitive.GetBaseMembersMessage;
+import com.anet.qtr4tdm.uebki.messages.primitive.RadarInfoHandler;
+import com.anet.qtr4tdm.uebki.messages.primitive.RadarMessage;
+import com.anet.qtr4tdm.uebki.messages.primitive.SetBaseMember;
+import com.anet.qtr4tdm.uebki.messages.primitive.SetBaseMemberHandler;
+import com.anet.qtr4tdm.uebki.messages.primitive.TopBarMessage;
+import com.anet.qtr4tdm.uebki.messages.primitive.TopBarMessageHandler;
+import com.anet.qtr4tdm.uebki.messages.primitive.baseInfoMessage;
+import com.anet.qtr4tdm.uebki.messages.primitive.baseInfoMessageHandler;
 
 import net.minecraft.init.Blocks;
 import net.minecraftforge.event.world.WorldEvent;
@@ -105,6 +109,9 @@ public class TdmMod
 
         wrapper.registerMessage(GetBaseMembersHandler.class, GetBaseMembersMessage.class, 10, Side.CLIENT);
         wrapper.registerMessage(TopBarMessageHandler.class, TopBarMessage.class, 11, Side.CLIENT);
+
+        wrapper.registerMessage(DefDataHandler.class, AskDefenceDataToPlayer.class, 12, Side.SERVER);
+        wrapper.registerMessage(DefDataRecHandler.class, DefenceDataToPlayer.class, 13, Side.CLIENT);
     }
 
     @EventHandler

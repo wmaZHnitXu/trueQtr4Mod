@@ -14,7 +14,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.MinecraftForge;
 
-public abstract class TEDefenceEnrg extends TileEntityDefence implements IEnergySink, ITickable {
+public abstract class TEDefenceEnrg extends TileEntityDefence implements IEnergySink, ITickable, IHasEnergy {
 
     public boolean connected;
     public boolean powered;
@@ -82,6 +82,14 @@ public abstract class TEDefenceEnrg extends TileEntityDefence implements IEnergy
         }
     }
 
-    public abstract int getConsumptionPerTick ();
+    @Override
+    public double getEnergy() {
+        return energy;
+    }
+
+    @Override
+    public double getMaxEnergy() {
+        return maxEnergy;
+    }
 
 }

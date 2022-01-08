@@ -2,7 +2,7 @@ package com.anet.qtr4tdm.uebki.gui;
 
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.tiles.EnergyConsumerTile;
-import com.anet.qtr4tdm.uebki.messages.BasedRequest;
+import com.anet.qtr4tdm.uebki.messages.primitive.BasedRequest;
 
 import org.lwjgl.opengl.GL11;
 

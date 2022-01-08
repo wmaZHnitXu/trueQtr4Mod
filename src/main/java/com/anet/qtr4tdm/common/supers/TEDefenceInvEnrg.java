@@ -20,12 +20,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
 
-public abstract class TEDefenceInvEnrg extends TEDefenceEnrg implements ISidedInventory {
+public abstract class TEDefenceInvEnrg extends TEDefenceEnrg implements ISidedInventory, IHasAmmo {
     
     public TEDefContainer container;
     protected List<ItemStack> ammo;
     protected int maxAmmo;
-    private int currentammo;
 
     public abstract Item GetAmmoType ();
 
@@ -225,5 +224,23 @@ public abstract class TEDefenceInvEnrg extends TEDefenceEnrg implements ISidedIn
         energy = Math.min(energy + amount, maxEnergy);
         //return Math.max(energy - maxEnergy, 0); V DOKAX SKAZALI, 4TO TAK LY$WE DLYA PROIZVODITELNOSTI
         return 0;
+    }
+
+    @Override
+    public int getAmmo() {
+        int ammocount = 0;
+        if (ammo != null) {
+            for (ItemStack s : ammo) {
+                if (s != null && !s.isEmpty()) {
+                    ammocount += s.getCount();
+                }
+            }
+        }
+        return ammocount;   
+    }
+
+    @Override
+    public int getMaxAmmo() {
+        return getSizeInventory() * getInventoryStackLimit();
     }
 }

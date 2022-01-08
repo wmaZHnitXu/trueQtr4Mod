@@ -6,7 +6,7 @@ import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.uebki.RadarObjectStructure;
 import com.anet.qtr4tdm.uebki.RadarsInfo;
 import com.anet.qtr4tdm.uebki.Sounds;
-import com.anet.qtr4tdm.uebki.messages.RadarInfoHandler;
+import com.anet.qtr4tdm.uebki.messages.primitive.RadarInfoHandler;
 import com.ibm.icu.util.BytesTrie.Result;
 
 import net.minecraft.nbt.NBTTagByte;

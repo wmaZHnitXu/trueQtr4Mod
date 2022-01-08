@@ -5,7 +5,7 @@ import java.io.IOException;
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.bases.InWorldBasesManager;
 import com.anet.qtr4tdm.common.tiles.BaseTile;
-import com.anet.qtr4tdm.uebki.messages.BasedRequest;
+import com.anet.qtr4tdm.uebki.messages.primitive.BasedRequest;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

@@ -5,16 +5,17 @@ import java.util.ArrayList;
 import javax.lang.model.util.ElementScanner6;
 
 import com.anet.qtr4tdm.TdmMod;
-import com.anet.qtr4tdm.uebki.messages.BasedRequest;
-import com.anet.qtr4tdm.uebki.messages.GetBaseMembersMessage;
-import com.anet.qtr4tdm.uebki.messages.MemberData;
-import com.anet.qtr4tdm.uebki.messages.SetBaseMember;
+import com.anet.qtr4tdm.uebki.messages.primitive.BasedRequest;
+import com.anet.qtr4tdm.uebki.messages.primitive.GetBaseMembersMessage;
+import com.anet.qtr4tdm.uebki.messages.primitive.MemberData;
+import com.anet.qtr4tdm.uebki.messages.primitive.SetBaseMember;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiWidgetMembers extends GuiWidget implements IScrollest {
+public class GuiWidgetMembers extends GuiWidget implements IScrollest, IChildHasScrolls {
 
     private InputFieldDownScroll inp;
     private ITextFieldFocus master;
@@ -32,7 +33,7 @@ public class GuiWidgetMembers extends GuiWidget implements IScrollest {
         this.master = master;
         inp = new InputFieldPlayers(0, mc.fontRenderer, xPos + 20, yPos + 20, 60, 15, master);
         buttonList = new ArrayList<GuiButton>();
-        membersScroll = new Scroll(xPos + 110, yPos, 85, new String[0], this, mc, true);
+        membersScroll = new Scroll(xPos + 115, yPos, 85, new String[0], this, mc, true, 150);
         membersScroll.enabled = true;
         buttonList.add(new SimpleButton(0, xPos + 85, yPos + 20, 15, 15, "+"));
         buttonList.add(new SimpleButton(1, xPos + 20, yPos + 100, 105, 20, "Исключить игрока"));
@@ -152,5 +153,20 @@ public class GuiWidgetMembers extends GuiWidget implements IScrollest {
         shownRank = "";
         buttonList.get(1).visible = false;
         membersScroll.selectedIndex = -1;
+    }
+
+    @Override
+    public void SetPosition(int xPos, int yPos) {
+        this.xPos = xPos;
+        this.yPos = yPos;
+        buttonList.get(0).y = yPos + 20;  
+        buttonList.get(1).y = yPos + 100;
+        membersScroll.yPos = yPos;
+        inp.y = yPos + 20;   
+    }
+
+    @Override
+    public void mouseWheelMove(int mouseX, int mouseY, int wheelDelta) {
+        membersScroll.handleMouseWheel(mouseX, mouseY, wheelDelta * 10);
     }
 }

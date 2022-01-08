@@ -157,10 +157,11 @@ public class Trail
             Vec3d pos1 = new Vec3d(node1.x - viewPos.x, node1.y - viewPos.y, node1.z - viewPos.z);
             float scale0 = ((float) (MAX_LENGTH - i)) / MAX_LENGTH * thickness;
             float scale1 = ((float) MAX_LENGTH - i - 1.0f) / MAX_LENGTH * thickness;
-            if (i == 1)
+            /*if (i == 1)
             {
                 scale1 = 0;
             }
+            */
             final Vec3f up0 = node0.up;
             final Vec3f right0 = node0.right;
             final Vec3f up1 = node1.up;

@@ -1,6 +1,7 @@
 package com.anet.qtr4tdm.uebki.gui;
 
 import java.io.IOException;
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,9 +12,13 @@ import com.anet.qtr4tdm.common.items.BaseExpandItem;
 import com.anet.qtr4tdm.common.tiles.BaseTile;
 import com.anet.qtr4tdm.init.BlocksInit;
 import com.anet.qtr4tdm.uebki.gui.baseGuiMisc.BaseContainer;
-import com.anet.qtr4tdm.uebki.messages.BaseUpgradeMessage;
+import com.anet.qtr4tdm.uebki.messages.primitive.AskDefenceDataToPlayer;
+import com.anet.qtr4tdm.uebki.messages.primitive.BaseUpgradeMessage;
+import com.anet.qtr4tdm.uebki.messages.primitive.DefenceDataToPlayer;
+import com.anet.qtr4tdm.uebki.messages.primitive.DefenceDataToPlayer.DefDataStruct;
 
 import org.jline.reader.Widget;
+import org.lwjgl.input.Mouse;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -31,6 +36,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import scala.tools.ant.sabbus.Break;
 
 public class BaseGui extends GuiContainer implements ITextFieldFocus {
 
@@ -54,11 +60,26 @@ public class BaseGui extends GuiContainer implements ITextFieldFocus {
     private boolean nearBase = false;
     private ArrayList<GuiWidget> widgets;
     public boolean InputFieldFocused;
+    private static ArrayList<DefDataStruct> defenceData;
+    private static ArrayList<DefDataStruct> dead;
+    private boolean blink;
+    private static GuiWidgetModule widgetModule;
+    private static DefDataStruct selectedDef;
+
+
+    static {
+        dead = new ArrayList<DefDataStruct>();
+        defenceData = new ArrayList<DefDataStruct>();
+    }
+
+    private int counter;
+    private static boolean sortedDead;
     
     public BaseGui(InventoryPlayer playerInventory, BaseTile baseTe) {
         super(new BaseContainer(playerInventory, baseTe));
         player = playerInventory;
         te = baseTe;
+        widgetModule = null;
         LoadMap();
         UpdateMap(1);
         UpdatePrice();
@@ -66,21 +87,31 @@ public class BaseGui extends GuiContainer implements ITextFieldFocus {
         rightBar = new String[5];
     }
 
+    private void UpdateData () {
+        TdmMod.wrapper.sendToServer(new AskDefenceDataToPlayer(te.getPos(), Minecraft.getMinecraft().player.getEntityId()));
+        counter = 100;
+    }
+
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+
         mc.renderEngine.bindTexture(mapTexLocation);
         GlStateManager.pushMatrix();
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
             drawScaledCustomSizeModalRect(-81, -50, 0, 0, 208, 208, 208, 208, 208, 208);
 
+
             //DRAW MARKED CHUNKS
             GlStateManager.pushMatrix();
+
+            if (!widgetModule.deployed) {
+
                 if (info != null && info.chunks != null)
                     for (ChunkPos pos : info.chunks) {
                         int localx = pos.x - (startchunk.x - 6);
                         int localy = pos.z - (startchunk.z - 6);
-                        drawRect(-81 + localx * 16, -50 + localy * 16, -81 + localx * 16 + 16, -50 + localy * 16 + 16, 0x9999FF99);
+                        drawRect(-81 + localx * 16, -50 + localy * 16, -81 + localx * 16 + 16, -50 + localy * 16 + 16, 0x5599FF99);
                     }
 
                 if (mouseX > guiLeft - 81 && mouseX < guiLeft - 81 + 208 && mouseY > guiTop - 50 && mouseY < guiTop - 50 + 208) {
@@ -101,12 +132,47 @@ public class BaseGui extends GuiContainer implements ITextFieldFocus {
                 if (selectedChunk != null) {
                     int localx = selectedChunk.x - (startchunk.x - 6);
                     int localy = selectedChunk.z - (startchunk.z - 6);
-                    drawRect(-81 + localx * 16, -50 + localy * 16, -81 + localx * 16 + 16, -50 + localy * 16 + 16, 0xAA00FFFF);
+                    drawRect(-81 + localx * 16, -50 + localy * 16, -81 + localx * 16 + 16, -50 + localy * 16 + 16, 0x5500FFFF);
                     drawRect(-81 + localx * 16, -50 + localy * 16, -81 + localx * 16 + 1, -50 + localy * 16 + 1, 0xFFFFFFFF);
                     drawRect(-81 + localx * 16 + 15, -50 + localy * 16 + 15, -81 + localx * 16 + 16, -50 + localy * 16 + 16,0xFFFFFFFF);
                     drawRect(-81 + localx * 16, -50 + localy * 16 + 15, -81 + localx * 16 + 1, -50 + localy * 16 + 16, 0xFFFFFFFF);
                     drawRect(-81 + localx * 16 + 15, -50 + localy * 16, -81 + localx * 16 + 16, -50 + localy * 16 + 1, 0xFFFFFFFF);
                 }
+            }
+                drawRect(mouseX, mouseY, mouseX+1, mouseY+1, 0xFFFFFFF);
+                if (defenceData != null && defenceData.size() > 0) {
+                    for (int i = 0; i < defenceData.size(); i++) {
+                        DefDataStruct def = defenceData.get(i);
+                        int relativeX = def.pos.getX() - (startchunk.x - 6) * 16;
+                        int relativeZ = def.pos.getZ() - (startchunk.z - 6) * 16;
+                        int finalX = -81 + relativeX;
+                        int finalZ = -50 + relativeZ;
+
+                        boolean highlighted = mouseX - (guiLeft-100) - 19 == relativeX  && mouseY - (guiTop-70) - 20 == relativeZ;
+
+                        int color = 0;
+                        switch (def.chargeStatus) {
+                            case 0 : color = 0xFF111188; break;
+                            case 1 : color = 0xFF0077FF; break;
+                            case 3 : color = 0xFFFFFF00; break;
+                            case -1 : color = 0xFFFF0000; break;
+                        }
+                        drawRect(finalX, finalZ, finalX + 1, finalZ + 1, highlighted || def == selectedDef ? 0xFFFFFFFF : color);
+                    }
+                }
+
+                if (!blink) {
+                    for (int i = 0; i < dead.size(); i++) {
+                        DefDataStruct def = dead.get(i);
+                        int relativeX = def.pos.getX() - (startchunk.x - 6) * 16;
+                        int relativeZ = def.pos.getZ() - (startchunk.z - 6) * 16;
+
+                        int color = 0xFFFF0000;
+                        drawRect(-81 + relativeX, -50 + relativeZ, -81 + relativeX + 1, -50 + relativeZ + 1, color);
+                       
+                    }
+                }
+
             GlStateManager.popMatrix();
         GlStateManager.disableAlpha();
         GlStateManager.popMatrix();
@@ -164,13 +230,14 @@ public class BaseGui extends GuiContainer implements ITextFieldFocus {
                     BlockPos normalBlockCoords = workChunk.getPos().getBlock(xW, 0, zN);
                     int northHeight = world.getHeight(normalBlockCoords.north()).getY()-1;
                     int westHeight = world.getHeight(normalBlockCoords.west()).getY()-1;
-                    int light = 255 - Math.max(((northHeight + westHeight) / 2 - hmap[h]-1) * 100, 0);
+                    int light = 255 - Math.max(((northHeight + westHeight) - hmap[h]-1) * 10, 0);
                     color = color - 0xFF000000 + light * 16777216;
 
                     mapTextureData[j * 208 * 16 + i * 16 + h % 16 + (h / 16 * 208)] = color;
                 }
             }
         }
+
         mapTex.updateDynamicTexture();
     }
 
@@ -186,6 +253,9 @@ public class BaseGui extends GuiContainer implements ITextFieldFocus {
         for (GuiWidget widget : widgets) {
             widget.Update();
         }
+        counter--;
+        if (counter % 5 == 0) blink = !blink;
+        if (counter <= 0) UpdateData();
         super.updateScreen();
     }
 
@@ -198,6 +268,26 @@ public class BaseGui extends GuiContainer implements ITextFieldFocus {
         if (!InputFieldFocused) {
             super.keyTyped(typedChar, keyCode);
         }
+    }
+
+    @Override
+    public void handleMouseInput() throws IOException {
+        
+        super.handleMouseInput();
+
+        if (widgets == null) return;
+
+        int i = Mouse.getEventDWheel();
+        int x = Mouse.getX();
+        int y = Mouse.getY();
+
+        i = Integer.compare(i, 0);
+        TdmMod.logger.info("sdasdjhasfyhda");
+        for (GuiWidget widget : widgets) {
+            if (widget instanceof IChildHasScrolls) {
+                ((IChildHasScrolls)widget).mouseWheelMove(x, y, i);
+            }
+        } 
     }
 
     @Override
@@ -244,7 +334,10 @@ public class BaseGui extends GuiContainer implements ITextFieldFocus {
         buttonList.add(new UpgradeButton(0, 132 + guiLeft, 130 + guiTop, 112, 24, "Расширить базу"));
         buttonList.get(0).enabled = false;
         widgets.clear();
-        widgets.add(new GuiWidgetMembers(true, guiLeft - 100 + 367, guiTop - 70, 200, 150, mc, new ResourceLocation(TdmMod.MODID, "textures/gui/members.png"), this));
+        widgetModule = new GuiWidgetModule(true, guiLeft - 100 + 367, guiTop - 70, 200, 165, mc, new ResourceLocation(TdmMod.MODID, "textures/gui/members.png"), this);
+        widgets.add(widgetModule);
+        widgets.add(new GuiWidgetMembers(true, guiLeft - 100 + 367, guiTop - 30, 200, 150, mc, new ResourceLocation(TdmMod.MODID, "textures/gui/members.png"), this));
+       
     }
 
     @Override
@@ -261,25 +354,37 @@ public class BaseGui extends GuiContainer implements ITextFieldFocus {
             int onMapX = mouseX - (guiLeft - 81);
             int onmapY = mouseY - (guiTop - 50);
             nearBase = false;
-            ChunkPos pos = new ChunkPos(startchunk.x - 6 + onMapX / 16, startchunk.z - 6 + onmapY / 16);
-            if (selectedChunk != null && selectedChunk.equals(pos)) {
-                selectedChunk = null;
-                rightBar[3] = "";
-                rightBar[4] = "";
+            if (widgetModule.deployed == false) {
+                ChunkPos pos = new ChunkPos(startchunk.x - 6 + onMapX / 16, startchunk.z - 6 + onmapY / 16);
+                if (selectedChunk != null && selectedChunk.equals(pos)) {
+                    selectedChunk = null;
+                    rightBar[3] = "";
+                    rightBar[4] = "";
+                }
+                else {
+                    rightBar[3] = "Чанк: x:" + pos.x + " z:" + pos.z;
+                    baseContains = false;
+                    for (ChunkPos poss : info.chunks) {
+                        if (poss.equals(pos)) {baseContains = true; continue;}
+                    }
+                    rightBar[3] = (baseContains ? "§a" : "") + rightBar[3];
+                    for (ChunkPos poss : info.chunks) {
+                        if ((Math.abs(poss.x - pos.x) == 1 && Math.abs(poss.z - pos.z) == 0) || (Math.abs(poss.z - pos.z) == 1 && Math.abs(poss.x - pos.x) == 0))
+                        {nearBase = true; continue;}
+                    }
+                    rightBar[4] = (nearBase ? baseContains ? "Уже запривачен." : "Можно заприватить." : "Нельзя заприватить.");
+                    selectedChunk = pos;
+                }
             }
             else {
-                rightBar[3] = "Чанк: x:" + pos.x + " z:" + pos.z;
-                baseContains = false;
-                for (ChunkPos poss : info.chunks) {
-                    if (poss.equals(pos)) {baseContains = true; continue;}
+                for (DefDataStruct struct : defenceData) {
+                    int relativeX = struct.pos.getX() - (startchunk.x - 6) * 16;
+                    int relativeZ = struct.pos.getZ() - (startchunk.z - 6) * 16;
+                    if (mouseX - (guiLeft-100) - 19 == relativeX  && mouseY - (guiTop-70) - 20 == relativeZ) {
+                        widgetModule.insertModule(struct);
+                        selectedDef = struct;
+                    }
                 }
-                rightBar[3] = (baseContains ? "§a" : "") + rightBar[3];
-                for (ChunkPos poss : info.chunks) {
-                    if ((Math.abs(poss.x - pos.x) == 1 && Math.abs(poss.z - pos.z) == 0) || (Math.abs(poss.z - pos.z) == 1 && Math.abs(poss.x - pos.x) == 0))
-                     {nearBase = true; continue;}
-                }
-                rightBar[4] = (nearBase ? baseContains ? "Уже запривачен." : "Можно заприватить." : "Нельзя заприватить.");
-                selectedChunk = pos;
             }
         }
 
@@ -297,13 +402,63 @@ public class BaseGui extends GuiContainer implements ITextFieldFocus {
         UpdatePrice();
     }
 
+    public static void InsertDefenceData (ArrayList<DefDataStruct> data) {
+
+        dead.clear();
+
+        if (defenceData != null && defenceData.size() > data.size()) {
+            for (int i = 0; i < defenceData.size(); i++) {
+                boolean contains = false;
+                for (int j = 0; j < data.size(); j++) {
+                    if (defenceData.get(i).pos.equals(data.get(j).pos)) {
+                        contains = true; break;
+                    }
+                }
+                if (!contains) dead.add(defenceData.get(i));
+            }
+        }
+
+        if (selectedDef != null && widgetModule != null) {
+            boolean contains = false;
+            for (DefDataStruct s : data) {
+                if (s.pos.equals(selectedDef.pos)) {
+                    widgetModule.insertModule(s);
+                    contains = true;
+                    break;
+                }
+            }
+            if (!contains) {
+                widgetModule.insertModule(null);
+            }
+        }
+
+        defenceData = data;
+        sortedDead = false;
+
+        if (widgetModule != null) {
+            widgetModule.InsertModules(defenceData);
+        }
+    }
+
     public void SendExpand (ChunkPos pos) {
         TdmMod.wrapper.sendToServer(new BaseUpgradeMessage(info.id, selectedChunk));
 
     }
 
+    public void SetSelectedDef (DefDataStruct def) {
+        selectedDef = def;
+    }
+
     public void drawWidgets (int mouseX, int mouseY) {
-        for (GuiWidget widget : widgets) {
+        int rightOffset = 0;
+        int leftOffset = 0;
+        for (int i = 0; i < widgets.size(); i++) {
+            GuiWidget widget = widgets.get(i);
+            widget.SetPosition(widget.xPos, widget.yBasic + (widget.rightSide ? rightOffset : leftOffset));
+            if (widget.deployProgress > 0) {
+                if (widget.rightSide) rightOffset+=Double.valueOf(Double.valueOf(widget.DeployedHeight - widget.iconHeight) * widget.deployProgress).intValue();
+                else leftOffset += Double.valueOf(Double.valueOf(widget.DeployedHeight - widget.iconHeight) * widget.deployProgress).intValue();
+            }
             widget.draw(mouseX, mouseY);
         }
     }

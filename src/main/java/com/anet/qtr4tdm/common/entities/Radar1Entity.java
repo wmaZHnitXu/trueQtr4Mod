@@ -1,7 +1,7 @@
 package com.anet.qtr4tdm.common.entities;
 
 import com.anet.qtr4tdm.TdmMod;
-import com.anet.qtr4tdm.uebki.messages.BasedRequest;
+import com.anet.qtr4tdm.uebki.messages.primitive.BasedRequest;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;

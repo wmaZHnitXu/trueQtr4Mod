@@ -26,12 +26,12 @@ public abstract class BlockDefenceSystem<T extends IDefenceSystem> extends Block
     public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
         try {
             T te = (T)getTileEntityClass().newInstance();
-            tooltip.add("§cМощность: §r" + te.getPoints());
-            tooltip.add("§cРадиус действия: §r" + (te).getRange());
+            tooltip.add("§7Мощность: §r" + te.getPoints());
+            tooltip.add("§7Дальность действия: §r" + (te).getRange());
 
             if (te instanceof TEDefenceEnrg) {
-                tooltip.add("§cПотребление энергии: §r" + ((TEDefenceEnrg)te).getConsumptionPerTick() + "/t");
-                tooltip.add("§cЭнергоуровень: §r" + ((TEDefenceEnrg)te).getSinkTier());
+                tooltip.add("§7Потребление энергии: §r" + ((TEDefenceEnrg)te).getConsumptionPerTick() + "/t");
+                tooltip.add("§7Энергоуровень: §r" + ((TEDefenceEnrg)te).getSinkTier());
             }
 
 

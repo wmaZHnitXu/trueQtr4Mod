@@ -26,7 +26,8 @@ public class RadarsInfo {
     }
 
     public static boolean IsRadarActive (BlockPos pos) {
-        boolean result = false;
+        return true;
+        /*boolean result = false;
         for (int i = 0; i < instance.teamRadars.length; i++) {
             for (RadarInfoStruct radar : instance.teamRadars[i]) {
                 if (pos.getDistance(radar.pos.getX(), radar.pos.getY(), radar.pos.getZ()) < 2f) {
@@ -34,7 +35,7 @@ public class RadarsInfo {
                 }
             }
         }
-        return result;
+        return result;*/
     }
 
 

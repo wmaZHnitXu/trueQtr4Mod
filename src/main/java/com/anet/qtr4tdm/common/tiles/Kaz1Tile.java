@@ -1,6 +1,5 @@
 package com.anet.qtr4tdm.common.tiles;
 
-import java.security.interfaces.RSAPrivateCrtKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,14 +10,11 @@ import com.anet.qtr4tdm.common.blocks.Kaz2Block;
 import com.anet.qtr4tdm.common.entities.KazAmmoEntity;
 import com.anet.qtr4tdm.common.items.KAZAmmoItem;
 import com.anet.qtr4tdm.common.supers.TEDefenceInvEnrg;
-import com.anet.qtr4tdm.common.supers.TileEntityDefence;
 import com.anet.qtr4tdm.init.BlocksInit;
 import com.anet.qtr4tdm.uebki.Sounds;
 import com.anet.qtr4tdm.uebki.gui.KAZGuiMisc.kazContainer;
-import com.flansmod.common.driveables.EnumWeaponType;
 import com.flansmod.common.guns.BulletType;
 import com.flansmod.common.guns.EntityBullet;
-import com.flansmod.common.guns.FiredShot;
 
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;

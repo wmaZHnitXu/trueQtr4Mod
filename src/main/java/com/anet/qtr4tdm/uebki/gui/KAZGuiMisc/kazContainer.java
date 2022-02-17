@@ -1,7 +1,5 @@
 package com.anet.qtr4tdm.uebki.gui.KAZGuiMisc;
 
-import com.anet.qtr4tdm.common.blocks.Kaz1Block;
-import com.anet.qtr4tdm.common.items.KAZAmmoItem;
 import com.anet.qtr4tdm.common.tiles.Kaz1Tile;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,8 +9,6 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -107,7 +103,7 @@ public class kazContainer extends Container {
     }
 
     @SideOnly(Side.CLIENT)
-    public void updateProgressBar(int id, int data)
+    public void updateProgressBar(int id, int data) //Если возьмешь за основу, сохраняй название этого метода.
     {
         this.te.setField(id, data);
     }

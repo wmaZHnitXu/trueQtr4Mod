@@ -3,6 +3,9 @@ package com.anet.qtr4tdm.common.bases;
 
 import java.util.ArrayList;
 
+import com.anet.qtr4tdm.TdmMod;
+import com.anet.qtr4tdm.common.entities.HarvesterDroneEntity;
+import com.anet.qtr4tdm.common.supers.DroneSmallEntity;
 import com.anet.qtr4tdm.common.supers.IBaseConnectable;
 import com.anet.qtr4tdm.common.supers.IDefenceSystem;
 import com.anet.qtr4tdm.common.supers.IRadar;
@@ -13,6 +16,8 @@ import com.anet.qtr4tdm.uebki.gui.baseGuiMisc.BaseContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
 public class baseInfo {
     public BlockPos pos;
@@ -29,6 +34,8 @@ public class baseInfo {
     public BaseContainer container;
     public ArrayList<RadarTrackingInfo> radarTrackingData;
     public ArrayList<IDefenceSystem> defenders;
+    public ArrayList<DroneSmallEntity> dronesSmall;
+    public ArrayList<Vec3d> deadPeople;
     public int defcount; // clientside only
     public int timeExisted;
 
@@ -44,6 +51,8 @@ public class baseInfo {
         this.status = baseStatus.Peace;
 
         defenders = new ArrayList<IDefenceSystem>();
+        dronesSmall = new ArrayList<DroneSmallEntity>();
+        deadPeople = new ArrayList<Vec3d>();
         
     }
 
@@ -85,6 +94,10 @@ public class baseInfo {
 
         }
         return false;
+    }
+
+    public void ConnectDrone (DroneSmallEntity drone) {
+        dronesSmall.add(drone);
     }
 
     public void DisconnectDefenceSystem (IBaseConnectable sys) {
@@ -166,12 +179,29 @@ public class baseInfo {
         }
 
         if (validTargets.size() == 0) {
+            if (status != baseStatus.Peace) SendHarvesters();
             status = baseStatus.Peace;
         }
         
         for (IDefenceSystem def : defenders) {
             def.SetTargetsFromBase(validTargets);
         }
+    }
+
+    public void SendHarvesters () {
+        //TdmMod.logger.info(dronesSmall.size() + " - size");
+        for (DroneSmallEntity drone : dronesSmall) {
+            if (drone instanceof HarvesterDroneEntity && !drone.isDead) {
+                HarvesterDroneEntity harvester = (HarvesterDroneEntity)drone;
+                harvester.StartSortie(deadPeople);
+                deadPeople.clear();
+                return;
+            }
+        }
+    }
+
+    public void AddDeadPlayer (LivingDeathEvent evt) {
+        deadPeople.add(evt.getEntity().getPositionVector());
     }
 
     public void Tick () {

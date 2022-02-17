@@ -27,10 +27,12 @@ public abstract class BlockDefenceSystem<T extends IDefenceSystem> extends Block
         try {
             T te = (T)getTileEntityClass().newInstance();
             tooltip.add("§7Мощность: §r" + te.getPoints());
-            tooltip.add("§7Дальность действия: §r" + (te).getRange());
+            if (te.getRange() != 0)
+                tooltip.add("§7Дальность действия: §r" + (te).getRange());
 
             if (te instanceof TEDefenceEnrg) {
-                tooltip.add("§7Потребление энергии: §r" + ((TEDefenceEnrg)te).getConsumptionPerTick() + "/t");
+                if (((TEDefenceEnrg)te).getConsumptionPerTick() != 0)
+                    tooltip.add("§7Потребление энергии: §r" + ((TEDefenceEnrg)te).getConsumptionPerTick() + "/t");
                 tooltip.add("§7Энергоуровень: §r" + ((TEDefenceEnrg)te).getSinkTier());
             }
 

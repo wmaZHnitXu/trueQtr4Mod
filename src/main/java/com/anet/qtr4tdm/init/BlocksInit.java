@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.blocks.BaseBlock;
+import com.anet.qtr4tdm.common.blocks.DroneBaseBlock;
 import com.anet.qtr4tdm.common.blocks.EnergyConsumerBlock;
 import com.anet.qtr4tdm.common.blocks.Kaz1Block;
 import com.anet.qtr4tdm.common.blocks.Kaz2Block;
@@ -14,24 +15,28 @@ import com.anet.qtr4tdm.common.blocks.RadarMasterBlock;
 import com.anet.qtr4tdm.common.blocks.RadarSlaveBlock;
 import com.anet.qtr4tdm.common.blocks.TerminalRadarBlock;
 import com.anet.qtr4tdm.common.blocks.ThermalRadarBlock;
+import com.anet.qtr4tdm.common.entities.HarvesterDroneEntity;
 import com.anet.qtr4tdm.common.entities.KazAmmoEntity;
 import com.anet.qtr4tdm.common.entities.MrkAmmoEntity;
 import com.anet.qtr4tdm.common.entities.Radar1Entity;
 import com.anet.qtr4tdm.common.entities.Radar2Entity;
 import com.anet.qtr4tdm.common.entities.Radar3Entity;
 import com.anet.qtr4tdm.common.entities.RocketEntity;
+import com.anet.qtr4tdm.common.entities.render.RenderHarvesterDrone1;
 import com.anet.qtr4tdm.common.entities.render.RenderKazAmmo1;
 import com.anet.qtr4tdm.common.entities.render.RenderMrkRocket1;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar1;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar2;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar3;
 import com.anet.qtr4tdm.common.items.BaseExpandItem;
+import com.anet.qtr4tdm.common.items.HarvesterDroneItem;
 import com.anet.qtr4tdm.common.items.IMetadataItem;
 import com.anet.qtr4tdm.common.items.KAZAmmoItem;
 import com.anet.qtr4tdm.common.items.MRKAmmoItem;
 import com.anet.qtr4tdm.common.items.rocketItem;
 import com.anet.qtr4tdm.common.supers.EntityBaseConnectable;
 import com.anet.qtr4tdm.common.tiles.BaseTile;
+import com.anet.qtr4tdm.common.tiles.DroneBaseTile;
 import com.anet.qtr4tdm.common.tiles.EnergyConsumerTile;
 import com.anet.qtr4tdm.common.tiles.Kaz1Tile;
 import com.anet.qtr4tdm.common.tiles.MiniSiloTile;
@@ -76,6 +81,7 @@ public class BlocksInit {
     public static final Block KAZ1 = new Kaz1Block();
     public static final Block KAZ2 = new Kaz2Block();
     public static final Block MRK1 = new Mrk1Block();
+    public static final Block DRONEBASE = new DroneBaseBlock();
 
     public static final Block[] BLOCKS = new Block[] {
     
@@ -89,7 +95,8 @@ public class BlocksInit {
             RADARTHERMALBASE,
             KAZ1,
             KAZ2,
-            MRK1
+            MRK1,
+            DRONEBASE
 
     };
 
@@ -97,12 +104,14 @@ public class BlocksInit {
     public static final Item BASEEXPANDER = new BaseExpandItem();
     public static final Item KAZAMMO = new KAZAmmoItem();
     public static final Item MRKAMMO = new MRKAmmoItem();
+    public static final Item DRONEHARVESTER = new HarvesterDroneItem();
 
     public static final Item[] ITEMS = new Item[] {
         ROCKET,
         BASEEXPANDER,
         KAZAMMO,
-        MRKAMMO
+        MRKAMMO,
+        DRONEHARVESTER
     };
 
     @SubscribeEvent
@@ -174,8 +183,10 @@ public class BlocksInit {
                 return new RenderRadar1(manager);
             }
         });
+
         RenderingRegistry.registerEntityRenderingHandler(KazAmmoEntity.class, new RenderKazAmmo1.Factory());
         RenderingRegistry.registerEntityRenderingHandler(MrkAmmoEntity.class, new RenderMrkRocket1.Factory());
+        RenderingRegistry.registerEntityRenderingHandler(HarvesterDroneEntity.class, new RenderHarvesterDrone1.Factory());
     }
 
     @SideOnly(Side.CLIENT)
@@ -216,6 +227,8 @@ public class BlocksInit {
         GameRegistry.registerTileEntity(Kaz1Tile.class, new ResourceLocation(TdmMod.MODID + ":" + "kaz1tile"));
         GameRegistry.registerTileEntity(Mrk1Tile.class, new ResourceLocation(TdmMod.MODID + ":" + "mrk1tile"));
 
+        GameRegistry.registerTileEntity(DroneBaseTile.class, new ResourceLocation(TdmMod.MODID + ":" + "dronebasetile"));
+
     }
 
     public static void RegisterEntities () {
@@ -226,6 +239,7 @@ public class BlocksInit {
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "rocket1"), RocketEntity.class, "rocket1", 1338, TdmMod.instance, 1000, 2, true);
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "kazammo"), KazAmmoEntity.class, "kazammo1", 1340, TdmMod.instance, 75, 3, true);
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "mrkammo"), MrkAmmoEntity.class, "mrkammo1", 1341, TdmMod.instance, 150, 3, true);
+        EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "droneharvester"), HarvesterDroneEntity.class, "droneharvester", 1342, TdmMod.instance, 150, 3, true);
 
     }
 }

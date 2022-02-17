@@ -282,7 +282,6 @@ public class BaseGui extends GuiContainer implements ITextFieldFocus {
         int y = Mouse.getY();
 
         i = Integer.compare(i, 0);
-        TdmMod.logger.info("sdasdjhasfyhda");
         for (GuiWidget widget : widgets) {
             if (widget instanceof IChildHasScrolls) {
                 ((IChildHasScrolls)widget).mouseWheelMove(x, y, i);

@@ -10,7 +10,6 @@ public class DefDataRecHandler implements IMessageHandler<DefenceDataToPlayer, I
 
     @Override
     public IMessage onMessage(DefenceDataToPlayer message, MessageContext ctx) {
-        TdmMod.logger.info("recccccccc");
         return null;
     }
     

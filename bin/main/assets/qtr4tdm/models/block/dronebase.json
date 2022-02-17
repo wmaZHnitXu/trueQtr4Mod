@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+      "up": "qtr4tdm:blocks/dronebase_top",
+      "down": "qtr4tdm:blocks/dronebase",
+      "south": "qtr4tdm:blocks/dronebase",
+      "north": "qtr4tdm:blocks/dronebase",
+      "west": "qtr4tdm:blocks/dronebase",
+      "east": "qtr4tdm:blocks/dronebase",
+      "particle": "qtr4tdm:blocks/dronebase"
+    }
+  }

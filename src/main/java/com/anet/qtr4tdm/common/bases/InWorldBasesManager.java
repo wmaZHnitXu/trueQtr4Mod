@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.savedata.WorldBasesSavedData;
 import com.anet.qtr4tdm.common.supers.IBaseConnectable;
+import com.anet.qtr4tdm.common.supers.RadarTrackingInfo;
 import com.anet.qtr4tdm.common.tiles.BaseTile;
 import com.anet.qtr4tdm.uebki.IDSmanager;
 import com.anet.qtr4tdm.uebki.gui.GuiHandler;
@@ -16,6 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
 public class InWorldBasesManager {
     ArrayList<baseInfo> bases;
@@ -235,5 +237,18 @@ public class InWorldBasesManager {
         baseInfo b = GetInfo(pos);
         b.SetMember(name, level);
         GetInstance().SaveData();
+    }
+
+    public static void PlayerDeadSubmit (LivingDeathEvent evt) {
+        if (instance == null) return;
+        for (baseInfo base : instance.bases) {
+            if (base.radarTrackingData != null)
+            for (int i = 0; i < base.radarTrackingData.size(); i++) {
+                RadarTrackingInfo info = base.radarTrackingData.get(i);
+                if (info != null && info.ent == evt.getEntity()) {
+                    base.AddDeadPlayer(evt);
+                }
+            }
+        }
     }
 }

@@ -210,4 +210,8 @@ public class baseInfo {
             UpdateAllRadars();
         } 
     }
+
+    public boolean isValidBase () {
+        return (!pos.equals(BlockPos.ORIGIN));
+    }
 }

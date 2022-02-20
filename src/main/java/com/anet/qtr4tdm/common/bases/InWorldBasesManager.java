@@ -133,7 +133,6 @@ public class InWorldBasesManager {
                 int y = world.getHeight(x, z)-1;
                 BlockPos pos2 = new BlockPos(x,y,z);
                 TileEntity te = world.getTileEntity(pos2);
-                System.out.println(x + " - x; " + y + " - y" + z + " - z; " + (te == null ? "da" : "net"));
                 if (te instanceof IBaseConnectable) {
                     ((IBaseConnectable)te).ConnectToBase();
                 }

@@ -3,6 +3,7 @@ package com.anet.qtr4tdm;
 import java.nio.file.Path;
 
 import com.anet.qtr4tdm.commands.AdminManagementCommands;
+import com.anet.qtr4tdm.common.bases.BaseBorderInfoSender;
 import com.anet.qtr4tdm.common.bases.InWorldBasesManager;
 import com.anet.qtr4tdm.init.BlocksInit;
 import com.anet.qtr4tdm.uebki.IDSmanager;
@@ -13,6 +14,8 @@ import com.anet.qtr4tdm.uebki.gui.GuiHandler;
 import com.anet.qtr4tdm.uebki.messages.primitive.AskDefenceDataToPlayer;
 import com.anet.qtr4tdm.uebki.messages.primitive.AskForRadarHandler;
 import com.anet.qtr4tdm.uebki.messages.primitive.AskForRadarsMessage;
+import com.anet.qtr4tdm.uebki.messages.primitive.BaseBorderHandler;
+import com.anet.qtr4tdm.uebki.messages.primitive.BaseBorderMessage;
 import com.anet.qtr4tdm.uebki.messages.primitive.BaseUpgradeHandler;
 import com.anet.qtr4tdm.uebki.messages.primitive.BaseUpgradeMessage;
 import com.anet.qtr4tdm.uebki.messages.primitive.BasedAnswer;
@@ -52,6 +55,7 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.server.SPacketEntity;
 import net.minecraft.server.MinecraftServer;
 
 
@@ -113,6 +117,8 @@ public class TdmMod
 
         wrapper.registerMessage(DefDataHandler.class, AskDefenceDataToPlayer.class, 12, Side.SERVER);
         wrapper.registerMessage(DefDataRecHandler.class, DefenceDataToPlayer.class, 13, Side.CLIENT);
+
+        wrapper.registerMessage(BaseBorderHandler.class, BaseBorderMessage.class, 14, Side.CLIENT);
     }
 
     @EventHandler
@@ -130,15 +136,16 @@ public class TdmMod
     {
         logger.info("Server Starting");
         event.registerServerCommand(new AdminManagementCommands()); //ИНИЦИАЛИЗИРОВАТЬ ВСЕ МАНАГЕРЫ ХЕЛПЕРЫ ХАНДЛЕРЫ
+        new BaseBorderInfoSender();
     }
 
     @SubscribeEvent
     public void WorldLoad (WorldEvent.Load event) {
         if (event.getWorld().provider.getDimension() == 0) {
             System.out.println("Main init"); //НЕ работает ничего, что способно выводить текст
-            new InWorldBasesManager();
-            new PrivatesHandler();
-            new RadarsInfo();
+            new InWorldBasesManager(); //да вообще не работает, пизда, этот блок кода не выполняется
+            new PrivatesHandler(); //worldbasemanager тупо в basetile инициируется, когда первый тайл этого класса грузится
+            new RadarsInfo(); //в приват хандлер инстанс не нужен и радарсинфо сам тоже не нужен, поэтому не крашится
 
         }
     }

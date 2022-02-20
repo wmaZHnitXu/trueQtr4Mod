@@ -1,5 +1,6 @@
 package com.anet.qtr4tdm;
 
+import com.anet.qtr4tdm.common.bases.BaseBorderInfoSender;
 import com.anet.qtr4tdm.common.bases.InWorldBasesManager;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,9 +10,12 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 
 @Mod.EventBusSubscriber(modid = TdmMod.MODID)
 public class WorldEventsCatcher {
+
+
     @SubscribeEvent
     public static void BlockDestroyEvt (BlockEvent.BreakEvent evt) {
         if (!evt.getWorld().isRemote) {
@@ -50,5 +54,17 @@ public class WorldEventsCatcher {
         if (evt.getEntity() instanceof EntityPlayer && !evt.getEntity().world.isRemote) {
             InWorldBasesManager.PlayerDeadSubmit(evt);
         }
+    }
+
+    private static int tickTimer;
+
+    @SubscribeEvent
+    public static void WorldTick (WorldTickEvent evt) {
+
+        if (tickTimer % 20 == 0) {
+            BaseBorderInfoSender.send();
+        }
+
+        tickTimer++;
     }
 }

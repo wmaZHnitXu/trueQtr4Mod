@@ -51,5 +51,14 @@ public class TurretMasterBlock extends BlockTileEntity<TurretMasterTe> {
         }
         return true;
     }
+
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        TileEntity te = worldIn.getTileEntity(pos);
+        if (te instanceof TurretMasterTe && !te.isInvalid()) {
+            ((TurretMasterTe)te).Disassemble(pos);
+        }
+        super.breakBlock(worldIn, pos, state);
+    }
     
 }

@@ -27,7 +27,7 @@ public class TurretItem extends Item implements IMetadataItem {
         super.getSubItems(tab, items);
         if (tab != TdmMod.qtr4) return;
         for (int type = 0; type < GetMetaCount(); type++) {
-            items.add(new ItemStack(BlocksInit.KAZAMMO, 1, type));
+            items.add(new ItemStack(BlocksInit.TURRETITEM, 1, type));
         }
     }
 

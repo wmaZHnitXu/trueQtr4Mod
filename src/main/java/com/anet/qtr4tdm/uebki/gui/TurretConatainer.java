@@ -35,7 +35,7 @@ public class TurretConatainer extends Container {
                 }
             }
 
-        //dronetile
+        //tile
         this.tile = tile;
         this.addSlotToContainer(new SlotForTurret(tile, 27, 8, 64));
 

@@ -55,9 +55,9 @@ public class TurretBaseTe extends TileEntity {
 
         }
         if (neighboursDirs.size() == 2) {
-            BlockPos centerPos = pos;
+            BlockPos centerPos = new BlockPos(pos);
             for (EnumFacing face : neighboursDirs) {
-                pos = pos.add(face.getDirectionVec());
+                centerPos = centerPos.add(face.getDirectionVec());
             }
             return centerPos;
         }
@@ -67,6 +67,13 @@ public class TurretBaseTe extends TileEntity {
     public void Transform (BlockPos center) {
         TdmMod.logger.info("assembled turret base with center: " + center);
         IBlockState masterState = BlocksInit.TURRETMASTER.getDefaultState();
-        IBlockState slaveState = 
+        IBlockState slaveState = BlocksInit.TURRETSLAVE.getDefaultState();
+        for (int x = center.getX() - 1; x < center.getX() + 2; x++) {
+            for (int z = center.getZ() - 1; z < center.getZ() + 2; z++) {
+                BlockPos positionToChange = new BlockPos(x, pos.getY(), z);
+                if (positionToChange.equals(center)) world.setBlockState(positionToChange, masterState, 3);
+                else world.setBlockState(positionToChange, slaveState, 3);
+            }
+        }
     }
 }

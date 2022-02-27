@@ -10,6 +10,7 @@ import com.anet.qtr4tdm.common.supers.TEDefenceInvEnrg;
 import com.anet.qtr4tdm.common.tiles.BaseTile;
 import com.anet.qtr4tdm.common.tiles.DroneBaseTile;
 import com.anet.qtr4tdm.common.tiles.Kaz1Tile;
+import com.anet.qtr4tdm.common.tiles.TurretMasterTe;
 import com.anet.qtr4tdm.uebki.IDSmanager;
 import com.anet.qtr4tdm.uebki.gui.KAZGuiMisc.kazContainer;
 import com.anet.qtr4tdm.uebki.gui.TEDefInvEnrgGuiMisc.TEDefContainer;
@@ -53,8 +54,10 @@ public class GuiHandler implements IGuiHandler {
                 return def.container;
             case TdmMod.GUI_DRONEHARVESTER:
                 DroneBaseTile droneBaseTile = (DroneBaseTile)world.getTileEntity(new BlockPos(x,y,z));
-                droneBaseTile.container = new DroneContainer(player.inventory, droneBaseTile.GetDrone(), droneBaseTile);
-                return droneBaseTile.container;
+                return droneBaseTile.container = new DroneContainer(player.inventory, droneBaseTile.GetDrone(), droneBaseTile);
+            case TdmMod.GUI_TURRETMASTER:
+                TurretMasterTe turretBaseTile = (TurretMasterTe)world.getTileEntity(new BlockPos(x,y,z));
+                return turretBaseTile.conatainer = new TurretConatainer(player.inventory, turretBaseTile);
         }
         return null;
     }
@@ -85,6 +88,8 @@ public class GuiHandler implements IGuiHandler {
                 DroneSmallEntity drone = null;
                 if (drones.size() > 0) drone = drones.get(0);
                 return new DroneBaseGui(player.inventory, drone, tile);
+            case TdmMod.GUI_TURRETMASTER:
+            return new TurretGui(player.inventory, (TurretMasterTe)world.getTileEntity(new BlockPos(x,y,z)));
         }
         return null;
     }

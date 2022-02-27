@@ -17,8 +17,10 @@ import com.anet.qtr4tdm.common.blocks.TerminalRadarBlock;
 import com.anet.qtr4tdm.common.blocks.ThermalRadarBlock;
 import com.anet.qtr4tdm.common.blocks.TurretBaseBlock;
 import com.anet.qtr4tdm.common.blocks.TurretMasterBlock;
+import com.anet.qtr4tdm.common.blocks.TurretSlaveBlock;
 import com.anet.qtr4tdm.common.entities.HarvesterDroneEntity;
 import com.anet.qtr4tdm.common.entities.KazAmmoEntity;
+import com.anet.qtr4tdm.common.entities.LaserTurretEntity;
 import com.anet.qtr4tdm.common.entities.MrkAmmoEntity;
 import com.anet.qtr4tdm.common.entities.Radar1Entity;
 import com.anet.qtr4tdm.common.entities.Radar2Entity;
@@ -26,6 +28,7 @@ import com.anet.qtr4tdm.common.entities.Radar3Entity;
 import com.anet.qtr4tdm.common.entities.RocketEntity;
 import com.anet.qtr4tdm.common.entities.render.RenderHarvesterDrone1;
 import com.anet.qtr4tdm.common.entities.render.RenderKazAmmo1;
+import com.anet.qtr4tdm.common.entities.render.RenderLaserTurret;
 import com.anet.qtr4tdm.common.entities.render.RenderMrkRocket1;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar1;
 import com.anet.qtr4tdm.common.entities.render.RenderRadar2;
@@ -35,6 +38,7 @@ import com.anet.qtr4tdm.common.items.HarvesterDroneItem;
 import com.anet.qtr4tdm.common.items.IMetadataItem;
 import com.anet.qtr4tdm.common.items.KAZAmmoItem;
 import com.anet.qtr4tdm.common.items.MRKAmmoItem;
+import com.anet.qtr4tdm.common.items.TurretItem;
 import com.anet.qtr4tdm.common.items.rocketItem;
 import com.anet.qtr4tdm.common.supers.EntityBaseConnectable;
 import com.anet.qtr4tdm.common.tiles.BaseTile;
@@ -48,6 +52,8 @@ import com.anet.qtr4tdm.common.tiles.RadarWorkerTile;
 import com.anet.qtr4tdm.common.tiles.TerminalRadarTile;
 import com.anet.qtr4tdm.common.tiles.ThermalBaseTile;
 import com.anet.qtr4tdm.common.tiles.TurretBaseTe;
+import com.anet.qtr4tdm.common.tiles.TurretMasterTe;
+import com.anet.qtr4tdm.common.tiles.TurretSlaveTe;
 import com.anet.qtr4tdm.common.tiles.renderers.RenderThermalRadar;
 
 import net.minecraft.block.Block;
@@ -65,7 +71,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.Render;
@@ -87,6 +92,7 @@ public class BlocksInit {
     public static final Block DRONEBASE = new DroneBaseBlock();
     public static final Block TURRETBASE = new TurretBaseBlock();
     public static final Block TURRETMASTER = new TurretMasterBlock();
+    public static final Block TURRETSLAVE = new TurretSlaveBlock();
 
     public static final Block[] BLOCKS = new Block[] {
     
@@ -102,7 +108,9 @@ public class BlocksInit {
             KAZ2,
             MRK1,
             DRONEBASE,
-            TURRETBASE
+            TURRETBASE,
+            TURRETMASTER,
+            TURRETSLAVE
 
     };
 
@@ -111,13 +119,15 @@ public class BlocksInit {
     public static final Item KAZAMMO = new KAZAmmoItem();
     public static final Item MRKAMMO = new MRKAmmoItem();
     public static final Item DRONEHARVESTER = new HarvesterDroneItem();
+    public static final Item TURRETITEM = new TurretItem();
 
     public static final Item[] ITEMS = new Item[] {
         ROCKET,
         BASEEXPANDER,
         KAZAMMO,
         MRKAMMO,
-        DRONEHARVESTER
+        DRONEHARVESTER,
+        TURRETITEM
     };
 
     @SubscribeEvent
@@ -193,6 +203,7 @@ public class BlocksInit {
         RenderingRegistry.registerEntityRenderingHandler(KazAmmoEntity.class, new RenderKazAmmo1.Factory());
         RenderingRegistry.registerEntityRenderingHandler(MrkAmmoEntity.class, new RenderMrkRocket1.Factory());
         RenderingRegistry.registerEntityRenderingHandler(HarvesterDroneEntity.class, new RenderHarvesterDrone1.Factory());
+        RenderingRegistry.registerEntityRenderingHandler(LaserTurretEntity.class, new RenderLaserTurret.Factory());
     }
 
     @SideOnly(Side.CLIENT)
@@ -235,7 +246,8 @@ public class BlocksInit {
 
         GameRegistry.registerTileEntity(DroneBaseTile.class, new ResourceLocation(TdmMod.MODID + ":" + "dronebasetile"));
         GameRegistry.registerTileEntity(TurretBaseTe.class, new ResourceLocation(TdmMod.MODID + ":" + "turretbasetile"));
-
+        GameRegistry.registerTileEntity(TurretMasterTe.class, new ResourceLocation(TdmMod.MODID + ":" + "turretmastertile"));
+        GameRegistry.registerTileEntity(TurretSlaveTe.class, new ResourceLocation(TdmMod.MODID + ":" + "turretslavetile"));
     }
 
     public static void RegisterEntities () {
@@ -247,6 +259,7 @@ public class BlocksInit {
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "kazammo"), KazAmmoEntity.class, "kazammo1", 1340, TdmMod.instance, 75, 3, true);
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "mrkammo"), MrkAmmoEntity.class, "mrkammo1", 1341, TdmMod.instance, 150, 3, true);
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "droneharvester"), HarvesterDroneEntity.class, "droneharvester", 1342, TdmMod.instance, 150, 3, true);
+        EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "laserturret"), LaserTurretEntity.class, "laserturret", 1343, TdmMod.instance, 150, 3, false);
 
     }
 }

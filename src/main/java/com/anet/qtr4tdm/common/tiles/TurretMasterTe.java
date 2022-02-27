@@ -3,9 +3,14 @@ package com.anet.qtr4tdm.common.tiles;
 import java.util.ArrayList;
 
 import com.anet.qtr4tdm.TdmMod;
+import com.anet.qtr4tdm.common.entities.LaserTurretEntity;
+import com.anet.qtr4tdm.common.entities.TurretEntity;
 import com.anet.qtr4tdm.common.supers.TEDefenceEnrg;
+import com.anet.qtr4tdm.init.BlocksInit;
+import com.anet.qtr4tdm.uebki.gui.TurretConatainer;
 
 import ic2.api.energy.tile.IEnergyEmitter;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -20,6 +25,9 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
     public ArrayList<ItemStack> items;
     public int NetworkEnergy;
     public int NetworkMaxEnergy;
+    public TurretConatainer conatainer;
+    private boolean disassembling;
+    private TurretEntity entity;
 
     @Override
     public void onLoad() {
@@ -28,11 +36,12 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
         for (int i = 0; i < 28; i++) {
             items.add(ItemStack.EMPTY);
         }
+        TdmMod.logger.info("loaded");
     }
 
     public void Interaction (EntityPlayer player) {
         if (!world.isRemote) {
-            player.openGui(TdmMod.instance, TdmMod.GUI_COMMONDEF, world, pos.getX(), pos.getY(), pos.getZ());
+            player.openGui(TdmMod.instance, TdmMod.GUI_TURRETMASTER, world, pos.getX(), pos.getY(), pos.getZ());
         }
     }
 
@@ -71,26 +80,48 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
         
     }
 
-    private void SpawnSentry () {
-
+    private void SpawnSentry (ItemStack stack) {
+        TurretEntity entityToSpawn = getSentryForItemStack(stack);
+        entityToSpawn.setPosition(pos.getX() + 0.5d, pos.getY() + 1, pos.getZ() + 0.5d);
+        this.entity = entityToSpawn;
+        world.spawnEntity(entityToSpawn);
+        TdmMod.logger.info(entity == null ? "null" : "nonnull");
     }
 
-    private Entity getSentryForItemStack () {
-        return null; //TODO ______________________________________________________
+    private TurretEntity getSentryForItemStack (ItemStack stack) {
+        switch (stack.getItemDamage()) {
+            case 0: return new LaserTurretEntity(world);
+            default: return null;
+        }
     }
 
     private void DespawnSentry () {
-        //TODO ______________________________________________________
+        TdmMod.logger.info(entity == null ? "null" : "nonnull");
+        if (entity != null) {
+            entity.setDead();
+            entity = null;
+        }
     }
 
-    public void Destruction (BlockPos cause) {
+    public void Disassemble (BlockPos caused) {
+        if (disassembling) return;
+        disassembling = true;
         DespawnSentry();
         InventoryHelper.dropInventoryItems(world, pos.up(), this);
+        IBlockState baseState = BlocksInit.TURRETBASE.getDefaultState();
+        for (int x = pos.getX() - 1; x < pos.getX() + 2; x++) {
+            for (int z = pos.getZ() - 1; z < pos.getZ() + 2; z++) {
+                BlockPos changePos = new BlockPos(x, pos.getY(), z);
+                if (!changePos.equals(caused)) {
+                    world.setBlockState(changePos, baseState, 3);
+                }
+            }
+        }
     }
 
     @Override
     public int getSizeInventory() {
-        return 1;
+        return 28;
     }
 
     @Override
@@ -118,12 +149,25 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
 
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
+
+        ItemStack startTurret = items.get(27); //TODO ______________________________________________
+
+        if (index == 27 && !world.isRemote) {
+            if (this.items.get(27).equals(ItemStack.EMPTY)) {
+                SpawnSentry(stack);
+            }
+            else {
+                DespawnSentry();
+            }
+        }
+
         this.items.set(index, stack);
 
         if (stack.getCount() > this.getInventoryStackLimit())
         {
             stack.setCount(this.getInventoryStackLimit());
         }
+
         markDirty();
     }
 
@@ -178,7 +222,7 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
 
     @Override
     public int getFieldCount() {
-        return 0;
+        return 2;
     }
 
     @Override

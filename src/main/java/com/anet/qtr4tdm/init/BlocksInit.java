@@ -15,6 +15,8 @@ import com.anet.qtr4tdm.common.blocks.RadarMasterBlock;
 import com.anet.qtr4tdm.common.blocks.RadarSlaveBlock;
 import com.anet.qtr4tdm.common.blocks.TerminalRadarBlock;
 import com.anet.qtr4tdm.common.blocks.ThermalRadarBlock;
+import com.anet.qtr4tdm.common.blocks.TurretBaseBlock;
+import com.anet.qtr4tdm.common.blocks.TurretMasterBlock;
 import com.anet.qtr4tdm.common.entities.HarvesterDroneEntity;
 import com.anet.qtr4tdm.common.entities.KazAmmoEntity;
 import com.anet.qtr4tdm.common.entities.MrkAmmoEntity;
@@ -45,6 +47,7 @@ import com.anet.qtr4tdm.common.tiles.RadarBaseTile;
 import com.anet.qtr4tdm.common.tiles.RadarWorkerTile;
 import com.anet.qtr4tdm.common.tiles.TerminalRadarTile;
 import com.anet.qtr4tdm.common.tiles.ThermalBaseTile;
+import com.anet.qtr4tdm.common.tiles.TurretBaseTe;
 import com.anet.qtr4tdm.common.tiles.renderers.RenderThermalRadar;
 
 import net.minecraft.block.Block;
@@ -82,6 +85,8 @@ public class BlocksInit {
     public static final Block KAZ2 = new Kaz2Block();
     public static final Block MRK1 = new Mrk1Block();
     public static final Block DRONEBASE = new DroneBaseBlock();
+    public static final Block TURRETBASE = new TurretBaseBlock();
+    public static final Block TURRETMASTER = new TurretMasterBlock();
 
     public static final Block[] BLOCKS = new Block[] {
     
@@ -96,7 +101,8 @@ public class BlocksInit {
             KAZ1,
             KAZ2,
             MRK1,
-            DRONEBASE
+            DRONEBASE,
+            TURRETBASE
 
     };
 
@@ -228,6 +234,7 @@ public class BlocksInit {
         GameRegistry.registerTileEntity(Mrk1Tile.class, new ResourceLocation(TdmMod.MODID + ":" + "mrk1tile"));
 
         GameRegistry.registerTileEntity(DroneBaseTile.class, new ResourceLocation(TdmMod.MODID + ":" + "dronebasetile"));
+        GameRegistry.registerTileEntity(TurretBaseTe.class, new ResourceLocation(TdmMod.MODID + ":" + "turretbasetile"));
 
     }
 

@@ -36,12 +36,15 @@ public class BaseBordersRender {
     private static HashMap<ChunkPos, int[]> heightmaps;
     private static HashMap<ChunkPos, boolean[]> sides;
     private static float motionOffset;
+    private static float distanceFactor;
+    private static float targetDistanceFactor;
     //private static baseInfo lastRendered; Сомнительно, а чё если их несколько рендерится одновременно (ес чё это надо чтобы обновлялись высоты.)
 
     static {
         borders = new HashMap<Integer, baseInfo>();
         heightmaps = new HashMap<ChunkPos, int[]>();
         sides = new HashMap<ChunkPos, boolean[]>();
+        distanceFactor = 1;
     }
     
     public static void InsertBorderData (baseInfo shadow) {
@@ -82,10 +85,15 @@ public class BaseBordersRender {
             player = Minecraft.getMinecraft().player;
             for (baseInfo border : borders.values()) {
                 ChunkPos playerPos = new ChunkPos(player.getPosition());
-                if (Vector2Distance(playerPos, border.chunks[0]) < 5) {
+                if (Vector2Distance(playerPos, border.chunks[0]) < 10) {
                     RenderBorder(border, evt.getPartialTicks());
                 }
             }
+
+            targetDistanceFactor = Minecraft.getMinecraft().player.isSneaking() ? 0.0001f : 1;
+
+            distanceFactor = distanceFactor + (targetDistanceFactor - distanceFactor) * 0.1f;
+
         }
     }
 
@@ -156,14 +164,13 @@ public class BaseBordersRender {
                 viewEntity.prevPosY + (viewEntity.posY - viewEntity.prevPosY) * partialTicks,
                 viewEntity.prevPosZ + (viewEntity.posZ - viewEntity.prevPosZ) * partialTicks);
 
-
         float lightMapSaveX = OpenGlHelper.lastBrightnessX;
         float lightMapSaveY = OpenGlHelper.lastBrightnessY;
         
         GlStateManager.pushMatrix();
         GlStateManager.disableCull();
-        GlStateManager.disableBlend();
-        GlStateManager.disableAlpha();
+        GlStateManager.enableBlend();
+        GlStateManager.enableAlpha();
         GlStateManager.disableLighting();
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 0.0F);
         GlStateManager.color(1, 1, 1, 1f);
@@ -174,34 +181,47 @@ public class BaseBordersRender {
         BufferBuilder vertexbuffer = tessellator.getBuffer();
 
         vertexbuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+
+        float width = 0.2f;
+        float depth = 0.2f;
+        
         if (x_plus) {
 
             int x = pos.getXEnd();
             for (Double z = pos.getZStart() + Float.valueOf(motionOffset).doubleValue(); z <= pos.getZEnd() + motionOffset; z+=2) {
                 boolean last = false;
 
-                float width = 0.2f;
-                float depth = 0.2f;
+                if (z > pos.getZEnd() + 1 - depth) {z -= 16; last = true;}
 
-                if (z > pos.getZEnd() + 2 - depth) {z -= 16; last = true;}
+                Vec3d distancePos = new Vec3d(x + width * 0.5d, viewPos.y, z + depth * 0.5d);
+                Double squareDistance = distancePos.squareDistanceTo(viewPos);
+
+                float scaleFactor = Math.min(1 / (squareDistance.floatValue() * 0.3f * distanceFactor), 1);
+                if (scaleFactor > 0.1f) {
 
                 //int height = getHeightFromHeightMap(x, z, heightmaps.get(pos), pos);
                 
                 double y = Minecraft.getMinecraft().world.getHeight(x, Double.valueOf(z + depth * 0.5f).intValue()) + 0.1d;
 
+                y += Math.max(0, Math.min(1 - 1 / (squareDistance * 0.2f * distanceFactor), 1));
+
                 Vec3d pos0 = new Vec3d(x - viewPos.x, y - viewPos.y, z - viewPos.z);
                 Vec3d pos1 = new Vec3d(x - viewPos.x, y - viewPos.y, z - viewPos.z);
                 
-                vertexbuffer.pos(pos0.x + 1, pos0.y, pos0.z + depth)
+                vertexbuffer.pos(pos0.x + 1, pos0.y, pos0.z + depth * scaleFactor)
                         .tex(0.0D, 1D).endVertex();
                 vertexbuffer.pos(pos0.x + 1, pos0.y, pos0.z)
                         .tex(0.0D, 0D).endVertex();
-                vertexbuffer.pos(pos1.x + 1 - width, pos1.y, pos1.z)
+                vertexbuffer.pos(pos1.x + 1 - width * scaleFactor, pos1.y, pos1.z)
                         .tex(1.0D, 0D).endVertex();
-                vertexbuffer.pos(pos1.x + 1 - width, pos1.y, pos1.z + depth)
+                vertexbuffer.pos(pos1.x + 1 - width * scaleFactor, pos1.y, pos1.z + depth * scaleFactor)
                         .tex(1D, 1D).endVertex();
 
+                }
+
                 if (last) break;
+
+                
 
             }
 
@@ -209,31 +229,37 @@ public class BaseBordersRender {
         if (x_minus) {
 
             int x = pos.getXStart();
-            for (Double z = pos.getZStart() - Float.valueOf(motionOffset).doubleValue(); z <= pos.getZEnd() + motionOffset; z+=2) {
+            for (Double z = pos.getZStart() - Float.valueOf(motionOffset).doubleValue() + 2; z <= pos.getZEnd() + motionOffset + 2; z+=2) {
                 boolean last = false;
 
-                float width = 0.2f;
-                float depth = 0.2f;
+                if (z > pos.getZEnd() + 1) {z -= 16; last = true;}
 
-                if (z < pos.getZStart() - 2 - depth) {z += 16; last = true;}
+                Vec3d distancePos = new Vec3d(x + width * 0.5d, viewPos.y, z + depth * 0.5d);
+                Double squareDistance = distancePos.squareDistanceTo(viewPos);
 
-                //int height = getHeightFromHeightMap(x, z, heightmaps.get(pos), pos);
-                
-                double y = Minecraft.getMinecraft().world.getHeight(x, Double.valueOf(z + depth * 0.5f).intValue()) + 0.1d;
+                float scaleFactor = Math.min(1 / (squareDistance.floatValue() * 0.3f * distanceFactor), 1);
+                if (scaleFactor > 0.1f) {
 
-                Vec3d pos0 = new Vec3d(x - viewPos.x, y - viewPos.y, z - viewPos.z);
-                Vec3d pos1 = new Vec3d(x - viewPos.x, y - viewPos.y, z - viewPos.z);
-                
-                vertexbuffer.pos(pos0.x, pos0.y, pos0.z + depth)
-                        .tex(0.0D, 1D).endVertex();
-                vertexbuffer.pos(pos0.x, pos0.y, pos0.z)
-                        .tex(0.0D, 0D).endVertex();
-                vertexbuffer.pos(pos1.x + width, pos1.y, pos1.z)
-                        .tex(1.0D, 0D).endVertex();
-                vertexbuffer.pos(pos1.x + width, pos1.y, pos1.z + depth)
-                        .tex(1D, 1D).endVertex();
+                    //int height = getHeightFromHeightMap(x, z, heightmaps.get(pos), pos);
+                    
+                    double y = Minecraft.getMinecraft().world.getHeight(x, Double.valueOf(z + depth * 0.5f).intValue()) + 0.1d;
 
-                if (last) z = pos.getZStart() - Float.valueOf(motionOffset).doubleValue();
+                    y += Math.max(0, Math.min(1 - 1 / (squareDistance * 0.2f * distanceFactor), 1));
+
+                    Vec3d pos0 = new Vec3d(x - viewPos.x, y - viewPos.y, z - viewPos.z);
+                    Vec3d pos1 = new Vec3d(x - viewPos.x, y - viewPos.y, z - viewPos.z);
+                    
+                    vertexbuffer.pos(pos0.x, pos0.y, pos0.z + depth * scaleFactor)
+                            .tex(0.0D, 1D).endVertex();
+                    vertexbuffer.pos(pos0.x, pos0.y, pos0.z)
+                            .tex(0.0D, 0D).endVertex();
+                    vertexbuffer.pos(pos1.x + width * scaleFactor, pos1.y, pos1.z)
+                            .tex(1.0D, 0D).endVertex();
+                    vertexbuffer.pos(pos1.x + width * scaleFactor, pos1.y, pos1.z + depth * scaleFactor)
+                            .tex(1D, 1D).endVertex();
+                }
+
+                if (last) z = pos.getZEnd() + 2d;
             }
 
         }
@@ -241,29 +267,36 @@ public class BaseBordersRender {
         if (z_plus) {
 
             int z = pos.getZStart();
-            for (Double x = pos.getXStart() - Float.valueOf(motionOffset).doubleValue(); x <= pos.getXEnd() + motionOffset; x+=2) {
+            for (Double x = pos.getXStart() + Float.valueOf(motionOffset).doubleValue() - 1; x <= pos.getXEnd() + motionOffset - 1; x+=2) {
                 boolean last = false;
 
-                float width = 0.2f;
-                float depth = 0.2f;
+                //if (x < pos.getXStart() - 1 + depth) {x += 16; last = true;}
 
-                if (x > pos.getXEnd() + 2 + depth) {x -= 16; last = true;}
+                Vec3d distancePos = new Vec3d(x + depth * 0.5d + 1, viewPos.y, z + width * 0.5d);
+                Double squareDistance = distancePos.squareDistanceTo(viewPos);
 
-                //int height = getHeightFromHeightMap(x, z, heightmaps.get(pos), pos);
-                
-                double y = Minecraft.getMinecraft().world.getHeight(Double.valueOf(x + depth * 0.5f).intValue(), z) + 0.1d;
+                float scaleFactor = Math.min(1 / (squareDistance.floatValue() * 0.3f * distanceFactor), 1);
+                if (scaleFactor > 0.1f) {
 
-                Vec3d pos0 = new Vec3d(x - viewPos.x, y - viewPos.y, z - viewPos.z);
-                Vec3d pos1 = new Vec3d(x - viewPos.x, y - viewPos.y, z - viewPos.z);
-                
-                vertexbuffer.pos(pos0.x + 1, pos0.y, pos0.z + depth)
-                        .tex(0.0D, 1D).endVertex();
-                vertexbuffer.pos(pos0.x + 1, pos0.y, pos0.z)
-                        .tex(0.0D, 0D).endVertex();
-                vertexbuffer.pos(pos1.x + 1 - width, pos1.y, pos1.z)
-                        .tex(1.0D, 0D).endVertex();
-                vertexbuffer.pos(pos1.x + 1 - width, pos1.y, pos1.z + depth)
-                        .tex(1D, 1D).endVertex();
+                    //int height = getHeightFromHeightMap(x, z, heightmaps.get(pos), pos);
+                    
+                    double y = Minecraft.getMinecraft().world.getHeight(Double.valueOf(x + depth * 0.5f).intValue(), z) + 0.1d;
+
+                    y += Math.max(0, Math.min(1 - 1 / (squareDistance * 0.2f * distanceFactor), 1));
+
+                    Vec3d pos0 = new Vec3d(x - viewPos.x, y - viewPos.y, z - viewPos.z);
+                    Vec3d pos1 = new Vec3d(x - viewPos.x, y - viewPos.y, z - viewPos.z);
+                    
+                    vertexbuffer.pos(pos0.x + 1, pos0.y, pos0.z + depth * scaleFactor)
+                            .tex(0.0D, 1D).endVertex();
+                    vertexbuffer.pos(pos0.x + 1, pos0.y, pos0.z)
+                            .tex(0.0D, 0D).endVertex();
+                    vertexbuffer.pos(pos1.x + 1 - width * scaleFactor, pos1.y, pos1.z)
+                            .tex(1.0D, 0D).endVertex();
+                    vertexbuffer.pos(pos1.x + 1 - width * scaleFactor, pos1.y, pos1.z + depth * scaleFactor)
+                            .tex(1D, 1D).endVertex();
+
+                }
 
                 if (last) break;
             }
@@ -275,26 +308,32 @@ public class BaseBordersRender {
             for (Double x = pos.getXStart() - Float.valueOf(motionOffset).doubleValue() + 1; x <= pos.getXEnd() - motionOffset + 1; x+=2) {
                 boolean last = false;
 
-                float width = 0.2f;
-                float depth = 0.2f;
+                if (x > pos.getXEnd() + 2) {x -= 16; last = true;}
 
-                if (x > pos.getXEnd() + 2 - depth) {x -= 16; last = true;}
+                Vec3d distancePos = new Vec3d(x + depth * 0.5d + 1, viewPos.y, z + width * 0.5d);
+                Double squareDistance = distancePos.squareDistanceTo(viewPos);
 
-                //int height = getHeightFromHeightMap(x, z, heightmaps.get(pos), pos);
-                
-                double y = Minecraft.getMinecraft().world.getHeight(Double.valueOf(x + depth * 0.5f).intValue(), z) + 0.1d;
+                float scaleFactor = Math.min(1 / (squareDistance.floatValue() * 0.3f * distanceFactor), 1);
+                if (scaleFactor > 0.1f) {
 
-                Vec3d pos0 = new Vec3d(x - viewPos.x, y - viewPos.y, z - viewPos.z);
-                Vec3d pos1 = new Vec3d(x - viewPos.x, y - viewPos.y, z - viewPos.z);
-                
-                vertexbuffer.pos(pos0.x + 1, pos0.y, pos0.z + 1 - depth)
-                        .tex(0.0D, 1D).endVertex();
-                vertexbuffer.pos(pos0.x + 1, pos0.y, pos0.z + 1)
-                        .tex(0.0D, 0D).endVertex();
-                vertexbuffer.pos(pos1.x + 1 - width, pos1.y, pos1.z + 1)
-                        .tex(1.0D, 0D).endVertex();
-                vertexbuffer.pos(pos1.x + 1 - width, pos1.y, pos1.z + 1 - depth)
-                        .tex(1D, 1D).endVertex();
+                    //int height = getHeightFromHeightMap(x, z, heightmaps.get(pos), pos);
+                    
+                    double y = Minecraft.getMinecraft().world.getHeight(Double.valueOf(x - depth * 0.5f).intValue(), z) + 0.1d;
+
+                    y += Math.max(0, Math.min(1 - 1 / (squareDistance * 0.2f * distanceFactor), 1));
+
+                    Vec3d pos0 = new Vec3d(x - viewPos.x, y - viewPos.y, z - viewPos.z);
+                    Vec3d pos1 = new Vec3d(x - viewPos.x, y - viewPos.y, z - viewPos.z);
+                    
+                    vertexbuffer.pos(pos0.x + 1, pos0.y, pos0.z + 1 - depth * scaleFactor)
+                            .tex(0.0D, 1D).endVertex();
+                    vertexbuffer.pos(pos0.x + 1, pos0.y, pos0.z + 1)
+                            .tex(0.0D, 0D).endVertex();
+                    vertexbuffer.pos(pos1.x + 1 - width * scaleFactor, pos1.y, pos1.z + 1)
+                            .tex(1.0D, 0D).endVertex();
+                    vertexbuffer.pos(pos1.x + 1 - width * scaleFactor, pos1.y, pos1.z + 1 - depth * scaleFactor)
+                            .tex(1D, 1D).endVertex();
+                }
 
                 if (last) x = pos.getXStart() - Float.valueOf(motionOffset).doubleValue();
             }

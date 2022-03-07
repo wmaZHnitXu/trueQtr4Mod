@@ -31,6 +31,7 @@ public class RenderLaserTurret extends Render<LaserTurretEntity> {
         GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y + 1.5d, z);
         GlStateManager.rotate(180, 1, 0, 0);
+        model.SetRotationTurret(entity.getYawTurret().floatValue(), entity.getPitchTurret().floatValue());
         model.render(entity, 0.0F, 0.0F, 0F, 0.0F, 0.0F, 0.0625F);
         GlStateManager.popMatrix();
     }

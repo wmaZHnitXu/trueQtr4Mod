@@ -8,5 +8,16 @@ public class LaserTurretEntity extends TurretEntity {
         super(worldIn);
         
     }
+
+    @Override
+    protected int getDetectionRange() {
+        return 50;
+    }
+
+    @Override
+    protected double getGunHeight() {
+        // TODO Auto-generated method stub
+        return 1;
+    }
     
 }

@@ -74,6 +74,11 @@ public class laserturret extends ModelBase {
 		turret.render(f5);
 	}
 
+	public void SetRotationTurret (float yaw, float pitch) {
+		setRotationAngle(turret, 0, yaw, 0);
+		setRotationAngle(gun, 0, 0, pitch);
+	}
+
 	public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
 		modelRenderer.rotateAngleX = x;
 		modelRenderer.rotateAngleY = y;

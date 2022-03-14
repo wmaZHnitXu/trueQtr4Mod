@@ -28,4 +28,10 @@ public class TurretGui extends GuiContainer {
             progress = Double.valueOf(Double.valueOf(tile.NetworkEnergy) / tile.NetworkMaxEnergy * 53).intValue();
         drawScaledCustomSizeModalRect(guiLeft + 31, guiTop + 66, 176, 0, progress, 12, progress, 12, 256, 256);
     }
+
+    @Override
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        drawString(this.fontRenderer, tile.NetworkEnergy + " / " + tile.NetworkMaxEnergy + " Eu", 90, 68, 0xAAAAAAAA);
+    }
+    
 }

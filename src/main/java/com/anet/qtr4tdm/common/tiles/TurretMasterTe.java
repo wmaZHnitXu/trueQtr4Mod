@@ -199,6 +199,18 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
     }
 
     @Override
+    public double getEnergy() {
+        if (entity != null) return entity.getEnergy();
+        return 0;
+    }
+
+    @Override
+    public double getMaxEnergy() {
+        if (entity != null) return entity.getMaxEnergy();
+        return 0;
+    }
+
+    @Override
     public int getField(int id) {
         switch (id) {
             case 0: return Double.valueOf(getEnergy()).intValue();
@@ -255,6 +267,22 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
     @Override
     public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
         return false;
+    }
+
+    @Override
+    public double getDemandedEnergy() {
+        if (entity != null) {
+            return entity.getDemandedEnergy();
+        }
+        else return 0;
+    }
+
+    @Override
+    public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
+        if (entity != null) {
+            entity.injectEnergy(amount);
+        }
+        return 0;
     }
     
 }

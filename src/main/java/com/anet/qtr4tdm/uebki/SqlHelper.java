@@ -58,7 +58,7 @@ public class SqlHelper {
     public void setConnection() throws SQLException {
         try {
             Class.forName("com.mysql.jdbc.Driver"); //Настраиваем драйвер JDBC
-            System.out.println("Driver was loaded");
+            System.out.println("Driver not loaded return"); return;
         } catch (ClassNotFoundException e) {
             System.out.println("Class not Found!!!");
             System.out.println(e.toString());

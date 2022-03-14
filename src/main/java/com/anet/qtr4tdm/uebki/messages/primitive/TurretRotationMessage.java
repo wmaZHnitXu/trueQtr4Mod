@@ -8,13 +8,15 @@ public class TurretRotationMessage implements IMessage {
     public int entityId;
     public double yaw;
     public double pitch;
+    public int targetId;
     
     public TurretRotationMessage () {}
 
-    public TurretRotationMessage (int entityId, double yaw, double pitch) {
+    public TurretRotationMessage (int entityId, double yaw, double pitch, int targetId) {
         this.entityId = entityId;
         this.yaw = yaw;
         this.pitch = pitch;
+        this.targetId = targetId;
     }
 
     @Override
@@ -22,13 +24,16 @@ public class TurretRotationMessage implements IMessage {
         entityId = buf.readInt();
         yaw = buf.readDouble();
         pitch = buf.readDouble();
+        targetId = buf.readInt();
+        
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(entityId);
         buf.writeDouble(yaw);
-        buf.writeDouble(pitch);        
+        buf.writeDouble(pitch);
+        buf.writeInt(targetId);  
     }
     
 }

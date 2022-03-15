@@ -80,6 +80,10 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
         
     }
 
+    public void ConnectEntity (TurretEntity e) {
+        entity = e;
+    }
+
     private void SpawnSentry (ItemStack stack) {
         TurretEntity entityToSpawn = getSentryForItemStack(stack);
         entityToSpawn.setPosition(pos.getX() + 0.5d, pos.getY() + 1, pos.getZ() + 0.5d);

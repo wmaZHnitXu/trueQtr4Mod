@@ -28,10 +28,10 @@ public abstract class TurretEntity extends Entity {
     protected Entity target;
     protected TurretMasterTe baseTile;
 
-    protected Double yawTurret;
+    protected double yawTurret;
         public Double getYawTurret () { return yawTurret; }
 
-    protected Double pitchTurret;
+    protected double pitchTurret;
         public Double getPitchTurret () { return pitchTurret; }
 
     protected double newYaw;
@@ -43,8 +43,6 @@ public abstract class TurretEntity extends Entity {
 
     public TurretEntity(World worldIn) {
         super(worldIn);
-        yawTurret = Double.valueOf(0);
-        pitchTurret = Double.valueOf(0);
         setSize(2, 3);
     }
 
@@ -59,6 +57,7 @@ public abstract class TurretEntity extends Entity {
         TileEntity downTile = world.getTileEntity(getPosition().down());
         if (downTile instanceof TurretMasterTe) {
             baseTile = (TurretMasterTe)downTile;
+            baseTile.ConnectEntity(this);
         }
         else {
             if (!world.isRemote)
@@ -71,6 +70,7 @@ public abstract class TurretEntity extends Entity {
     protected void readEntityFromNBT(NBTTagCompound compound) {
         yawTurret = compound.getDouble("yaw_turret");
         pitchTurret = compound.getDouble("pitch_turret");
+        TdmMod.logger.info("yaw " + yawTurret);
         newYaw = yawTurret;
         newPitch = pitchTurret;
     }
@@ -228,7 +228,7 @@ public abstract class TurretEntity extends Entity {
 
     protected abstract double getGunHeight ();
 
-    protected Vec3d getGunPosition () {
+    public Vec3d getGunPosition () {
         return getPositionVector().addVector(0, getGunHeight(), 0);
     }
 

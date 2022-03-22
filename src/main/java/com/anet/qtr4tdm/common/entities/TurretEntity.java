@@ -8,6 +8,7 @@ import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.tiles.TurretMasterTe;
 import com.anet.qtr4tdm.uebki.messages.primitive.TurretRotationMessage;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -17,13 +18,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public abstract class TurretEntity extends Entity {
+public abstract class TurretEntity extends Entity implements IEntityAdditionalSpawnData {
 
     protected Entity target;
     protected TurretMasterTe baseTile;
@@ -43,7 +46,6 @@ public abstract class TurretEntity extends Entity {
 
     public TurretEntity(World worldIn) {
         super(worldIn);
-        setSize(2, 3);
     }
 
     protected abstract int getDetectionRange ();
@@ -55,6 +57,7 @@ public abstract class TurretEntity extends Entity {
 
     protected void mainInit () {
         TileEntity downTile = world.getTileEntity(getPosition().down());
+        TdmMod.logger.info(newPitch + " " + newYaw);
         if (downTile instanceof TurretMasterTe) {
             baseTile = (TurretMasterTe)downTile;
             baseTile.ConnectEntity(this);
@@ -70,7 +73,6 @@ public abstract class TurretEntity extends Entity {
     protected void readEntityFromNBT(NBTTagCompound compound) {
         yawTurret = compound.getDouble("yaw_turret");
         pitchTurret = compound.getDouble("pitch_turret");
-        TdmMod.logger.info("yaw " + yawTurret);
         newYaw = yawTurret;
         newPitch = pitchTurret;
     }
@@ -233,7 +235,9 @@ public abstract class TurretEntity extends Entity {
     }
 
     protected boolean traceEntity (Entity entity) {
-        return tracePositions(getGunPosition(), entity.getPositionEyes(1));
+        //, false, true, false
+        RayTraceResult result = world.rayTraceBlocks(getGunPosition(), entity.getPositionEyes(1));
+        return result == null;
     }
 
     protected boolean tracePositions (Vec3d position, Vec3d tracePos) {
@@ -248,12 +252,9 @@ public abstract class TurretEntity extends Entity {
             IBlockState state = world.getBlockState(currentBlockPos);
             AxisAlignedBB collider = state.getCollisionBoundingBox(world, currentBlockPos);
             if (!world.isAirBlock(currentBlockPos) || (collider != null && collider.offset(currentBlockPos).contains(tracer))) {
-                TdmMod.logger.info("tracing result : false");
                 return false;
             }
         }
-
-        TdmMod.logger.info("tracing result : true");
 
         return result;
 
@@ -295,5 +296,19 @@ public abstract class TurretEntity extends Entity {
     public void injectEnergy (double amount) {
         energy += amount;
         energy = Math.max(Math.min(getMaxEnergy(), energy), 0);
+    }
+
+    @Override
+    public void writeSpawnData(ByteBuf buffer) {
+        buffer.writeDouble(getYawTurret());
+        buffer.writeDouble(getPitchTurret());        
+    }
+
+    @Override
+    public void readSpawnData(ByteBuf additionalData) {
+        yawTurret = additionalData.readDouble();
+        pitchTurret = additionalData.readDouble();
+        newYaw = yawTurret;
+        newPitch = pitchTurret;
     }
 }

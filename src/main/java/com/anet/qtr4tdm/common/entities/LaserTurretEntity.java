@@ -7,6 +7,7 @@ import com.anet.qtr4tdm.uebki.WorldAddition;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -22,7 +23,12 @@ public class LaserTurretEntity extends TurretEntity {
 
     public LaserTurretEntity(World worldIn) {
         super(worldIn);
-        
+        setSize(2, 3);
+    }
+
+    @Override
+    public AxisAlignedBB getRenderBoundingBox() {
+        return charge < 0.8f ? super.getRenderBoundingBox() : getEntityBoundingBox().expand(500, 500, 500);
     }
 
     @Override
@@ -37,7 +43,7 @@ public class LaserTurretEntity extends TurretEntity {
 
     @Override
     public double getMaxEnergy() {
-        return 100000;
+        return 10000;
     }
 
     @Override
@@ -92,7 +98,7 @@ public class LaserTurretEntity extends TurretEntity {
     }
 
     protected void shoot () {
-        injectEnergy(-128);
+        injectEnergy(-120);
         Vec3d direction = new Vec3d(Math.cos(yawTurret), -Math.tan(pitchTurret) ,Math.sin(yawTurret)).normalize().scale(laserRange);
         processLaserBeam(getGunPosition(), direction.add(getGunPosition()));
     }
@@ -101,7 +107,7 @@ public class LaserTurretEntity extends TurretEntity {
         List<Entity> entities = WorldAddition.traceEntities(world, origin, destination, this);
         for (Entity result : entities) {
             result.attackEntityFrom(DamageSource.HOT_FLOOR, Math.max((charge - 0.8f) * 75, 0));
-            result.setFire(1);
+            if (charge > 0.9f) result.setFire(1);
         }
     }
     

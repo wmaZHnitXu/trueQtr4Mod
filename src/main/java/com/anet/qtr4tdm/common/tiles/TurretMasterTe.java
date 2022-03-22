@@ -82,6 +82,8 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
 
     public void ConnectEntity (TurretEntity e) {
         entity = e;
+        items.set(27, getItemStackFromSentry(e));
+
     }
 
     private void SpawnSentry (ItemStack stack) {
@@ -97,6 +99,11 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
             case 0: return new LaserTurretEntity(world);
             default: return null;
         }
+    }
+
+    private ItemStack getItemStackFromSentry (TurretEntity entity) {
+        if (entity instanceof LaserTurretEntity) return new ItemStack(BlocksInit.TURRETITEM, 1, 0);
+        return ItemStack.EMPTY;
     }
 
     private void DespawnSentry () {

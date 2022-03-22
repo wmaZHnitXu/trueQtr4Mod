@@ -17,7 +17,6 @@ import net.minecraft.util.math.Vec3d;
 public class LaserBeam {
 
     public final static ResourceLocation whiteTexture = new ResourceLocation(TdmMod.MODID, "textures/particle/white.png");
-
     public static void RenderLaserBeam (float partialTicks, Vec3d origin, Vec3d destination, float width, Vec3d up, Vec3d right) {
 
         final Entity viewEntity = Minecraft.getMinecraft().getRenderViewEntity();

@@ -2,6 +2,7 @@ package com.anet.qtr4tdm.common.entities.render;
 
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.client.LaserBeam;
+import com.anet.qtr4tdm.client.LaserTurretEntityRenderSupport;
 import com.anet.qtr4tdm.common.entities.LaserTurretEntity;
 import com.anet.qtr4tdm.common.entities.models.laserturret;
 
@@ -12,6 +13,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.EnumParticleTypes;
@@ -36,6 +38,11 @@ public class RenderLaserTurret extends Render<LaserTurretEntity> {
     @Override
     protected ResourceLocation getEntityTexture(LaserTurretEntity entity) {
         return texture;
+    }
+
+    @Override
+    public boolean shouldRender(LaserTurretEntity livingEntity, ICamera camera, double camX, double camY, double camZ) {
+        return true;
     }
 
     @Override
@@ -67,14 +74,19 @@ public class RenderLaserTurret extends Render<LaserTurretEntity> {
         GlStateManager.popMatrix();
 
         //LASER BEAM RENDER
+        LaserTurretEntityRenderSupport.sddmitRenderedByItself(entity);
+        doLaserBeamRender(entity, partialTicks);
+        
+    }
 
+    public static void doLaserBeamRender (LaserTurretEntity entity, float partialTicks) {
         if (entity.charge > 0.8d) {
             double pitchSin = Math.sin(entity.getPitchTurret());
             double pitchCos = Math.cos(entity.getPitchTurret());
             Vec3d clientLaserDist = new Vec3d(Math.cos(entity.getYawTurret()), -pitchSin / pitchCos ,Math.sin(entity.getYawTurret())).normalize().scale(500);
             clientLaserDist = clientLaserDist.add(entity.getGunPosition());
             Vec3d clientLaserOrigin = entity.getGunPosition().add(clientLaserDist.subtract(entity.getGunPosition()).scale(0.5d / 500));
-            RayTraceResult rtres = entity.world.rayTraceBlocks(clientLaserOrigin, clientLaserDist);
+            RayTraceResult rtres = entity.world.rayTraceBlocks(clientLaserOrigin, clientLaserDist, false, true, false);
 
             int ctr2 = Float.valueOf((entity.charge - 0.8f) * 5 * 100).intValue();
             if (rtres != null) {

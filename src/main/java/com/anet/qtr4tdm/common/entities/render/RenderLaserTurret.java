@@ -40,10 +40,12 @@ public class RenderLaserTurret extends Render<LaserTurretEntity> {
         return texture;
     }
 
+    /*
     @Override
     public boolean shouldRender(LaserTurretEntity livingEntity, ICamera camera, double camX, double camY, double camZ) {
         return true;
     }
+    */
 
     @Override
     public void doRender(LaserTurretEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {

@@ -3,6 +3,7 @@ package com.anet.qtr4tdm.common.tiles;
 import java.util.ArrayList;
 
 import com.anet.qtr4tdm.TdmMod;
+import com.anet.qtr4tdm.common.entities.CannonTurretEntity;
 import com.anet.qtr4tdm.common.entities.LaserTurretEntity;
 import com.anet.qtr4tdm.common.entities.TurretEntity;
 import com.anet.qtr4tdm.common.supers.TEDefenceEnrg;
@@ -97,6 +98,7 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
     private TurretEntity getSentryForItemStack (ItemStack stack) {
         switch (stack.getItemDamage()) {
             case 0: return new LaserTurretEntity(world);
+            case 1: return new CannonTurretEntity(world);
             default: return null;
         }
     }

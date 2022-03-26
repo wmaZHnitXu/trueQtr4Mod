@@ -33,7 +33,7 @@ public class TurretItem extends Item implements IMetadataItem {
 
     @Override
     public int GetMetaCount() {
-        return 1;
+        return 2;
     }
     
 }

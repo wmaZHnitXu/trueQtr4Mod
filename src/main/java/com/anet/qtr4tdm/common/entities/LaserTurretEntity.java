@@ -33,7 +33,7 @@ public class LaserTurretEntity extends TurretEntity {
 
     @Override
     protected int getDetectionRange() {
-        return 50;
+        return 75;
     }
 
     @Override

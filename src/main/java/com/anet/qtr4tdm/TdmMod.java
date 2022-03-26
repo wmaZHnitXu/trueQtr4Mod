@@ -27,6 +27,8 @@ import com.anet.qtr4tdm.uebki.messages.primitive.DefDataRecHandler;
 import com.anet.qtr4tdm.uebki.messages.primitive.DefenceDataToPlayer;
 import com.anet.qtr4tdm.uebki.messages.primitive.GetBaseMembersHandler;
 import com.anet.qtr4tdm.uebki.messages.primitive.GetBaseMembersMessage;
+import com.anet.qtr4tdm.uebki.messages.primitive.ProjectileHitHandler;
+import com.anet.qtr4tdm.uebki.messages.primitive.ProjectileHitMessage;
 import com.anet.qtr4tdm.uebki.messages.primitive.RadarInfoHandler;
 import com.anet.qtr4tdm.uebki.messages.primitive.RadarMessage;
 import com.anet.qtr4tdm.uebki.messages.primitive.SetBaseMember;
@@ -124,6 +126,8 @@ public class TdmMod
         wrapper.registerMessage(BaseBorderHandler.class, BaseBorderMessage.class, 14, Side.CLIENT);
 
         wrapper.registerMessage(TurretRotationHandler.class, TurretRotationMessage.class, 15, Side.CLIENT);
+
+        wrapper.registerMessage(ProjectileHitHandler.class, ProjectileHitMessage.class, 16, Side.CLIENT);
     }
 
     @EventHandler

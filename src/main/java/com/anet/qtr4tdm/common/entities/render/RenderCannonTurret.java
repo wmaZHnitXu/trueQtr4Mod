@@ -28,6 +28,7 @@ public class RenderCannonTurret extends Render<CannonTurretEntity> {
     public void doRender(CannonTurretEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
         entity.calculatePitchYaw(partialTicks);
+        entity.calculateKnockBack(partialTicks);
         bindEntityTexture(entity);
         GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y + 1.5d, z);
@@ -44,7 +45,7 @@ public class RenderCannonTurret extends Render<CannonTurretEntity> {
         public Render<? super CannonTurretEntity> createRenderFor(RenderManager manager) {
 
             return new RenderCannonTurret(manager);
-            
+
         }
         
     }

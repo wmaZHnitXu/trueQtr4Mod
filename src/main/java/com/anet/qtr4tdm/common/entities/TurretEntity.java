@@ -281,6 +281,11 @@ public abstract class TurretEntity extends Entity implements IEntityAdditionalSp
         return result;
     }
 
+    public Vec3d getFacingDir () {
+        return new Vec3d(Math.cos(yawTurret), -Math.tan(pitchTurret) ,Math.sin(yawTurret)).normalize();
+    }
+
+
     public abstract double getMaxEnergy ();
 
     public double getEnergy () {

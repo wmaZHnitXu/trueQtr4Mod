@@ -99,7 +99,7 @@ public class LaserTurretEntity extends TurretEntity {
 
     protected void shoot () {
         injectEnergy(-120);
-        Vec3d direction = new Vec3d(Math.cos(yawTurret), -Math.tan(pitchTurret) ,Math.sin(yawTurret)).normalize().scale(laserRange);
+        Vec3d direction = getFacingDir().scale(laserRange);
         processLaserBeam(getGunPosition(), direction.add(getGunPosition()));
     }
 

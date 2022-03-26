@@ -18,6 +18,7 @@ import com.anet.qtr4tdm.common.blocks.ThermalRadarBlock;
 import com.anet.qtr4tdm.common.blocks.TurretBaseBlock;
 import com.anet.qtr4tdm.common.blocks.TurretMasterBlock;
 import com.anet.qtr4tdm.common.blocks.TurretSlaveBlock;
+import com.anet.qtr4tdm.common.entities.CannonProjectileEntity;
 import com.anet.qtr4tdm.common.entities.CannonTurretEntity;
 import com.anet.qtr4tdm.common.entities.HarvesterDroneEntity;
 import com.anet.qtr4tdm.common.entities.KazAmmoEntity;
@@ -27,6 +28,7 @@ import com.anet.qtr4tdm.common.entities.Radar1Entity;
 import com.anet.qtr4tdm.common.entities.Radar2Entity;
 import com.anet.qtr4tdm.common.entities.Radar3Entity;
 import com.anet.qtr4tdm.common.entities.RocketEntity;
+import com.anet.qtr4tdm.common.entities.render.RenderCannonProjectile;
 import com.anet.qtr4tdm.common.entities.render.RenderCannonTurret;
 import com.anet.qtr4tdm.common.entities.render.RenderHarvesterDrone1;
 import com.anet.qtr4tdm.common.entities.render.RenderKazAmmo1;
@@ -207,6 +209,7 @@ public class BlocksInit {
         RenderingRegistry.registerEntityRenderingHandler(HarvesterDroneEntity.class, new RenderHarvesterDrone1.Factory());
         RenderingRegistry.registerEntityRenderingHandler(LaserTurretEntity.class, new RenderLaserTurret.Factory());
         RenderingRegistry.registerEntityRenderingHandler(CannonTurretEntity.class, new RenderCannonTurret.Factory());
+        RenderingRegistry.registerEntityRenderingHandler(CannonProjectileEntity.class, new RenderCannonProjectile.Factory());
 
     }
 
@@ -265,6 +268,7 @@ public class BlocksInit {
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "droneharvester"), HarvesterDroneEntity.class, "droneharvester", 1342, TdmMod.instance, 150, 3, true);
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "laserturret"), LaserTurretEntity.class, "laserturret", 1343, TdmMod.instance, 150, 3, false);
         EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "cannonturret"), CannonTurretEntity.class, "cannonturret", 1344, TdmMod.instance, 150, 3, false);
+        EntityRegistry.registerModEntity(new ResourceLocation(TdmMod.MODID + ":" + "cannonprojectile"), CannonProjectileEntity.class, "cannonprojectile", 1345, TdmMod.instance, 500, 3, false);
 
     }
 }

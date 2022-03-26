@@ -4,6 +4,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.Vec3d;
 
 // Made with Blockbench 4.1.5
 // Exported for Minecraft version 1.7 - 1.12
@@ -120,7 +121,9 @@ public class cannonturret extends ModelBase {
 	}
 
 	public void setGunKnockBack (float knockBack) {
-		gun.offsetX = knockBack;
+		for (ModelRenderer rend : gun.childModels) {
+			rend.offsetX = -knockBack;
+		}
 		setRotationAngle(kazennik, 0, 0, knockBack);
 	}
 

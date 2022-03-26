@@ -17,6 +17,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -184,7 +185,25 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
         markDirty();
     }
 
-    
+    public boolean containsItemInside (Item item) {
+        for (ItemStack stack : items) {
+            if (stack.getItem().equals(item)) return true;
+        }
+        return false;
+    }
+
+    public ItemStack transferAmmoInTurret (Item item) {
+        ItemStack result = ItemStack.EMPTY;
+        for (int i = 0; i < items.size(); i++) {
+            ItemStack stack = items.get(i);
+            if (stack.getItem().equals(item)) {
+                result = stack;
+                items.set(i, ItemStack.EMPTY);
+                break;
+            }
+        }
+        return result;
+    }
 
     @Override
     public int getInventoryStackLimit() {

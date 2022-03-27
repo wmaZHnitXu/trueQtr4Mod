@@ -99,7 +99,7 @@ public class CannonTurretEntity extends TurretEntity {
             //Spawn projectile
             CannonProjectileEntity projectile = new CannonProjectileEntity(world);
             Vec3d origin = getProjectileOrigin();
-            projectile.setVelocity(getFacingDir().scale(3));
+            projectile.setVelocity(getFacingDir().scale(4));
             projectile.setPosition(origin.x, origin.y, origin.z);
             projectile.setParent(this);
             world.spawnEntity(projectile);

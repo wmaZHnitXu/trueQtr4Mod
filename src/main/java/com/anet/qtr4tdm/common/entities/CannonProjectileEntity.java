@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 public class CannonProjectileEntity extends ProjectileEntity {
 
     TurretEntity parent;
+    private boolean initialized;
 
     public CannonProjectileEntity(World worldIn) {
         super(worldIn);
@@ -30,8 +31,9 @@ public class CannonProjectileEntity extends ProjectileEntity {
 
     @Override
     public void doHit() {
-        //TargetPoint point = new TargetPoint(world.provider.getDimension(), posX, posY, posZ, 200);
-        //TdmMod.wrapper.sendToAllAround(new ProjectileHitMessage(velocity, getPositionVector(), BlockPos.ORIGIN, 0), point);
+        TargetPoint point = new TargetPoint(world.provider.getDimension(), posX, posY, posZ, 200);
+        TdmMod.wrapper.sendToAllAround(new ProjectileHitMessage(velocity, getPositionVector(), BlockPos.ORIGIN, 0), point);
+        setDead();
     }
 
     @Override
@@ -44,16 +46,24 @@ public class CannonProjectileEntity extends ProjectileEntity {
     @Override
     public void readSpawnData(ByteBuf additionalData) {
         super.readSpawnData(additionalData);
-        Entity e = world.getEntityByID(additionalData.readInt());
-        if (e instanceof CannonTurretEntity) {
-            ((CannonTurretEntity)e).shoot();
+        if (!initialized) {
+            Entity e = world.getEntityByID(additionalData.readInt());
+            if (e instanceof CannonTurretEntity) {
+                ((CannonTurretEntity)e).shoot();
+            }
+            initialized = true;
         }
     }
 
     @Override
     public void writeSpawnData(ByteBuf buffer) {
         super.writeSpawnData(buffer);
-        buffer.writeInt(parent.getEntityId());
+        if (parent != null) {
+            buffer.writeInt(parent.getEntityId());
+        }
+        else {
+            buffer.writeInt(0);
+        }
     }
     
 }

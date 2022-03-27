@@ -1,5 +1,6 @@
 package com.anet.qtr4tdm.client;
 
+import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.uebki.messages.primitive.ProjectileHitMessage;
 
 import net.minecraft.block.Block;
@@ -14,46 +15,48 @@ public class ProjectileHitClient {
     
     public static void doProjectileHit (ProjectileHitMessage hitMessage) {
 
-        
-
-        if (hitMessage.blockPos.equals(BlockPos.ORIGIN)) {
-
-        }
-
-        else {
-            SpawnImpactParticles(hitMessage.dir, hitMessage.hitPos, hitMessage.blockPos);
-        }
+        SpawnImpactParticles(hitMessage.dir, hitMessage.hitPos, hitMessage.blockPos);
 
     }
 
     public static void SpawnImpactParticles (Vec3d impactVel, Vec3d impactPos, BlockPos pos) {
 
+        TdmMod.logger.info(impactVel + " : " + impactPos + " : " + pos);
+
+        int iters = Double.valueOf(Math.min(impactVel.distanceTo(Vec3d.ZERO) * 40, 100)).intValue();
         World world = Minecraft.getMinecraft().world;
-        IBlockState state = world.getBlockState(pos);
-        EnumParticleTypes particle = EnumParticleTypes.BLOCK_CRACK;
-        int iters = Double.valueOf(Math.min(impactVel.distanceTo(Vec3d.ZERO), 40)).intValue();
 
-        for (int i = 0; i < iters; i++) {
+        world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, true, impactPos.x, impactPos.y, impactPos.z, 0, 0, 0);
 
-            Vec3d particleVelocity = impactVel.scale(world.rand.nextGaussian() * 0.25d);
-            particleVelocity = particleVelocity.addVector(world.rand.nextGaussian() * 0.25d, world.rand.nextGaussian() * 0.25d, world.rand.nextGaussian() * 0.25d);
-            world.spawnParticle(particle, true, impactPos.x, impactPos.y, impactPos.z, particleVelocity.x, particleVelocity.y, particleVelocity.z, Block.getStateId(state));
+        if (!pos.equals(BlockPos.ORIGIN)) {
 
+            
+            IBlockState state = world.getBlockState(pos);
+            EnumParticleTypes particle = EnumParticleTypes.BLOCK_CRACK;
+            
+
+            for (int i = 0; i < iters * 2; i++) {
+
+                Vec3d particleVelocity = impactVel.scale(-2d);
+                particleVelocity = particleVelocity.addVector(world.rand.nextGaussian(), world.rand.nextGaussian(), world.rand.nextGaussian());
+                world.spawnParticle(particle, true, impactPos.x, impactPos.y, impactPos.z, particleVelocity.x, particleVelocity.y, particleVelocity.z, Block.getStateId(state));
+
+            }
         }
 
         iters /= 2;
 
         for (int i = 0; i < iters; i++) {
 
-            Vec3d particleVelocity = new Vec3d(world.rand.nextGaussian(), world.rand.nextGaussian(), world.rand.nextGaussian()).scale(0.1d);
+            Vec3d particleVelocity = new Vec3d(world.rand.nextGaussian(), world.rand.nextGaussian(), world.rand.nextGaussian()).scale(0.5d);
             world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, true, impactPos.x, impactPos.y, impactPos.z, particleVelocity.x, particleVelocity.y, particleVelocity.z);
 
         }
 
         for (int i = 0; i < iters; i++) {
 
-            Vec3d particleVelocity = impactVel.scale(world.rand.nextGaussian() * 0.25d);
-            particleVelocity = particleVelocity.addVector(world.rand.nextGaussian() * 0.25d, world.rand.nextGaussian() * 0.25d, world.rand.nextGaussian() * 0.25d);
+            Vec3d particleVelocity = impactVel.scale(world.rand.nextGaussian());
+            particleVelocity = particleVelocity.addVector(world.rand.nextGaussian(), world.rand.nextGaussian(), world.rand.nextGaussian());
             world.spawnParticle(EnumParticleTypes.LAVA, true, impactPos.x, impactPos.y, impactPos.z, particleVelocity.x, particleVelocity.y, particleVelocity.z);
 
         }

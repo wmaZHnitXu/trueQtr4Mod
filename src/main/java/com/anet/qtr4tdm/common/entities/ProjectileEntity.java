@@ -84,6 +84,12 @@ public abstract class ProjectileEntity extends Entity implements IEntityAddition
 
         }
 
+        if (!isDead) {
+            posX = newX;
+            posY = newY;
+            posZ = newZ;
+        }
+
     }
 
     public abstract void doDamage (Entity e);

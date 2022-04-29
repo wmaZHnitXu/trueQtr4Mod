@@ -61,7 +61,7 @@ public class WorldEventsCatcher {
     @SubscribeEvent
     public static void WorldTick (WorldTickEvent evt) {
 
-        if (tickTimer % 20 == 0) {
+        if (tickTimer % 200 == 0) {
             BaseBorderInfoSender.send();
         }
 

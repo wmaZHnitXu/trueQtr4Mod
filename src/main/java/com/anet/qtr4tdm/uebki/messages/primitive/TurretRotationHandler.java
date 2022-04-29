@@ -17,7 +17,7 @@ public class TurretRotationHandler implements IMessageHandler<TurretRotationMess
     public IMessage onMessage(TurretRotationMessage message, MessageContext ctx) {
         Entity e = Minecraft.getMinecraft().world.getEntityByID(message.entityId);
         if (e instanceof TurretEntity) {
-            ((TurretEntity)e).insertTurretRotations(message.pitch, message.yaw, message.targetId);
+            ((TurretEntity)e).insertTurretRotations(message.pitch, message.yaw, message.targetId, message.additional);
             if (e instanceof LaserTurretEntity) {
                 LaserTurretEntityRenderSupport.messageRecieved(message, (LaserTurretEntity)e);
             }

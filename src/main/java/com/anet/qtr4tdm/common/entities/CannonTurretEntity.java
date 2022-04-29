@@ -10,8 +10,8 @@ import net.minecraft.world.World;
 
 public class CannonTurretEntity extends TurretEntity {
 
-    private ItemStack ammoInside;
-    private int reloadingCooldown;
+    protected ItemStack ammoInside;
+    protected int reloadingCooldown;
 
 
     //KNOCKBACK
@@ -46,7 +46,7 @@ public class CannonTurretEntity extends TurretEntity {
 
     @Override
     protected int getDetectionRange() {
-        return 50;
+        return 100;
     }
 
     @Override
@@ -67,6 +67,10 @@ public class CannonTurretEntity extends TurretEntity {
     @Override
     public void onUpdate() {
         super.onUpdate();
+        GunOperations();
+    }
+
+    protected void GunOperations () {
         if (!world.isRemote) {
 
             //Reloading
@@ -79,7 +83,7 @@ public class CannonTurretEntity extends TurretEntity {
                 }
 
                 //Shoot
-                if (target != null && !ammoInside.equals(ItemStack.EMPTY)) { //сюда ещё условие сведения
+                if (target != null && !ammoInside.equals(ItemStack.EMPTY) && isAimedAtTarget())  { //сюда ещё условие сведения
                     shoot();
                 }
             }
@@ -89,6 +93,14 @@ public class CannonTurretEntity extends TurretEntity {
         }
     }
 
+    public boolean isAimedAtTarget () {
+        if (target == null) return false;
+        Vec3d targetDir = getPositionVector().subtract(target.getPositionVector()).normalize();
+        Vec3d facingDir = getFacingDir();
+        return targetDir.distanceTo(facingDir) < Math.min(0.1f, 0.1f / target.getPositionVector().distanceTo(getPositionVector()));
+    }
+
+    @Override
     public void shoot () {
 
         if (!world.isRemote) {

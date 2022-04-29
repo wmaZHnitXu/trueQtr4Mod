@@ -53,9 +53,9 @@ public abstract class TEDefenceInvEnrg extends TEDefenceEnrg implements ISidedIn
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound.setInteger("ammocount", ammo.get(0) != null ? ammo.get(0).getCount() : 0);
-        compound.setInteger("ammometa", ammo.get(0) != null ? ammo.get(0).getItemDamage() : 0);
-        compound.setInteger("compoundid", ammo.get(0) != null ? Item.getIdFromItem(ammo.get(0).getItem()) : 0);
+        compound.setInteger("ammocount", ammo != null && ammo.get(0) != null ? ammo.get(0).getCount() : 0);
+        compound.setInteger("ammometa", ammo != null && ammo.get(0) != null ? ammo.get(0).getItemDamage() : 0);
+        compound.setInteger("compoundid", ammo != null && ammo.get(0) != null ? Item.getIdFromItem(ammo.get(0).getItem()) : 0);
         return super.writeToNBT(compound);
     }
 

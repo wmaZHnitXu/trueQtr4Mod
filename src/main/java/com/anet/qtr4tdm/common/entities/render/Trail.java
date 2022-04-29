@@ -38,6 +38,7 @@ public class Trail
     private float thickness;
     private int Lifetime;
     private boolean isFlame;
+    private Vec3f color;
 
     private static ArrayList<Trail> trails;
     static {
@@ -53,6 +54,21 @@ public class Trail
         this.nodes = new TrailNode[MAX_LENGTH];
         this.thickness = thickNess;
         this.isFlame = isFlame;
+        Lifetime = 200;
+
+        resetNodes();
+    }
+
+    public Trail(Entity entity, float thickNess, int length, float spawnInterval, Vec3f color)
+    {
+        this.mc = Minecraft.getMinecraft();
+        this.trackedEntity = entity;
+        this.spawnCooldown = spawnInterval;
+        this.MAX_LENGTH = length;
+        this.nodes = new TrailNode[MAX_LENGTH];
+        this.thickness = thickNess;
+        this.isFlame = true;
+        this.color = color;
         Lifetime = 200;
 
         resetNodes();
@@ -128,7 +144,11 @@ public class Trail
         float lightMapSaveY = OpenGlHelper.lastBrightnessY;
 
         if (isFlame) {
-            GlStateManager.color(1.0F, 1.0F, 0.7F, 1.0F);
+            if (color == null)
+                GlStateManager.color(1.0F, 1.0F, 0.7F, 1.0F);
+            else {
+                GlStateManager.color(color.x, color.y, color.z, 1.0F);
+            }
             GlStateManager.disableBlend();
             GlStateManager.disableAlpha();
             GlStateManager.disableLighting();
@@ -308,30 +328,6 @@ public class Trail
             );
 
             return dest;
-        }
-    }
-
-    class Vec3f {
-        float x, y, z;
-
-        public float getX () {return x;};
-        public float getY () {return y;};
-        public float getZ () {return z;};
-
-        public Vec3f () {
-
-        }
-
-        public void set (Vec3f v) {
-            x = v.x;
-            y = v.y;
-            z = v.z;
-        }
-
-        public void set (float x, float y, float z) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
         }
     }
 }

@@ -15,11 +15,19 @@ public class ProjectileHitClient {
     
     public static void doProjectileHit (ProjectileHitMessage hitMessage) {
 
-        SpawnImpactParticles(hitMessage.dir, hitMessage.hitPos, hitMessage.blockPos);
+        switch (hitMessage.type) {
+            case 0:
+                SpawnCannonImpactParticles(hitMessage.dir, hitMessage.hitPos, hitMessage.blockPos);
+                break;
+            case 1:
+                SpawnRailImpactParticles(hitMessage.dir, hitMessage.hitPos, hitMessage.blockPos);
+            default:
+                SpawnCannonImpactParticles(hitMessage.dir, hitMessage.hitPos, hitMessage.blockPos);
+        }
 
     }
 
-    public static void SpawnImpactParticles (Vec3d impactVel, Vec3d impactPos, BlockPos pos) {
+    public static void SpawnCannonImpactParticles (Vec3d impactVel, Vec3d impactPos, BlockPos pos) {
 
         TdmMod.logger.info(impactVel + " : " + impactPos + " : " + pos);
 
@@ -61,6 +69,10 @@ public class ProjectileHitClient {
 
         }
 
+    }
+
+    public static void SpawnRailImpactParticles (Vec3d impactVel, Vec3d impactPos, BlockPos pos) {
+        SpawnCannonImpactParticles(impactVel, impactPos, pos);
     }
 
 }

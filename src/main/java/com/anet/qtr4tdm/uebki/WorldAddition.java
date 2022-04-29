@@ -1,6 +1,7 @@
 package com.anet.qtr4tdm.uebki;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -13,9 +14,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class WorldAddition {
-    public static List<Entity> traceEntities (World world, Vec3d start, Vec3d end, Entity excluded) {
+    public static List<RayTraceResult> traceEntities (World world, Vec3d start, Vec3d end, Entity excluded) {
         {
-            ArrayList<Entity> result = new ArrayList<Entity>();
+            HashMap<Entity, RayTraceResult> result = new HashMap<Entity, RayTraceResult>();
             double d0 = start.x;
             double d1 = start.y;
             double d2 = start.z;
@@ -47,12 +48,15 @@ public class WorldAddition {
 
                         if (raytraceresult1 != null)
                         {
-                            result.add(entity1);
+                            if (!result.containsKey(entity1)) {
+                                raytraceresult1.entityHit = entity1;
+                                result.put(entity1, raytraceresult1);
+                            }
                         }
                     }
                 }
             }
-            return result;
+            return new ArrayList<RayTraceResult>(result.values());
         }
     }
 }

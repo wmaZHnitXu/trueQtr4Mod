@@ -9,6 +9,7 @@ import net.minecraft.client.model.ModelEnderCrystal;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.BlockModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -35,6 +36,13 @@ public class RenderCannonProjectile extends Render<CannonProjectileEntity> {
             cube_r1.cubeList.add(new ModelBox(cube_r1, 0, 0, -4, -4, -4, 4, 4, 4, 0.0F, false));
         }
 
+        @Override
+        public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw,
+                float headPitch, float scale) {
+            cube_r1.render(scale);
+            TdmMod.logger.info("renderbullet");
+        }
+
     }
 
     protected RenderCannonProjectile(RenderManager renderManager) {
@@ -52,10 +60,20 @@ public class RenderCannonProjectile extends Render<CannonProjectileEntity> {
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
         bindEntityTexture(entity);
         GlStateManager.pushMatrix();
-        GlStateManager.translate(entity.posX, entity.posY, entity.posZ);
+
+            GlStateManager.translate(x, y, z);
+            GlStateManager.color(1, 0.85f, 0.7f);
+
+            float lightMapSaveX = OpenGlHelper.lastBrightnessX;
+            float lightMapSaveY = OpenGlHelper.lastBrightnessY;
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 0.0F);
             GlStateManager.disableLighting();
+
                 model.render((Entity)entity, 0.0F, 0.0F, 0F, 0.0F, 0.0F, 0.0625F);
+
             GlStateManager.enableLighting();
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightMapSaveX, lightMapSaveY);
+
         GlStateManager.popMatrix();
     }
 

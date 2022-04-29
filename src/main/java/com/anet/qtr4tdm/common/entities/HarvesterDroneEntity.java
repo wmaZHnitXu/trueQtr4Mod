@@ -320,7 +320,8 @@ public class HarvesterDroneEntity extends DroneSmallEntity implements IInventory
 
             if (baseinf == null) {
                 baseinf = baseTile.GetBase();
-                baseinf.ConnectDrone(this);
+                if (baseinf != null)
+                    baseinf.ConnectDrone(this);
             }
 
             if (basePos == null) {

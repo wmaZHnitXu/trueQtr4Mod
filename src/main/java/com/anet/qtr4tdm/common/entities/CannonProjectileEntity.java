@@ -5,9 +5,9 @@ import com.anet.qtr4tdm.uebki.messages.primitive.ProjectileHitMessage;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
@@ -25,8 +25,13 @@ public class CannonProjectileEntity extends ProjectileEntity {
     }
 
     @Override
+    public float getInitDamage() {
+        return 50;
+    }
+
+    @Override
     public void doDamage(Entity e) {
-        
+        e.attackEntityFrom(DamageSource.ANVIL, damage);
     }
 
     @Override
@@ -38,6 +43,9 @@ public class CannonProjectileEntity extends ProjectileEntity {
 
     @Override
     public void doHit(RayTraceResult trace) {
+        if (trace.entityHit != null) {
+            doDamage(trace.entityHit);
+        }
         TargetPoint point = new TargetPoint(world.provider.getDimension(), posX, posY, posZ, 200);
         TdmMod.wrapper.sendToAllAround(new ProjectileHitMessage(velocity, trace.hitVec, trace.getBlockPos(), 0), point);
         setDead();
@@ -46,10 +54,10 @@ public class CannonProjectileEntity extends ProjectileEntity {
     @Override
     public void readSpawnData(ByteBuf additionalData) {
         super.readSpawnData(additionalData);
-        if (!initialized) {
+        if (!initialized && !isDead) {
             Entity e = world.getEntityByID(additionalData.readInt());
-            if (e instanceof CannonTurretEntity) {
-                ((CannonTurretEntity)e).shoot();
+            if (e instanceof TurretEntity) {
+                ((TurretEntity)e).shoot();
             }
             initialized = true;
         }

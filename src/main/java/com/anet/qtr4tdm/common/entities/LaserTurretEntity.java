@@ -97,17 +97,18 @@ public class LaserTurretEntity extends TurretEntity {
         return rand.nextGaussian();
     }
 
-    protected void shoot () {
+    @Override
+    public void shoot () {
         injectEnergy(-120);
         Vec3d direction = getFacingDir().scale(laserRange);
         processLaserBeam(getGunPosition(), direction.add(getGunPosition()));
     }
 
     protected void processLaserBeam (Vec3d origin, Vec3d destination) {
-        List<Entity> entities = WorldAddition.traceEntities(world, origin, destination, this);
-        for (Entity result : entities) {
-            result.attackEntityFrom(DamageSource.HOT_FLOOR, Math.max((charge - 0.8f) * 75, 0));
-            if (charge > 0.9f) result.setFire(1);
+        List<RayTraceResult> entities = WorldAddition.traceEntities(world, origin, destination, this);
+        for (RayTraceResult result : entities) {
+            result.entityHit.attackEntityFrom(DamageSource.HOT_FLOOR, Math.max((charge - 0.8f) * 75, 0));
+            if (charge > 0.9f) result.entityHit.setFire(1);
         }
     }
     

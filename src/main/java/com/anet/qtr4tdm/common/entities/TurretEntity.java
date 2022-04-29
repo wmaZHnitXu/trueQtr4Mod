@@ -30,6 +30,7 @@ public abstract class TurretEntity extends Entity implements IEntityAdditionalSp
 
     protected Entity target;
     protected TurretMasterTe baseTile;
+    protected int renderCooldown;
 
     protected double yawTurret;
         public Double getYawTurret () { return yawTurret; }
@@ -43,6 +44,8 @@ public abstract class TurretEntity extends Entity implements IEntityAdditionalSp
     protected double getRotationSpeed () { return 0.05d; }
 
     protected double energy;
+    public float additional;
+    protected float oldAdditional;
 
     public TurretEntity(World worldIn) {
         super(worldIn);
@@ -82,6 +85,8 @@ public abstract class TurretEntity extends Entity implements IEntityAdditionalSp
         compound.setDouble("yaw_turret", yawTurret);
         compound.setDouble("pitch_turret", pitchTurret);
     }
+
+    public abstract void shoot ();
 
     @Override
     public void onUpdate() {
@@ -141,7 +146,8 @@ public abstract class TurretEntity extends Entity implements IEntityAdditionalSp
                     pitchTurret += Math.min(Math.max((newPitch - pitchTurret), -getRotationSpeed()), getRotationSpeed());
                 }
 
-                if (oldYaw != yawTurret && oldPitch != pitchTurret) {
+                if (oldYaw != yawTurret || oldPitch != pitchTurret || oldAdditional != additional) {
+                    oldAdditional = additional;
                     sendRotationsToClients();
                 }
                 
@@ -149,9 +155,12 @@ public abstract class TurretEntity extends Entity implements IEntityAdditionalSp
 
             //CLIENTSIDE
             else {
-
-                //Etim zanyat renderer
-
+                
+                if (renderCooldown > 5) {
+                    calculatePitchYaw(1);
+                }
+                if (renderCooldown < 100000)
+                    renderCooldown++;
             }
 
             //ENERGY
@@ -162,6 +171,7 @@ public abstract class TurretEntity extends Entity implements IEntityAdditionalSp
 
     @SideOnly(Side.CLIENT)
     public void calculatePitchYaw (float partialTicks) {
+        if (partialTicks != 1) renderCooldown = 0;
         if (target != null) {
 
             Vec3d targetVector = target.getPositionEyes(1);
@@ -193,14 +203,15 @@ public abstract class TurretEntity extends Entity implements IEntityAdditionalSp
     protected void sendRotationsToClients () {
         //List<EntityPlayerMP> playersToSend = world.getPlayers(EntityPlayerMP.class, player -> player.getPositionVector().distanceTo(getPositionVector()) < 400); лол оказца метод для этого есть
         TargetPoint point = new TargetPoint(world.provider.getDimension(), posX, posY, posZ, 400);
-        TdmMod.wrapper.sendToAllAround(new TurretRotationMessage(getEntityId(), newYaw, newPitch, target == null ? 0 : target.getEntityId()), point);
+        TdmMod.wrapper.sendToAllAround(new TurretRotationMessage(getEntityId(), newYaw, newPitch, target == null ? 0 : target.getEntityId(), additional), point);
     }
     //Чзх я хз, пришлось вверх вставить, т.к ошибку выдаёт, хотя всё верно
     //Predicate<EntityPlayerMP> shouldSendTo = player -> player.getPositionVector().distanceTo(getPositionVector()) < 400;
 
-    public void insertTurretRotations (double pitch, double yaw, int targetId) {
+    public void insertTurretRotations (double pitch, double yaw, int targetId, float additional) {
         newPitch = pitch;
         newYaw = yaw;
+        this.additional = additional;
         if (targetId == 0) {
             target = null;
             return; //WARNING RETURN

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.entities.CannonTurretEntity;
 import com.anet.qtr4tdm.common.entities.LaserTurretEntity;
+import com.anet.qtr4tdm.common.entities.RailTurretEntity;
 import com.anet.qtr4tdm.common.entities.TurretEntity;
 import com.anet.qtr4tdm.common.supers.TEDefenceEnrg;
 import com.anet.qtr4tdm.init.BlocksInit;
@@ -100,12 +101,15 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
         switch (stack.getItemDamage()) {
             case 0: return new LaserTurretEntity(world);
             case 1: return new CannonTurretEntity(world);
+            case 2: return new RailTurretEntity(world);
             default: return null;
         }
     }
 
     private ItemStack getItemStackFromSentry (TurretEntity entity) {
         if (entity instanceof LaserTurretEntity) return new ItemStack(BlocksInit.TURRETITEM, 1, 0);
+        if (entity instanceof RailTurretEntity) return new ItemStack(BlocksInit.TURRETITEM, 1, 2); //Да, именно так, просто railturret у нас так же является cannonturret
+        if (entity instanceof CannonTurretEntity) return new ItemStack(BlocksInit.TURRETITEM, 1, 1);
         return ItemStack.EMPTY;
     }
 

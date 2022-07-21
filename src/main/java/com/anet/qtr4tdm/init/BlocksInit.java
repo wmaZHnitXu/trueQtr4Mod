@@ -16,6 +16,7 @@ import com.anet.qtr4tdm.common.blocks.RadarSlaveBlock;
 import com.anet.qtr4tdm.common.blocks.TerminalRadarBlock;
 import com.anet.qtr4tdm.common.blocks.ThermalRadarBlock;
 import com.anet.qtr4tdm.common.blocks.TurretBaseBlock;
+import com.anet.qtr4tdm.common.blocks.TurretCollisionBlock;
 import com.anet.qtr4tdm.common.blocks.TurretMasterBlock;
 import com.anet.qtr4tdm.common.blocks.TurretSlaveBlock;
 import com.anet.qtr4tdm.common.entities.CannonProjectileEntity;
@@ -101,6 +102,7 @@ public class BlocksInit {
     public static final Block TURRETBASE = new TurretBaseBlock();
     public static final Block TURRETMASTER = new TurretMasterBlock();
     public static final Block TURRETSLAVE = new TurretSlaveBlock();
+    public static final Block TURRETCOLLIDER = new TurretCollisionBlock();
 
     public static final Block[] BLOCKS = new Block[] {
     
@@ -118,7 +120,8 @@ public class BlocksInit {
             DRONEBASE,
             TURRETBASE,
             TURRETMASTER,
-            TURRETSLAVE
+            TURRETSLAVE,
+            TURRETCOLLIDER
 
     };
 

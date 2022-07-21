@@ -3,6 +3,7 @@ package com.anet.qtr4tdm.common.tiles;
 import java.util.ArrayList;
 
 import com.anet.qtr4tdm.TdmMod;
+import com.anet.qtr4tdm.common.blocks.TurretCollisionBlock;
 import com.anet.qtr4tdm.common.entities.CannonTurretEntity;
 import com.anet.qtr4tdm.common.entities.LaserTurretEntity;
 import com.anet.qtr4tdm.common.entities.RailTurretEntity;
@@ -10,8 +11,9 @@ import com.anet.qtr4tdm.common.entities.TurretEntity;
 import com.anet.qtr4tdm.common.supers.TEDefenceEnrg;
 import com.anet.qtr4tdm.init.BlocksInit;
 import com.anet.qtr4tdm.uebki.gui.TurretConatainer;
+import com.jcraft.jorbis.Block;
 
-import ic2.api.energy.tile.IEnergyEmitter;
+import net.minecraft.block.BlockAir;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -49,12 +51,7 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
     }
 
     @Override
-    public int getSinkTier() {
-        return 3;
-    }
-
-    @Override
-    public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing side) {
+    public boolean canConnectEnergy( EnumFacing side) {
         return side == EnumFacing.DOWN;
     }
 
@@ -95,6 +92,29 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
         this.entity = entityToSpawn;
         world.spawnEntity(entityToSpawn);
         TdmMod.logger.info(entity == null ? "null" : "nonnull");
+
+        ConstructCollider();
+    }
+
+    private void ConstructCollider () {
+        int i = 0;
+        for (int x = pos.getX() - 1; x <= pos.getX() + 1; x++ ) {
+            for (int z = pos.getZ() - 1; z <= pos.getZ() + 1; z++) {
+                IBlockState blkState = BlocksInit.TURRETCOLLIDER.getDefaultState().withProperty(TurretCollisionBlock.LOCATION, i);
+                world.setBlockState(new BlockPos(x, pos.getY() + 1, z), blkState, 3);
+                i++;
+            } 
+        }
+        
+    }
+
+    private void RemoveCollider () {
+        IBlockState airstate = BlockAir.getStateById(0);
+        for (int x = pos.getX() - 1; x <= pos.getX() + 1; x++ ) {
+            for (int z = pos.getZ() - 1; z <= pos.getZ() + 1; z++) {
+                world.setBlockState(new BlockPos(x, pos.getY() + 1, z), airstate, 3);
+            } 
+        }
     }
 
     private TurretEntity getSentryForItemStack (ItemStack stack) {
@@ -114,11 +134,19 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
     }
 
     private void DespawnSentry () {
-        TdmMod.logger.info(entity == null ? "null" : "nonnull");
         if (entity != null) {
             entity.setDead();
             entity = null;
         }
+
+        RemoveCollider();
+    }
+
+    public void DropSentry () {
+        ItemStack sentryStack = items.get(27);
+        items.set(27, ItemStack.EMPTY);
+        InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), sentryStack);
+        DespawnSentry();
     }
 
     public void Disassemble (BlockPos caused) {
@@ -235,13 +263,13 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
     }
 
     @Override
-    public double getEnergy() {
+    public long getPower() {
         if (entity != null) return entity.getEnergy();
         return 0;
     }
 
     @Override
-    public double getMaxEnergy() {
+    public long getMaxPower() {
         if (entity != null) return entity.getMaxEnergy();
         return 0;
     }
@@ -306,19 +334,9 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
     }
 
     @Override
-    public double getDemandedEnergy() {
-        if (entity != null) {
-            return entity.getDemandedEnergy();
-        }
-        else return 0;
-    }
-
-    @Override
-    public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
-        if (entity != null) {
-            entity.injectEnergy(amount);
-        }
-        return 0;
+    public void setPower(long arg0) {
+        if (entity != null && !entity.isDead)
+            entity.setEnergy(arg0);
     }
     
 }

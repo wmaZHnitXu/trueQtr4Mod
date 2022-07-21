@@ -31,7 +31,7 @@ public class RailTurretEntity extends CannonTurretEntity {
     }
 
     @Override
-    public double getMaxEnergy() {
+    public long getMaxEnergy() {
         return 100000;
     }
 

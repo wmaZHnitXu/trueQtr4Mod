@@ -42,7 +42,7 @@ public class LaserTurretEntity extends TurretEntity {
     }
 
     @Override
-    public double getMaxEnergy() {
+    public long getMaxEnergy() {
         return 10000;
     }
 

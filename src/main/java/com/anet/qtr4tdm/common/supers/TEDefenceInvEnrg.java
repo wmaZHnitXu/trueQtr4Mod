@@ -7,9 +7,6 @@ import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.bases.InWorldBasesManager;
 import com.anet.qtr4tdm.uebki.gui.TEDefInvEnrgGuiMisc.TEDefContainer;
 
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.IEnergyEmitter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryHelper;
@@ -45,7 +42,6 @@ public abstract class TEDefenceInvEnrg extends TEDefenceEnrg implements ISidedIn
         }
 
         if (!world.isRemote) {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
             DisconnectFromBase();
             InWorldBasesManager.GetBaseConnection(this);
         }
@@ -66,7 +62,6 @@ public abstract class TEDefenceInvEnrg extends TEDefenceEnrg implements ISidedIn
     }
 
     public void Destruction () {
-        MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
         DisconnectFromBase();
         InventoryHelper.dropInventoryItems(world, pos, this);
     }
@@ -204,27 +199,20 @@ public abstract class TEDefenceInvEnrg extends TEDefenceEnrg implements ISidedIn
     }
 
     @Override
-    public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing side) {
+    public boolean canConnectEnergy(EnumFacing side) {
         if (side != EnumFacing.UP) return true;
         return false;
     }
 
-    @Override
-    public double getDemandedEnergy() {
-        return maxEnergy - energy;
-    }
 
+    /* LEGACY
     @Override
-    public int getSinkTier() {
-        return 2;
-    }
-
-    @Override
-    public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
+    public int receiveEnergy(EnumFacing directionFrom, int amount, boolean kon4) {
         energy = Math.min(energy + amount, maxEnergy);
         //return Math.max(energy - maxEnergy, 0); V DOKAX SKAZALI, 4TO TAK LY$WE DLYA PROIZVODITELNOSTI
         return 0;
     }
+    */ 
 
     @Override
     public int getAmmo() {

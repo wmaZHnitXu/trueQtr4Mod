@@ -20,3 +20,7 @@ tile.dronebase.name=База для дрона
 tile.thermal_base.name=Тепловой сканер
 tile.mrk1.name=Малый ракетный комплекс
 turret_item_0.name=Лазерная турель
+turret_item_1.name=Турель с пушкой
+turret_item_2.name=Рельсотрон
+tile.turret_slave.name=Турель
+tile.turret_master.name=Турель

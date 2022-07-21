@@ -65,7 +65,7 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2855'
     //compile files('industrialcraft-2-2.8.221-ex112-dev.jar')
     compile 'mysql:mysql-connector-java:5.1.44'
-    compile files('industrialcraft-2-2.8.221-ex112-api.jar')
+    compile files('hbm-1.6.5a-G.jar')
     compile files("Flan's Mod-1.12.2-5.6.0-beta.8.jar")
 
     // You may put jars on which you depend on in ./libs or you may define them like so..

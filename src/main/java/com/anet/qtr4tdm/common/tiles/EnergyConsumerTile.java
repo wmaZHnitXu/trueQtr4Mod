@@ -1,14 +1,14 @@
 package com.anet.qtr4tdm.common.tiles;
 
 
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.prefab.BasicEnergyTe;
 
+import com.anet.qtr4tdm.common.supers.EnergySink;
+
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.MinecraftForge;
 
-public class EnergyConsumerTile extends BasicEnergyTe.Sink implements ITickable {
+public class EnergyConsumerTile extends EnergySink implements ITickable {
 
     public EnergyConsumerTile() {
         super(10000, 2);
@@ -43,13 +43,11 @@ public class EnergyConsumerTile extends BasicEnergyTe.Sink implements ITickable 
 
     @Override
     public void onLoad () {
-        MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getEnergyBuffer()));
     }
 
     @Override
     public void onChunkUnload() {
         super.onChunkUnload();
-        MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this.getEnergyBuffer()));
     }
 
     @Override
@@ -58,6 +56,5 @@ public class EnergyConsumerTile extends BasicEnergyTe.Sink implements ITickable 
     }
 
     public void FireIC2DisconnectEvent () {
-        MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this.getEnergyBuffer()));
     }
 }

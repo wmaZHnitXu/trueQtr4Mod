@@ -33,7 +33,6 @@ public abstract class BlockDefenceSystem<T extends IDefenceSystem> extends Block
             if (te instanceof TEDefenceEnrg) {
                 if (((TEDefenceEnrg)te).getConsumptionPerTick() != 0)
                     tooltip.add("§7Потребление энергии: §r" + ((TEDefenceEnrg)te).getConsumptionPerTick() + "/t");
-                tooltip.add("§7Энергоуровень: §r" + ((TEDefenceEnrg)te).getSinkTier());
             }
 
 

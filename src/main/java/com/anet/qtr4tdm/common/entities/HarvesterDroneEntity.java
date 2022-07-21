@@ -450,7 +450,7 @@ public class HarvesterDroneEntity extends DroneSmallEntity implements IInventory
     }
 
     @Override
-    public double getMaxEnergy() {
+    public long getMaxEnergy() {
         return 5000;
     }
 

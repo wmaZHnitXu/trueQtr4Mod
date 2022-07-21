@@ -26,7 +26,7 @@ public abstract class DroneSmallEntity extends EntityLiving {
         }
     }
 
-    protected double energy;
+    protected long energy;
     protected baseInfo baseinf;
     protected BlockPos basePos;
     protected DroneMoveStatus movingStatus;
@@ -43,7 +43,7 @@ public abstract class DroneSmallEntity extends EntityLiving {
         movingStatus = DroneMoveStatus.Standing;
     }
 
-    public double injectEnergy (double amount) {
+    public long injectEnergy (double amount) {
         energy += amount;
         energy = Math.min(energy, getMaxEnergy());
         return Math.max(energy - getMaxEnergy(), 0);
@@ -53,7 +53,11 @@ public abstract class DroneSmallEntity extends EntityLiving {
         return energy;
     }
 
-    public abstract double getMaxEnergy ();
+    public long getEnergy () {
+        return energy;
+    }
+
+    public abstract long getMaxEnergy ();
 
     public abstract Item getDroneItem ();
     

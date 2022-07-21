@@ -43,7 +43,7 @@ public abstract class TurretEntity extends Entity implements IEntityAdditionalSp
 
     protected double getRotationSpeed () { return 0.05d; }
 
-    protected double energy;
+    protected long energy;
     public float additional;
     protected float oldAdditional;
 
@@ -297,13 +297,13 @@ public abstract class TurretEntity extends Entity implements IEntityAdditionalSp
     }
 
 
-    public abstract double getMaxEnergy ();
+    public abstract long getMaxEnergy ();
 
-    public double getEnergy () {
+    public long getEnergy () {
         return energy;
     }
 
-    public double getDemandedEnergy () {
+    public long getDemandedEnergy () {
         return getMaxEnergy() - energy;
     }
 
@@ -312,6 +312,10 @@ public abstract class TurretEntity extends Entity implements IEntityAdditionalSp
     public void injectEnergy (double amount) {
         energy += amount;
         energy = Math.max(Math.min(getMaxEnergy(), energy), 0);
+    }
+
+    public void setEnergy (long energy) {
+        this.energy = energy;
     }
 
     @Override

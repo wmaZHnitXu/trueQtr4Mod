@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import com.anet.qtr4tdm.common.blocks.ThermalRadarBlock;
 import com.anet.qtr4tdm.common.supers.RadarTile;
-import ic2.api.energy.tile.IEnergyEmitter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -49,12 +48,7 @@ public class ThermalBaseTile extends RadarTile {
     }
 
     @Override
-    public int getSinkTier() {
-        return 2;
-    }
-
-    @Override
-    public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing side) {
+    public boolean canConnectEnergy(EnumFacing side) {
         return side == EnumFacing.DOWN;
     }
 

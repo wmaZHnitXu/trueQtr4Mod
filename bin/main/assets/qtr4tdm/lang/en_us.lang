@@ -20,3 +20,7 @@ tile.mrk1.name=Small rocket silo
 tile.dronebase.name=Drone base
 tile.turret_base.name=Turret base
 turret_item_0.name=Laser sentry
+turret_item_1.name=Cannon sentry
+turret_item_2.name=Railgun sentry
+tile.turret_slave.name=Turret block
+tile.turret_master.name=Turret block

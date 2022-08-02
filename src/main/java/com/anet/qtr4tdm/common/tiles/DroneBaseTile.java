@@ -9,6 +9,9 @@ import com.anet.qtr4tdm.common.supers.DroneSmallEntity;
 import com.anet.qtr4tdm.common.supers.TEDefenceEnrg;
 import com.anet.qtr4tdm.uebki.gui.DroneContainer;
 
+import ic2.api.energy.event.EnergyTileLoadEvent;
+import ic2.api.energy.event.EnergyTileUnloadEvent;
+import ic2.api.energy.tile.IEnergyEmitter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -36,6 +39,7 @@ public class DroneBaseTile extends TEDefenceEnrg implements IInventory {
     public void onLoad() {
         super.onLoad();
         if (!world.isRemote) {
+            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
             addedToEnet = true;
         }
     }
@@ -58,29 +62,29 @@ public class DroneBaseTile extends TEDefenceEnrg implements IInventory {
     }
 
     @Override
-    public boolean canConnectEnergy(EnumFacing side) {
+    public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing side) {
         if (side != EnumFacing.UP) return true;
         return false;
     }
 
     @Override
-    public void setPower(long arg0) {
-        if (drone != null);
-        drone.injectEnergy(arg0);
+    public double getDemandedEnergy() {
+        if (drone == null || drone.isDead) return 0;
+        else {
+            return Math.max(drone.getMaxEnergy() - drone.getCurrentEnergy(), 0);
+
+        }
     }
 
     @Override
-    public long getPower() {
-        if (drone != null && !drone.isDead)
-            return drone.getEnergy();
-        else return 0;
+    public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
+        drone.injectEnergy(amount);
+        return 0;
     }
 
     @Override
-    public long getMaxPower() {
-        if (drone != null && !drone.isDead)
-            return drone.getMaxEnergy();
-        else return 0;
+    public int getSinkTier() {
+        return 2;
     }
 
     protected double getChargeSpeed () {
@@ -88,7 +92,7 @@ public class DroneBaseTile extends TEDefenceEnrg implements IInventory {
     }
 
     @Override
-    public int getMaxEnergy() {
+    public double getMaxEnergy() {
         return 10000;
     }
 
@@ -249,6 +253,7 @@ public class DroneBaseTile extends TEDefenceEnrg implements IInventory {
     @Override
     public void onChunkUnload() {
         if (!world.isRemote && addedToEnet) {
+            MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
             addedToEnet = false;
         }
     }

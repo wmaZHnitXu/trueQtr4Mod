@@ -1,7 +1,7 @@
 package com.anet.qtr4tdm.common.supers;
 
 public interface IHasEnergy {
-    public int getEnergy ();
-    public int getMaxEnergy ();
+    public double getEnergy ();
+    public double getMaxEnergy ();
     public int getConsumptionPerTick ();
 }

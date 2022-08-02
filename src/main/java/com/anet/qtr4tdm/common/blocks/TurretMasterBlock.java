@@ -39,7 +39,8 @@ public class TurretMasterBlock extends BlockTileEntity<TurretMasterTe> {
     @Override
     public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state,
             int fortune) {
-        drops.add(new ItemStack(Item.getItemFromBlock(BlocksInit.TURRETBASE)));
+            drops.clear();
+            drops.add(new ItemStack(BlocksInit.TURRETBASE));
     }
 
     @Override

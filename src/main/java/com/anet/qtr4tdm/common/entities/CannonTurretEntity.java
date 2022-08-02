@@ -1,5 +1,6 @@
 package com.anet.qtr4tdm.common.entities;
 
+import com.anet.qtr4tdm.init.BlocksInit;
 import com.flansmod.common.FlansMod;
 
 import net.minecraft.item.Item;
@@ -55,7 +56,7 @@ public class CannonTurretEntity extends TurretEntity {
     }
 
     @Override
-    public long getMaxEnergy() {
+    public double getMaxEnergy() {
         return 10000;
     }
 
@@ -147,7 +148,6 @@ public class CannonTurretEntity extends TurretEntity {
                 getFacingDir().y - rand.nextGaussian(),
                 getFacingDir().z - rand.nextGaussian());
             }
-
         }
     }
 
@@ -168,7 +168,7 @@ public class CannonTurretEntity extends TurretEntity {
     }
 
     protected Item getAmmoType () {
-        return FlansMod.workbenchItem;
+        return BlocksInit.KAZAMMO;
     }
 
     protected Vec3d getProjectileOrigin () {

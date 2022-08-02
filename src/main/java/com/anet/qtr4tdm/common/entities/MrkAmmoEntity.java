@@ -122,7 +122,7 @@ public class MrkAmmoEntity extends Entity implements IEntityAdditionalSpawnData 
         return Math.max(min, Math.min(max, val));
     }
 
-    public void SetTargetAndTargetPos (Entity target) {
+    public void SetTargetAndTargetpos (Entity target) {
         this.target = target;
         if (target != null) {
 

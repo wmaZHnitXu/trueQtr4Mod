@@ -46,23 +46,23 @@ public class TurretCollisionBlock extends uebokblock {
         switch (location) {
 
             case 2:
-                return new AxisAlignedBB(0.5d, 0, 0d, 1d, 1.7d, 0.5d);
+                return new AxisAlignedBB(0.5d, 0, 0d, 1d, 1d, 0.5d);
             case 5://
-                return new AxisAlignedBB(0d, 0d, 0d, 1d, 1.7d, 0.5d);
+                return new AxisAlignedBB(0d, 0d, 0d, 1d, 1d, 0.5d);
             case 8:
-                return new AxisAlignedBB(0d, 0d, 0d, 0.5d, 1.7d, 0.5d);
+                return new AxisAlignedBB(0d, 0d, 0d, 0.5d, 1d, 0.5d);
             case 1://
-                return new AxisAlignedBB(0.5d, 0d, 0d, 1d, 1.7d, 1d);
+                return new AxisAlignedBB(0.5d, 0d, 0d, 1d, 1d, 1d);
             case 4:
-                return new AxisAlignedBB(0d, 0d, 0d, 1d, 1.7d, 1d);
+                return new AxisAlignedBB(0d, 0d, 0d, 1d, 1d, 1d);
             case 7://
-                return new AxisAlignedBB(0d, 0d, 0d, 0.5d, 1.7d, 1d);
+                return new AxisAlignedBB(0d, 0d, 0d, 0.5d, 1d, 1d);
             case 0:
-                return new AxisAlignedBB(0.5d, 0d, 0.5d, 1d, 1.7d, 1d);
+                return new AxisAlignedBB(0.5d, 0d, 0.5d, 1d, 1d, 1d);
             case 3://
-                return new AxisAlignedBB(0, 0d, 0.5d, 1d, 1.7d, 1d);
+                return new AxisAlignedBB(0, 0d, 0.5d, 1d, 1d, 1d);
             case 6:
-                return new AxisAlignedBB(0, 0d, 0.5d, 0.5d, 1.7d, 1d);
+                return new AxisAlignedBB(0, 0d, 0.5d, 0.5d, 1, 1d);
         }
 
         return new AxisAlignedBB(0,0,0,1,1,1);

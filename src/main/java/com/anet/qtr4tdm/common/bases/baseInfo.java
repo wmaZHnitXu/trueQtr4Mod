@@ -114,8 +114,9 @@ public class baseInfo {
     }
 
     public void DisconnectAllDefenceSystems () {
-        for (IBaseConnectable sys : defenders) {
-            sys.DisconnectFromBase();
+        int count = defenders.size();
+        for (int i = 0; i < count; i++) {
+            defenders.get(count).DisconnectFromBase();
         }
     }
 

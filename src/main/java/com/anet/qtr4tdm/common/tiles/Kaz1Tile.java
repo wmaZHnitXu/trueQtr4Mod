@@ -16,6 +16,9 @@ import com.anet.qtr4tdm.uebki.gui.KAZGuiMisc.kazContainer;
 import com.flansmod.common.guns.BulletType;
 import com.flansmod.common.guns.EntityBullet;
 
+import ic2.api.energy.event.EnergyTileLoadEvent;
+import ic2.api.energy.event.EnergyTileUnloadEvent;
+import ic2.api.energy.tile.IEnergyEmitter;
 import net.minecraft.block.BlockHopper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -104,6 +107,7 @@ public class Kaz1Tile extends TEDefenceInvEnrg {
             if (world.getBlockState(pos).getBlock() instanceof Kaz2Block) lvl = 2;
             LevelInit(lvl);
         }
+        MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
         currentammo = world.getBlockState(pos).getValue(Kaz1Block.AMMO);
         DisconnectFromBase();
         InWorldBasesManager.GetBaseConnection(this);
@@ -112,6 +116,7 @@ public class Kaz1Tile extends TEDefenceInvEnrg {
     @Override
     public void onChunkUnload() {
         super.onChunkUnload();
+        MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
     }
 
     @Override
@@ -145,6 +150,7 @@ public class Kaz1Tile extends TEDefenceInvEnrg {
     }
 
     public void Destruction () {
+        MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
         DisconnectFromBase();
         InventoryHelper.dropInventoryItems(world, pos, this);
     }
@@ -352,9 +358,14 @@ public class Kaz1Tile extends TEDefenceInvEnrg {
     }
 
     @Override
-    public boolean canConnectEnergy(EnumFacing side) {
+    public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing side) {
         if (side != EnumFacing.UP) return true;
         return false;
+    }
+
+    @Override
+    public int getSinkTier() {
+        return 3;
     }
 
     @Override

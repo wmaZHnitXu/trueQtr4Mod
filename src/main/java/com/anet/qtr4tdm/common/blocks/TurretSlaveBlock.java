@@ -1,17 +1,23 @@
 package com.anet.qtr4tdm.common.blocks;
 
+import java.util.ArrayList;
+
 import com.anet.qtr4tdm.common.tiles.TurretMasterTe;
 import com.anet.qtr4tdm.common.tiles.TurretSlaveTe;
+import com.anet.qtr4tdm.init.BlocksInit;
 import com.anet.qtr4tdm.uebki.BlockTileEntity;
 
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class TurretSlaveBlock extends BlockTileEntity<TurretSlaveTe> {
@@ -52,6 +58,14 @@ public class TurretSlaveBlock extends BlockTileEntity<TurretSlaveTe> {
             }
         }
         super.breakBlock(worldIn, pos, state);
+    }
+
+    @Override
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state,
+            int fortune) {
+        drops.clear();
+        drops.add(new ItemStack(BlocksInit.TURRETBASE));
+
     }
     
 }

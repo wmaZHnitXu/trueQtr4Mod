@@ -3,19 +3,22 @@ package com.anet.qtr4tdm.common.supers;
 import java.util.ArrayList;
 
 import com.anet.qtr4tdm.common.bases.InWorldBasesManager;
-import com.hbm.interfaces.ISidedConsumer;
 
+import ic2.api.energy.event.EnergyTileLoadEvent;
+import ic2.api.energy.event.EnergyTileUnloadEvent;
+import ic2.api.energy.tile.IEnergyEmitter;
+import ic2.api.energy.tile.IEnergySink;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.MinecraftForge;
 
-public abstract class TEDefenceEnrg extends TileEntityDefence implements ISidedConsumer, ITickable, IHasEnergy {
+public abstract class TEDefenceEnrg extends TileEntityDefence implements IEnergySink, ITickable, IHasEnergy {
 
     public boolean connected;
     public boolean powered;
-    protected long energy, maxEnergy;
+    protected double energy, maxEnergy;
     protected boolean addedToEnet;
 
     @Override
@@ -41,13 +44,14 @@ public abstract class TEDefenceEnrg extends TileEntityDefence implements ISidedC
     @Override
     public void onChunkUnload() {
         if (!world.isRemote && addedToEnet) {
+            MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
             addedToEnet = false;
         }
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound.setLong("energy", energy);
+        compound.setDouble("energy", energy);
         return super.writeToNBT(compound);
     }
 
@@ -59,32 +63,33 @@ public abstract class TEDefenceEnrg extends TileEntityDefence implements ISidedC
 
     @Override
     public void update() {
-    
+        if (!world.isRemote && !addedToEnet) {
+            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+            addedToEnet = true;
+        }
     }
 
     @Override
-    public int getEnergy() {
-        return (int)getPower();
+    public double getDemandedEnergy() {
+        return maxEnergy - energy;
     }
 
     @Override
-    public int getMaxEnergy() {
-        return (int)getMaxPower();
+    public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
+        energy = Math.min(energy + amount, maxEnergy);
+        markDirty();
+        //return Math.max(energy - maxEnergy, 0); V DOKAX SKAZALI, 4TO TAK LY$WE DLYA PROIZVODITELNOSTI
+        return 0;
     }
 
     @Override
-    public long getPower() {
+    public double getEnergy() {
         return energy;
     }
 
     @Override
-    public long getMaxPower() {
+    public double getMaxEnergy() {
         return maxEnergy;
-    }
-
-    @Override
-    public void setPower(long arg0) {
-        energy = arg0;
     }
 
 }

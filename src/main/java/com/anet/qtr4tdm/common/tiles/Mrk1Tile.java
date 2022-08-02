@@ -70,7 +70,7 @@ public class Mrk1Tile extends TEDefenceInvEnrg {
     private void Launch () {
         MrkAmmoEntity ammoEntity = new MrkAmmoEntity(world);
         ammoEntity.setPosition(pos.getX() + 0.5d, pos.getY(), pos.getZ() + 0.5d);
-        ammoEntity.SetTargetAndTargetPos(target);
+        ammoEntity.SetTargetAndTargetpos(target);
         world.spawnEntity(ammoEntity);
         ammo.get(0).setCount(ammo.get(0).getCount()-1);
         target = null;

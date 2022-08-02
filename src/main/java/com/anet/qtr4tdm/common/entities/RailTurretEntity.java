@@ -2,6 +2,7 @@ package com.anet.qtr4tdm.common.entities;
 
 import com.anet.qtr4tdm.TdmMod;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.Vec3d;
@@ -31,7 +32,7 @@ public class RailTurretEntity extends CannonTurretEntity {
     }
 
     @Override
-    public long getMaxEnergy() {
+    public double getMaxEnergy() {
         return 100000;
     }
 

@@ -1,14 +1,12 @@
 package com.anet.qtr4tdm.common.tiles;
 
 
-
-import com.anet.qtr4tdm.common.supers.EnergySink;
-
+import ic2.api.energy.prefab.BasicEnergyTe;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.MinecraftForge;
 
-public class EnergyConsumerTile extends EnergySink implements ITickable {
+public class EnergyConsumerTile extends BasicEnergyTe.Sink implements ITickable {
 
     public EnergyConsumerTile() {
         super(10000, 2);

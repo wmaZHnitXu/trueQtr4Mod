@@ -7,12 +7,11 @@ import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.bases.InWorldBasesManager;
 import com.anet.qtr4tdm.common.bases.baseInfo;
 import com.anet.qtr4tdm.common.entities.Radar1Entity;
-import com.anet.qtr4tdm.common.supers.EnergySink;
 import com.anet.qtr4tdm.common.tiles.EnergyConsumerTile;
 import com.anet.qtr4tdm.uebki.RadarsInfo;
 import com.anet.qtr4tdm.uebki.gui.BaseSetupGui;
 
-import cofh.redstoneflux.api.IEnergyReceiver;
+import ic2.api.energy.prefab.BasicEnergyTe.Sink;
 
 import com.anet.qtr4tdm.common.tiles.BaseTile;
 
@@ -72,8 +71,8 @@ public class BasedAnswer implements IMessage {
                     answer[2] = pos.getY();
                     answer[3] = pos.getZ();
                     TileEntity te = TdmMod.currentServer.getWorld(dim).getTileEntity(pos.down());
-                    if (te instanceof EnergySink)
-                        answer[4] =  ((EnergySink)te).getEnergyStored(null);
+                    if (te instanceof Sink)
+                        answer[4] =  Double.valueOf(((Sink)te).getEnergyBuffer().getEnergyStored()).intValue();
                     else answer[4] = 0;
                 break;
             }

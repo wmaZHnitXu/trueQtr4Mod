@@ -1,9 +1,11 @@
 package com.anet.qtr4tdm.common.tiles;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.anet.qtr4tdm.TdmMod;
 import com.anet.qtr4tdm.common.blocks.TurretCollisionBlock;
+import com.anet.qtr4tdm.common.blocks.TurretCollisionCapBlock;
 import com.anet.qtr4tdm.common.entities.CannonTurretEntity;
 import com.anet.qtr4tdm.common.entities.LaserTurretEntity;
 import com.anet.qtr4tdm.common.entities.RailTurretEntity;
@@ -13,6 +15,7 @@ import com.anet.qtr4tdm.init.BlocksInit;
 import com.anet.qtr4tdm.uebki.gui.TurretConatainer;
 import com.jcraft.jorbis.Block;
 
+import ic2.api.energy.tile.IEnergyEmitter;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -22,12 +25,15 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 
 public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
 
-    public ArrayList<ItemStack> items;
+    public NonNullList<ItemStack> items = NonNullList.<ItemStack>withSize(28, ItemStack.EMPTY);
     public int NetworkEnergy;
     public int NetworkMaxEnergy;
     public TurretConatainer conatainer;
@@ -37,11 +43,28 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
     @Override
     public void onLoad() {
         super.onLoad();
-        items = new ArrayList<ItemStack>();
-        for (int i = 0; i < 28; i++) {
-            items.add(ItemStack.EMPTY);
-        }
         TdmMod.logger.info("loaded");
+    }
+
+    public NBTTagCompound writeToNBT(NBTTagCompound compound)
+    {
+        super.writeToNBT(compound);
+        {
+            ItemStackHelper.saveAllItems(compound, this.items);
+        }
+
+        return compound;
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+        this.items = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
+
+        {
+            ItemStackHelper.loadAllItems(compound, this.items);
+        }
+
     }
 
     public void Interaction (EntityPlayer player) {
@@ -51,7 +74,12 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
     }
 
     @Override
-    public boolean canConnectEnergy( EnumFacing side) {
+    public int getSinkTier() {
+        return 3;
+    }
+
+    @Override
+    public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing side) {
         return side == EnumFacing.DOWN;
     }
 
@@ -97,7 +125,9 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
     }
 
     private void ConstructCollider () {
+
         int i = 0;
+
         for (int x = pos.getX() - 1; x <= pos.getX() + 1; x++ ) {
             for (int z = pos.getZ() - 1; z <= pos.getZ() + 1; z++) {
                 IBlockState blkState = BlocksInit.TURRETCOLLIDER.getDefaultState().withProperty(TurretCollisionBlock.LOCATION, i);
@@ -105,16 +135,35 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
                 i++;
             } 
         }
+
+        i = 0;
+
+        for (int x = pos.getX() - 1; x <= pos.getX() + 1; x++ ) {
+            for (int z = pos.getZ() - 1; z <= pos.getZ() + 1; z++) {
+                IBlockState blkState = BlocksInit.TURRETCOLLIDERCAP.getDefaultState().withProperty(TurretCollisionCapBlock.LOCATION, i);
+                world.setBlockState(new BlockPos(x, pos.getY() + 2, z), blkState, 3);
+                i++;
+            } 
+        }
         
     }
 
     private void RemoveCollider () {
+
         IBlockState airstate = BlockAir.getStateById(0);
+
         for (int x = pos.getX() - 1; x <= pos.getX() + 1; x++ ) {
             for (int z = pos.getZ() - 1; z <= pos.getZ() + 1; z++) {
                 world.setBlockState(new BlockPos(x, pos.getY() + 1, z), airstate, 3);
             } 
         }
+
+        for (int x = pos.getX() - 1; x <= pos.getX() + 1; x++ ) {
+            for (int z = pos.getZ() - 1; z <= pos.getZ() + 1; z++) {
+                world.setBlockState(new BlockPos(x, pos.getY() + 2, z), airstate, 3);
+            } 
+        }
+
     }
 
     private TurretEntity getSentryForItemStack (ItemStack stack) {
@@ -153,6 +202,7 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
         if (disassembling) return;
         disassembling = true;
         DespawnSentry();
+        DisconnectFromBase();
         InventoryHelper.dropInventoryItems(world, pos.up(), this);
         IBlockState baseState = BlocksInit.TURRETBASE.getDefaultState();
         for (int x = pos.getX() - 1; x < pos.getX() + 2; x++) {
@@ -229,8 +279,15 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
         for (int i = 0; i < items.size(); i++) {
             ItemStack stack = items.get(i);
             if (stack.getItem().equals(item)) {
-                result = stack;
-                items.set(i, ItemStack.EMPTY);
+                if (stack.getCount() == 1) {
+                    result = stack;
+                    items.set(i, ItemStack.EMPTY);
+                }
+                else {
+                    stack.setCount(stack.getCount()-1);
+                    result = stack.copy();
+                    result.setCount(1);
+                }
                 break;
             }
         }
@@ -263,13 +320,13 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
     }
 
     @Override
-    public long getPower() {
+    public double getEnergy() {
         if (entity != null) return entity.getEnergy();
         return 0;
     }
 
     @Override
-    public long getMaxPower() {
+    public double getMaxEnergy() {
         if (entity != null) return entity.getMaxEnergy();
         return 0;
     }
@@ -334,9 +391,19 @@ public class TurretMasterTe extends TEDefenceEnrg implements ISidedInventory {
     }
 
     @Override
-    public void setPower(long arg0) {
-        if (entity != null && !entity.isDead)
-            entity.setEnergy(arg0);
+    public double getDemandedEnergy() {
+        if (entity != null) {
+            return entity.getDemandedEnergy();
+        }
+        else return 0;
+    }
+
+    @Override
+    public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
+        if (entity != null) {
+            entity.injectEnergy(amount);
+        }
+        return 0;
     }
     
 }
